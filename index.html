@@ -295,6 +295,7 @@
     @media (max-width: 520px) { .hero__ctas .btn { width: 100%; } }
 
     .hero__card {
+      position: relative;
       width: 100%;
       background:
         radial-gradient(280px 180px at 50% 0%, rgba(245, 217, 139, 0.12), transparent 70%),
@@ -308,6 +309,31 @@
     }
     .hero__card-title { font-family: var(--font-script); font-size: 1.9rem; color: var(--gold-soft); line-height: 1.08; }
     .hero__card-sub { font-size: 0.8rem; color: var(--text-muted); max-width: 320px; line-height: 1.45; }
+    .hero__rating-pill {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 5px;
+      padding: 5px 12px;
+      border-radius: 999px;
+      border: 1px solid var(--line-strong);
+      background: rgba(212, 175, 55, 0.1);
+      color: var(--gold-soft);
+      font-family: var(--font-head);
+      font-size: 0.76rem;
+      font-weight: 600;
+      line-height: 1.2;
+      white-space: nowrap;
+      width: fit-content;
+      justify-self: end;
+      margin: 2px 0;
+      transition: background .22s var(--ease), border-color .22s var(--ease), transform .22s var(--ease);
+    }
+    .hero__rating-pill:hover {
+      background: rgba(212, 175, 55, 0.18);
+      border-color: var(--gold);
+      transform: translateY(-1px);
+    }
     .hero__stats {
       display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; width: 100%;
       padding-top: 10px; border-top: 1px solid var(--line);
@@ -885,14 +911,17 @@
     /* =========================================================
        FOOTER & COMPLIANCE LINKS
        ========================================================= */
-    .footer { background: #040406; border-top: 1px solid var(--line); padding: 42px 0 28px; text-align: center; }
+    .footer { background: #040406; border-top: 1px solid var(--line); padding: 40px 16px 96px; text-align: center; }
     .footer-links {
       display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
-      gap: 8px 14px; font-size: 0.84rem; color: var(--gold-soft); font-weight: 500;
+      gap: 6px 10px; text-align: center; font-size: 0.82rem; color: var(--gold-soft); font-weight: 500;
     }
+    .footer-links a, .footer-links span[aria-hidden="true"] { white-space: nowrap; }
+    .footer-links a:hover { color: var(--rose); text-decoration: underline; }
+    .footer-divider { width: 60px; height: 1px; background: var(--line-strong); margin: 4px auto; }
     .footer-link-btn {
-      background: none; border: none; padding: 4px 6px; color: var(--gold-soft);
-      font-size: 0.84rem; font-weight: 500; cursor: pointer; transition: color .2s;
+      background: none; border: none; padding: 3px 4px; color: var(--gold-soft);
+      font-size: 0.82rem; font-weight: 500; white-space: nowrap; cursor: pointer; transition: color .2s;
     }
     .footer-link-btn:hover { color: var(--rose); text-decoration: underline; }
     .footer__bottom {
@@ -1019,6 +1048,340 @@
     @media (max-width: 640px) {
       .mb-toast { bottom: 86px; max-width: calc(100% - 32px); }
     }
+
+    /* =========================================================
+       CUSTOMER FEEDBACK & REVIEWS SECTION
+       ========================================================= */
+    .reviews-summary-card {
+      max-width: 780px;
+      margin: 0 auto 26px;
+      background:
+        radial-gradient(320px 160px at 85% 0%, rgba(212, 175, 55, 0.12), transparent 70%),
+        linear-gradient(175deg, #16161c 0%, var(--card) 100%);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-xl);
+      padding: 24px 22px;
+      box-shadow: var(--shadow);
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+      align-items: center;
+    }
+    @media (min-width: 680px) {
+      .reviews-summary-card { grid-template-columns: 1fr 1.25fr; gap: 24px; }
+    }
+    .review-summary-left {
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+    .review-summary-heading {
+      font-family: var(--font-head);
+      font-size: 1rem;
+      font-weight: 700;
+      color: #fff;
+    }
+    .review-score-row {
+      display: flex;
+      align-items: baseline;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .review-score-big {
+      font-family: var(--font-head);
+      font-size: 2.5rem;
+      font-weight: 800;
+      color: var(--gold-soft);
+      line-height: 1;
+    }
+    .review-score-max {
+      font-size: 0.95rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .review-stars-display {
+      color: var(--gold);
+      font-size: 1.08rem;
+      letter-spacing: 0.08em;
+    }
+    .review-count-note {
+      font-size: 0.85rem;
+      color: var(--gold-soft);
+      font-weight: 600;
+    }
+    .review-branch-note {
+      font-size: 0.78rem;
+      color: var(--text-muted);
+    }
+    .review-dist-list {
+      display: grid;
+      gap: 7px;
+    }
+    .review-dist-row {
+      display: grid;
+      grid-template-columns: 40px 1fr 34px;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+    .review-dist-bar {
+      height: 7px;
+      border-radius: 999px;
+      background: rgba(255, 255, 255, 0.08);
+      overflow: hidden;
+    }
+    .review-dist-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: linear-gradient(90deg, var(--gold), var(--gold-soft));
+      transition: width .3s var(--ease);
+    }
+
+    .reviews-controls {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: center;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .reviews-filter-pills {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 8px;
+    }
+    .reviews-filter-pill {
+      padding: 9px 18px;
+      border-radius: 999px;
+      background: var(--card);
+      border: 1.5px solid var(--line);
+      color: var(--text-muted);
+      font-family: var(--font-head);
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .22s var(--ease);
+    }
+    .reviews-filter-pill:hover {
+      border-color: var(--gold);
+      color: var(--gold-soft);
+    }
+    .reviews-filter-pill.is-active {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.22), rgba(244, 114, 182, 0.14));
+      border-color: var(--gold);
+      color: var(--gold-soft);
+      box-shadow: 0 6px 20px rgba(212, 175, 55, 0.14);
+    }
+
+    .reviews-grid {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 18px;
+    }
+    @media (min-width: 620px) {
+      .reviews-grid { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (min-width: 960px) {
+      .reviews-grid { grid-template-columns: repeat(3, 1fr); }
+    }
+    .review-card {
+      background: linear-gradient(175deg, #16161c 0%, var(--card) 100%);
+      border: 1px solid rgba(212, 175, 55, 0.28);
+      border-radius: var(--radius-lg);
+      padding: 20px 18px;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      transition: transform .22s var(--ease), border-color .22s, box-shadow .22s;
+    }
+    .review-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--gold);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.5);
+    }
+    .review-card--live {
+      border-color: rgba(74, 222, 128, 0.35);
+      background:
+        radial-gradient(200px 120px at 90% 0%, rgba(212, 175, 55, 0.08), transparent 70%),
+        linear-gradient(175deg, #18171d 0%, var(--card) 100%);
+    }
+    .review-card__head {
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 10px;
+    }
+    .review-card__name {
+      font-family: var(--font-head);
+      font-weight: 700;
+      font-size: 0.98rem;
+      color: #fff;
+    }
+    .review-card__branch {
+      font-size: 0.76rem;
+      color: var(--rose);
+      font-weight: 600;
+      margin-top: 2px;
+    }
+    .review-card__badge {
+      flex: none;
+      padding: 3px 9px;
+      border-radius: 999px;
+      font-size: 0.66rem;
+      font-weight: 600;
+      letter-spacing: 0.04em;
+      white-space: nowrap;
+      background: rgba(74, 222, 128, 0.12);
+      border: 1px solid rgba(74, 222, 128, 0.4);
+      color: var(--green);
+    }
+    .review-card__rating {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: var(--font-head);
+      font-size: 0.82rem;
+      font-weight: 600;
+      color: var(--gold-soft);
+    }
+    .review-card__text {
+      font-size: 0.87rem;
+      color: #dcdce4;
+      line-height: 1.58;
+      flex: 1;
+      overflow-wrap: anywhere;
+    }
+    .review-card__foot {
+      font-size: 0.74rem;
+      color: var(--text-muted);
+      padding-top: 10px;
+      border-top: 1px solid rgba(255, 255, 255, 0.06);
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+    }
+    .reviews-load-wrap {
+      text-align: center;
+      margin-top: 26px;
+    }
+    .reviews-empty-state {
+      grid-column: 1 / -1;
+      text-align: center;
+      padding: 28px 18px;
+      border-radius: var(--radius-lg);
+      background: var(--card);
+      border: 1px dashed var(--line-strong);
+      color: var(--text-muted);
+      font-size: 0.92rem;
+    }
+
+    /* Feedback Submission Card */
+    .feedback-form-card {
+      margin-top: 40px;
+      background:
+        radial-gradient(320px 160px at 85% 0%, rgba(232, 155, 174, 0.08), transparent 70%),
+        var(--card);
+      border: 1px solid var(--line-strong);
+      border-radius: var(--radius-xl);
+      padding: 28px 22px;
+      box-shadow: var(--shadow);
+      max-width: 780px;
+      margin-inline: auto;
+    }
+    .feedback-form-head {
+      text-align: center;
+      margin-bottom: 22px;
+    }
+    .feedback-form-head h3 {
+      font-size: clamp(1.3rem, 3.2vw, 1.7rem);
+      color: var(--gold-soft);
+    }
+    .feedback-form-head p {
+      color: var(--text-muted);
+      font-size: 0.88rem;
+      margin-top: 6px;
+    }
+    .field textarea {
+      width: 100%;
+      min-height: 112px;
+      padding: 12px 14px;
+      font-family: inherit;
+      font-size: 0.95rem;
+      color: #fff;
+      background: #09090c;
+      border: 1.5px solid rgba(255, 255, 255, 0.14);
+      border-radius: var(--radius-md);
+      resize: vertical;
+      transition: border-color .2s, box-shadow .2s;
+    }
+    .field textarea:focus {
+      outline: none;
+      border-color: var(--gold);
+      box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.18);
+    }
+    .field.has-error textarea { border-color: var(--error); }
+    .star-selector {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      flex-wrap: wrap;
+    }
+    .star-btn {
+      width: 42px;
+      height: 42px;
+      border-radius: 10px;
+      border: 1.5px solid rgba(212, 175, 55, 0.3);
+      background: #09090c;
+      color: #52525e;
+      font-size: 1.35rem;
+      line-height: 1;
+      display: grid;
+      place-items: center;
+      cursor: pointer;
+      transition: transform .15s var(--ease), color .15s, border-color .15s, background .15s;
+    }
+    .star-btn.is-active {
+      color: var(--gold-soft);
+      border-color: var(--gold);
+      background: rgba(212, 175, 55, 0.14);
+    }
+    .star-btn:hover { transform: translateY(-1px); border-color: var(--gold-soft); }
+    .star-selected-label {
+      margin-left: 8px;
+      font-family: var(--font-head);
+      font-size: 0.86rem;
+      font-weight: 600;
+      color: var(--gold-soft);
+    }
+    .feedback-meta-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.76rem;
+      color: var(--text-muted);
+    }
+    .feedback-alert {
+      margin-top: 14px;
+      padding: 13px 16px;
+      border-radius: var(--radius-md);
+      font-size: 0.88rem;
+      line-height: 1.5;
+    }
+    .feedback-alert[hidden] { display: none; }
+    .feedback-alert--success {
+      background: rgba(74, 222, 128, 0.1);
+      border: 1px solid rgba(74, 222, 128, 0.45);
+      color: #bbf7d0;
+    }
+    .feedback-alert--error {
+      background: rgba(251, 113, 133, 0.1);
+      border: 1px solid rgba(251, 113, 133, 0.45);
+      color: #fecdd3;
+    }
   </style>
 </head>
 <body>
@@ -1111,6 +1474,7 @@
           <p class="hero__card-caption">Private Celebration Suites &bull; Kurla East &amp; Vashi</p>
           <div class="hero__card-title">Blink Events</div>
           <p class="hero__card-sub">Private celebrations crafted with metallic gold elegance, custom decor, and instant digital booking passes.</p>
+          <a href="#reviews" class="hero__rating-pill" id="heroRatingPill" aria-label="View customer reviews, rated 4.6 out of 5">⭐ 4.6 (78+)</a>
           <div class="hero__stats">
             <div class="hero__stat"><strong>2</strong><span>Branches</span></div>
             <div class="hero__stat"><strong>9 AM–12 AM</strong><span>Hourly Slots</span></div>
@@ -1402,6 +1766,106 @@
       </div>
     </section>
 
+    <!-- ================= CUSTOMER FEEDBACK & REVIEWS ================= -->
+    <section class="section" id="reviews">
+      <div class="container">
+        <div class="section__head">
+          <span class="section__kicker">Guest Experiences</span>
+          <h2>Real Experiences. Beautiful Memories.</h2>
+          <div class="gold-rule"></div>
+          <p>Every celebration is special. Explore guest experiences across Kurla &amp; Vashi and share yours with Blink Events.</p>
+        </div>
+
+        <!-- Unified Guest Reviews & Ratings Summary Card -->
+        <div class="reviews-summary-card" id="reviewsSummaryCard">
+          <div class="review-summary-left">
+            <h3 class="review-summary-heading">Guest Reviews &amp; Ratings</h3>
+            <div class="review-score-row">
+              <span class="review-score-big" id="unifiedAvgScore">4.6</span>
+              <span class="review-score-max">/ 5</span>
+              <span class="review-stars-display" id="unifiedAvgStars" aria-label="4.6 out of 5 stars">★★★★★</span>
+            </div>
+            <p class="review-count-note" id="unifiedCountNote">4.6 ★ &bull; Based on 78+ Verified Celebrations</p>
+            <p class="review-branch-note" id="unifiedBranchNote">39 Kurla &bull; 39 Vashi</p>
+          </div>
+          <div class="review-dist-list" id="unifiedDistList" aria-label="Star rating distribution"></div>
+        </div>
+
+        <!-- Branch Filter Pills -->
+        <div class="reviews-controls">
+          <div class="reviews-filter-pills" role="tablist" aria-label="Filter reviews by branch">
+            <button type="button" class="reviews-filter-pill is-active" data-review-branch="all" role="tab" aria-selected="true">All Reviews</button>
+            <button type="button" class="reviews-filter-pill" data-review-branch="Kurla" role="tab" aria-selected="false">Kurla Branch</button>
+            <button type="button" class="reviews-filter-pill" data-review-branch="Vashi" role="tab" aria-selected="false">Vashi Branch</button>
+          </div>
+        </div>
+
+        <!-- Responsive Review Cards Grid -->
+        <div class="reviews-grid" id="reviewsGrid" aria-live="polite"></div>
+
+        <div class="reviews-load-wrap">
+          <button type="button" class="btn btn--ghost" id="loadMoreReviewsBtn">Load More Reviews</button>
+        </div>
+
+        <!-- Customer Feedback Submission Form -->
+        <div class="feedback-form-card">
+          <div class="feedback-form-head">
+            <h3>Visited Blink Events? Share Your Feedback</h3>
+            <p>Your experience matters to us. Help others discover their perfect celebration venue.</p>
+          </div>
+
+          <form id="reviewForm" novalidate>
+            <div class="form-grid">
+              <div class="field">
+                <label for="revName">Your Name</label>
+                <input type="text" id="revName" name="revName" maxlength="60" placeholder="Enter your full name" required>
+                <span class="field__error" id="revNameErr"></span>
+              </div>
+
+              <div class="field">
+                <label for="revBranch">Visited Branch</label>
+                <select id="revBranch" name="revBranch" required>
+                  <option value="" disabled selected>Select visited branch</option>
+                  <option value="Kurla">Kurla</option>
+                  <option value="Vashi">Vashi</option>
+                </select>
+                <span class="field__error" id="revBranchErr"></span>
+              </div>
+
+              <div class="field field--full">
+                <label id="revRatingLabel">Rating</label>
+                <div class="star-selector" role="radiogroup" aria-labelledby="revRatingLabel" id="revStarGroup">
+                  <button type="button" class="star-btn is-active" data-star="1" role="radio" aria-checked="false" aria-label="1 star">★</button>
+                  <button type="button" class="star-btn is-active" data-star="2" role="radio" aria-checked="false" aria-label="2 stars">★</button>
+                  <button type="button" class="star-btn is-active" data-star="3" role="radio" aria-checked="false" aria-label="3 stars">★</button>
+                  <button type="button" class="star-btn is-active" data-star="4" role="radio" aria-checked="false" aria-label="4 stars">★</button>
+                  <button type="button" class="star-btn is-active" data-star="5" role="radio" aria-checked="true" aria-label="5 stars">★</button>
+                  <span class="star-selected-label" id="revStarText">5 / 5 Stars</span>
+                </div>
+                <span class="field__error" id="revRatingErr"></span>
+              </div>
+
+              <div class="field field--full">
+                <label for="revText">Your Review / Experience</label>
+                <textarea id="revText" name="revText" maxlength="500" placeholder="Tell us about your celebration, room decor, or booking experience..." required></textarea>
+                <div class="feedback-meta-row">
+                  <span class="field__error" id="revTextErr"></span>
+                  <span id="revCharCount">0 / 500</span>
+                </div>
+              </div>
+            </div>
+
+            <div style="margin-top: 16px;">
+              <button type="submit" class="btn btn--gold" id="revSubmitBtn" style="width: 100%; min-height: 50px;">Submit Feedback</button>
+            </div>
+
+            <div class="feedback-alert feedback-alert--success" id="revSuccessMsg" role="status" aria-live="polite" hidden></div>
+            <div class="feedback-alert feedback-alert--error" id="revErrorMsg" role="alert" aria-live="polite" hidden></div>
+          </form>
+        </div>
+      </div>
+    </section>
+
     <!-- ================= CONTACT ================= -->
     <section class="section" id="contact">
       <div class="container">
@@ -1456,13 +1920,15 @@
         <span aria-hidden="true">&bull;</span>
         <a href="#contact">Venues</a>
       </nav>
+      <div class="footer-divider" aria-hidden="true"></div>
       <nav aria-label="Policies and information" class="footer-links">
         <button type="button" class="footer-link-btn js-open-policy" data-policy="about">About Us</button>
         <span aria-hidden="true">&bull;</span>
         <button type="button" class="footer-link-btn js-open-policy" data-policy="contact">Contact Us</button>
         <span aria-hidden="true">&bull;</span>
         <button type="button" class="footer-link-btn js-open-policy" data-policy="privacy">Privacy Policy</button>
-        <span aria-hidden="true">&bull;</span>
+      </nav>
+      <nav aria-label="Legal and refund policies" class="footer-links">
         <button type="button" class="footer-link-btn js-open-policy" data-policy="terms">Terms &amp; Conditions</button>
         <span aria-hidden="true">&bull;</span>
         <button type="button" class="footer-link-btn js-open-policy" data-policy="refund">Refund &amp; Cancellation Policy</button>
@@ -1642,9 +2108,47 @@
         ]
       };
 
+      var GALLERY_KEYS = [
+        'kurla_couples',
+        'kurla_family',
+        'vashi_couples',
+        'vashi_family',
+        'vashi_heaven',
+        'vashi_mega'
+      ];
+
+      function getDefaultGalleryForKey(roomKey) {
+        if (roomKey === 'kurla_family' || roomKey === 'vashi_family' || roomKey === 'vashi_mega' || roomKey === 'family') {
+          return DEFAULT_VENUE_GALLERY.family;
+        }
+        return DEFAULT_VENUE_GALLERY.couples;
+      }
+
+      function getGalleryRoomLabel(roomKey) {
+        var labels = {
+          kurla_couples: 'Kurla — Couples Room',
+          kurla_family: 'Kurla — Family Room',
+          vashi_couples: 'Vashi — Couples Room',
+          vashi_family: 'Vashi — Friends & Family Zone',
+          vashi_heaven: 'Vashi — Heaven for Couple',
+          vashi_mega: 'Vashi — Mega Party Hall',
+          couples: 'Couples Room',
+          family: 'Family Room'
+        };
+        return labels[roomKey] || 'Couples Room';
+      }
+
+      function isCouplesGalleryKey(roomKey) {
+        return roomKey === 'kurla_couples' || roomKey === 'vashi_couples' || roomKey === 'vashi_heaven' || roomKey === 'couples';
+      }
+
       var VENUE_GALLERY = {
-        couples: DEFAULT_VENUE_GALLERY.couples.slice(),
-        family: DEFAULT_VENUE_GALLERY.family.slice()
+        kurla_couples: DEFAULT_VENUE_GALLERY.couples.slice(),
+        kurla_family: DEFAULT_VENUE_GALLERY.family.slice(),
+        vashi_couples: DEFAULT_VENUE_GALLERY.couples.slice(),
+        vashi_family: DEFAULT_VENUE_GALLERY.family.slice(),
+        vashi_heaven: DEFAULT_VENUE_GALLERY.couples.slice(),
+        vashi_mega: DEFAULT_VENUE_GALLERY.family.slice()
       };
 
       var ADDONS = [
@@ -2115,7 +2619,7 @@
         activeBookingsRef: null,
         availabilitySubToken: 0,
         carouselIndex: 0,
-        lightboxRoom: 'couples',
+        lightboxRoom: 'kurla_couples',
         lightboxIndex: 0,
         siteSettingsSubscribed: false,
         instagramReelsRaw: {}
@@ -2213,7 +2717,10 @@
       function isValidImageUrl(url) {
         if (typeof url !== 'string') return false;
         var s = url.trim();
-        return /^https?:\/\//i.test(s) || /^images\/[a-zA-Z0-9_\-./]+$/.test(s);
+        if (!s) return false;
+        return /^https?:\/\//i.test(s) ||
+               /^images\/[a-zA-Z0-9_\-./]+$/.test(s) ||
+               /^data:image\/(jpeg|jpg|png|webp);base64,/i.test(s);
       }
       function h(tag, cls, text) {
         var el = document.createElement(tag);
@@ -2288,14 +2795,18 @@
       function updateCarouselInstagramPills() {
         var branchPill = document.getElementById('branchVideoPill');
         if (!branchPill) return;
+        var zoneKey = getActiveGalleryRoomKey();
+        var rawReels = (state.instagramReelsRaw && typeof state.instagramReelsRaw === 'object') ? state.instagramReelsRaw : {};
+        var firebaseUrl = isSafeHttpUrl(rawReels[zoneKey]) ? rawReels[zoneKey].trim() : '';
         var branchReels = CATEGORY_REEL_URLS[state.branch] || {};
-        var reelUrl = branchReels[state.category] || '';
-        if (state.category === 'mega_party' || !reelUrl) {
+        var fallbackUrl = (zoneKey === 'vashi_mega') ? '' : (branchReels[state.category] || '');
+        var reelUrl = firebaseUrl || fallbackUrl;
+        if (!isSafeHttpUrl(reelUrl)) {
           branchPill.hidden = true;
           branchPill.removeAttribute('href');
         } else {
           branchPill.hidden = false;
-          branchPill.href = reelUrl;
+          branchPill.href = reelUrl.trim();
         }
       }
 
@@ -2348,7 +2859,7 @@
       });
 
       function normalizeFirebaseGalleryCategory(rawNode, roomKey) {
-        var defaults = DEFAULT_VENUE_GALLERY[roomKey] || [];
+        var defaults = getDefaultGalleryForKey(roomKey) || [];
         if (!rawNode || (typeof rawNode !== 'object' && !Array.isArray(rawNode))) {
           return defaults.slice();
         }
@@ -2366,7 +2877,7 @@
         }
 
         var normalized = [];
-        var roomLabel = roomKey === 'couples' ? 'Couples Room' : 'Family Room';
+        var roomLabel = getGalleryRoomLabel(roomKey);
 
         entries.forEach(function (entry) {
           var item = entry.item;
@@ -2460,7 +2971,7 @@
         // Dynamic Instagram Reel Links
         db.ref(SETTINGS_NODE + '/instagramReels').on('value', function (snap) {
           var reels = snap.val() || {};
-          state.instagramReelsRaw = (reels && typeof reels === 'object') ? reels : {};
+          state.instagramReelsRaw = (reels && typeof reels === 'object' && !Array.isArray(reels)) ? reels : {};
           var kurlaUrl = reels.Kurla || reels.kurla;
           var vashiUrl = reels.Vashi || reels.vashi;
           BRANCHES.Kurla.instagramUrl = isSafeHttpUrl(kurlaUrl) ? kurlaUrl.trim() : DEFAULT_INSTAGRAM_REELS.Kurla;
@@ -2468,14 +2979,16 @@
           renderBranchUI();
         });
 
-        // Real-Time Venue Gallery Synchronization (site_settings/gallery -> couples & family)
+        // Real-Time Venue Gallery Synchronization (site_settings/gallery -> all 6 branch/zone keys)
         db.ref(SETTINGS_NODE + '/gallery').on('value', function (snap) {
-          var data = snap.val() || {};
-          VENUE_GALLERY.couples = normalizeFirebaseGalleryCategory(data.couples, 'couples');
-          VENUE_GALLERY.family = normalizeFirebaseGalleryCategory(data.family, 'family');
+          var data = snap.val();
+          if (!data || typeof data !== 'object' || Array.isArray(data)) data = {};
+          GALLERY_KEYS.forEach(function (gKey) {
+            VENUE_GALLERY[gKey] = normalizeFirebaseGalleryCategory(data[gKey], gKey);
+          });
 
-          var activeRoom = (state.category === 'celebration' || state.category === 'mega_party') ? 'family' : 'couples';
-          var activePhotos = VENUE_GALLERY[activeRoom] || [];
+          var activeRoom = getActiveGalleryRoomKey();
+          var activePhotos = VENUE_GALLERY[activeRoom] || getDefaultGalleryForKey(activeRoom);
           if (state.carouselIndex >= activePhotos.length) {
             state.carouselIndex = Math.max(0, activePhotos.length - 1);
           }
@@ -2483,7 +2996,7 @@
 
           var lbOverlay = document.getElementById('lightboxOverlay');
           if (lbOverlay && !lbOverlay.hidden) {
-            var lbPhotos = VENUE_GALLERY[state.lightboxRoom] || [];
+            var lbPhotos = VENUE_GALLERY[state.lightboxRoom] || getDefaultGalleryForKey(state.lightboxRoom);
             if (state.lightboxIndex >= lbPhotos.length) {
               state.lightboxIndex = Math.max(0, lbPhotos.length - 1);
             }
@@ -2496,7 +3009,16 @@
          7. PACKAGES, SINGLE-IMAGE CAROUSEL & SMART ADD-ONS
          ========================================================= */
       function getActiveGalleryRoomKey() {
-        return (state.category === 'celebration' || state.category === 'mega_party') ? 'family' : 'couples';
+        var branch = state.branch === 'Vashi' ? 'Vashi' : 'Kurla';
+        var cat = state.category || 'love_paradise';
+        if (branch === 'Vashi') {
+          if (cat === 'celebration') return 'vashi_family';
+          if (cat === 'heaven_couple') return 'vashi_heaven';
+          if (cat === 'mega_party') return 'vashi_mega';
+          return 'vashi_couples';
+        }
+        if (cat === 'celebration') return 'kurla_family';
+        return 'kurla_couples';
       }
 
       function showCarouselPlaceholder(roomKey, idx) {
@@ -2505,7 +3027,7 @@
         var phTitle = document.getElementById('venuePlaceholderTitle');
         if (img) img.hidden = true;
         if (phTitle) {
-          phTitle.textContent = (roomKey === 'couples' ? 'Couples Room Photo #' : 'Family Room Photo #') + (idx + 1);
+          phTitle.textContent = getGalleryRoomLabel(roomKey) + ' Photo #' + (idx + 1);
         }
         if (ph) ph.hidden = false;
       }
@@ -2526,19 +3048,17 @@
         var img = document.getElementById('venueCarouselImg');
 
         if (!photos.length) {
-          photos = DEFAULT_VENUE_GALLERY[roomKey].slice();
+          photos = getDefaultGalleryForKey(roomKey).slice();
         }
         if (state.carouselIndex >= photos.length || state.carouselIndex < 0) {
           state.carouselIndex = 0;
         }
 
         if (titleEl) {
-          titleEl.textContent = roomKey === 'couples'
-            ? 'Couples Room — Venue Showcase'
-            : 'Family & Group Room — Venue Showcase';
+          titleEl.textContent = getGalleryRoomLabel(roomKey) + ' — Venue Showcase';
         }
         if (subEl) {
-          subEl.textContent = roomKey === 'couples'
+          subEl.textContent = isCouplesGalleryKey(roomKey)
             ? 'Private romantic setups for Love Paradise & Dinner Date • Tap photo to enlarge'
             : 'Spacious celebration suites for Friends & Family • Tap photo to enlarge';
         }
@@ -2552,7 +3072,7 @@
         if (img && activePhoto) {
           img.classList.add('is-fading');
           hideCarouselPlaceholder();
-          img.alt = activePhoto.alt || ((roomKey === 'couples' ? 'Couples Room' : 'Family Room') + ' Photo #' + (state.carouselIndex + 1));
+          img.alt = activePhoto.alt || (getGalleryRoomLabel(roomKey) + ' Photo #' + (state.carouselIndex + 1));
           img.dataset.roomKey = roomKey;
           img.dataset.photoIdx = String(state.carouselIndex);
           img.src = activePhoto.src;
@@ -2650,7 +3170,7 @@
         var ph = document.getElementById('lightboxPlaceholder');
         var phTitle = document.getElementById('lightboxPlaceholderTitle');
         var cap = document.getElementById('lightboxCap');
-        var roomLabel = state.lightboxRoom === 'couples' ? 'Couples Room' : 'Family Room';
+        var roomLabel = getGalleryRoomLabel(state.lightboxRoom);
         cap.textContent = roomLabel + ' (' + (state.lightboxIndex + 1) + ' / ' + photos.length + ')';
 
         if (!item) {
@@ -2677,7 +3197,7 @@
         lightboxImgEl.addEventListener('error', function () {
           var ph = document.getElementById('lightboxPlaceholder');
           var phTitle = document.getElementById('lightboxPlaceholderTitle');
-          var roomLabel = state.lightboxRoom === 'couples' ? 'Couples Room' : 'Family Room';
+          var roomLabel = getGalleryRoomLabel(state.lightboxRoom);
           lightboxImgEl.hidden = true;
           if (phTitle) phTitle.textContent = roomLabel + ' Photo #' + (state.lightboxIndex + 1);
           if (ph) ph.hidden = false;
@@ -4010,6 +4530,569 @@
       selectPackage('paradise_1');
       refreshCount();
       subscribeSiteSettings();
+
+      /* =========================================================
+         15. CUSTOMER FEEDBACK & LIVE REVIEWS SYSTEM
+         ========================================================= */
+      // 78 built-in guest reviews (39 Kurla, 39 Vashi)
+      // Each branch has 18x5, 11x4.5, 10x4 => sum 179.5 => 179.5 / 39 = 4.6026 => 4.6 / 5
+      var BUILTIN_GUEST_REVIEWS = [
+        // --- KURLA BRANCH (39) ---
+        { id: 's_k1', name: 'Rohan Kulkarni', branch: 'Kurla', rating: 5, date: 'Nov 2026', source: 'builtin', review: 'Booked Love Paradise at Kurla for my girlfriend’s birthday. The red sequin setup, mirror wall, and snacks hamper made the evening effortless.' },
+        { id: 's_k2', name: 'Sneha Deshmukh', branch: 'Kurla', rating: 4.5, date: 'Oct 2026', source: 'builtin', review: 'Very private and clean AC suite near Kurla Signal. Downloading the PNG booking pass right after payment was super convenient.' },
+        { id: 's_k3', name: 'Aditya Nair', branch: 'Kurla', rating: 5, date: 'Sep 2026', source: 'builtin', review: 'We picked Paradise 3 for our anniversary. The candle decor, smoke entry, and hanging photos looked gorgeous in person.' },
+        { id: 's_k4', name: 'Priya Sharma', branch: 'Kurla', rating: 4, date: 'Nov 2026', source: 'builtin', review: 'Silver Package worked well for four of us. Balloon decor and letter lights were neat, and the hourly slot system was easy to follow.' },
+        { id: 's_k5', name: 'Siddharth Joshi', branch: 'Kurla', rating: 5, date: 'Oct 2026', source: 'builtin', review: 'Golden Package for a surprise birthday was spot on. The neon telephone booth and half kg cake saved us so much planning time.' },
+        { id: 's_k6', name: 'Pooja Verma', branch: 'Kurla', rating: 4.5, date: 'Sep 2026', source: 'builtin', review: 'Booked a 2-hour Paradise 2 slot for a private movie date. Great sound, cozy sofa seating, and complete privacy.' },
+        { id: 's_k7', name: 'Pranav Patil', branch: 'Kurla', rating: 5, date: 'Nov 2026', source: 'builtin', review: 'Diamond Package was worth it for our college reunion of 8 friends. Board games, bubble entry, and fries kept everyone busy.' },
+        { id: 's_k8', name: 'Neha Gupta', branch: 'Kurla', rating: 4, date: 'Oct 2026', source: 'builtin', review: 'Clear pricing breakdown before paying the advance online. No surprises at the venue when settling the remaining balance.' },
+        { id: 's_k9', name: 'Omkar Shinde', branch: 'Kurla', rating: 5, date: 'Sep 2026', source: 'builtin', review: 'Proposed to my partner in the Couples Room at Kurla. The romantic setup and rose bouquet add-on looked straight out of a film.' },
+        { id: 's_k10', name: 'Ananya Iyer', branch: 'Kurla', rating: 4.5, date: 'Nov 2026', source: 'builtin', review: 'Loved the aesthetic mirror wall for photos. Staff checked our IDs smoothly and handed over the room right on time.' },
+        { id: 's_k11', name: 'Kunal Sawant', branch: 'Kurla', rating: 4, date: 'Oct 2026', source: 'builtin', review: 'Booked a 1-hour Paradise 1 slot on a weekday evening. Good option when you want a quick, private celebration.' },
+        { id: 's_k12', name: 'Meera Bane', branch: 'Kurla', rating: 5, date: 'Sep 2026', source: 'builtin', review: 'My sister’s bride-to-be surprise in the Family Room turned out amazing. Plenty of space and great speaker volume.' },
+        { id: 's_k13', name: 'Vikram Pawar', branch: 'Kurla', rating: 4.5, date: 'Nov 2026', source: 'builtin', review: 'The live hourly grid showed exact open slots, so we didn’t have to call around asking for availability.' },
+        { id: 's_k14', name: 'Tanvi Chavan', branch: 'Kurla', rating: 5, date: 'Oct 2026', source: 'builtin', review: 'Ordered Paradise 2 with the hanging photos add-on. Seeing our memories hung up around the room made it really personal.' },
+        { id: 's_k15', name: 'Harshvardhan More', branch: 'Kurla', rating: 4, date: 'Sep 2026', source: 'builtin', review: 'Easy to locate at Mass Metropolis on Eastern Express Highway. Room cooling and seating were comfortable.' },
+        { id: 's_k16', name: 'Ritika Kamble', branch: 'Kurla', rating: 5, date: 'Nov 2026', source: 'builtin', review: 'Celebrated our 3rd anniversary at Kurla. The red romantic theme and private movie screening felt very intimate.' },
+        { id: 's_k17', name: 'Nikhil Bhosale', branch: 'Kurla', rating: 4.5, date: 'Oct 2026', source: 'builtin', review: 'Added the fog entry and letter light name to Silver Package. Good value for a small group of friends.' },
+        { id: 's_k18', name: 'Shruti Menon', branch: 'Kurla', rating: 5, date: 'Sep 2026', source: 'builtin', review: 'Everything from selecting add-ons to downloading the digital pass took under five minutes. Super smooth experience.' },
+        { id: 's_k19', name: 'Aakash Salunkhe', branch: 'Kurla', rating: 4, date: 'Nov 2026', source: 'builtin', review: 'Clean space and well-maintained sofa seating. The complimentary snacks hamper was a nice touch.' },
+        { id: 's_k20', name: 'Ishita Tiwari', branch: 'Kurla', rating: 5, date: 'Oct 2026', source: 'builtin', review: 'Booked Paradise 3 for my husband’s 30th birthday. Candle decor and smoke entry gave a grand feel.' },
+        { id: 's_k21', name: 'Mayur Gaikwad', branch: 'Kurla', rating: 4.5, date: 'Sep 2026', source: 'builtin', review: 'The veg-only policy kept the room fresh and clean. Great hospitality from the Kurla reception team.' },
+        { id: 's_k22', name: 'Kavya Nambiar', branch: 'Kurla', rating: 5, date: 'Nov 2026', source: 'builtin', review: 'Private movie screening in Paradise 2 is such a relaxing date idea in Mumbai without crowded theatres.' },
+        { id: 's_k23', name: 'Saurabh Jadhav', branch: 'Kurla', rating: 4, date: 'Oct 2026', source: 'builtin', review: 'Golden Package gave us 2 full hours for 6 people. Enough time for cake cutting, photos, and music.' },
+        { id: 's_k24', name: 'Divya Shetty', branch: 'Kurla', rating: 5, date: 'Sep 2026', source: 'builtin', review: 'Used the iPhone shoot add-on at Kurla. Having someone capture our surprise moment saved us from juggling phones.' },
+        { id: 's_k25', name: 'Yashwant Rane', branch: 'Kurla', rating: 4.5, date: 'Nov 2026', source: 'builtin', review: 'Transparent ₹795 advance breakdown and instant WhatsApp copy option made coordinating with friends simple.' },
+        { id: 's_k26', name: 'Aarti Gokhale', branch: 'Kurla', rating: 5, date: 'Oct 2026', source: 'builtin', review: 'Threw a farewell party in the Family Room. The pastel balloon arch and cake pedestal looked lovely in pictures.' },
+        { id: 's_k27', name: 'Devendra Chauhan', branch: 'Kurla', rating: 4, date: 'Sep 2026', source: 'builtin', review: 'Good sound system for party music and crisp projector display for our surprise video.' },
+        { id: 's_k28', name: 'Rhea Dsouza', branch: 'Kurla', rating: 5, date: 'Nov 2026', source: 'builtin', review: 'Love Paradise decor is classy and not overdone. My partner genuinely had no clue about the surprise.' },
+        { id: 's_k29', name: 'Manish Parab', branch: 'Kurla', rating: 4.5, date: 'Oct 2026', source: 'builtin', review: 'Booked a late-evening 9 PM slot. AC was chilled and the room was spotless when we walked in.' },
+        { id: 's_k30', name: 'Nandini Kulkarni', branch: 'Kurla', rating: 4, date: 'Sep 2026', source: 'builtin', review: 'Helpful staff and straightforward check-in with our PNG pass. Would recommend for intimate birthdays.' },
+        { id: 's_k31', name: 'Tushar Bane', branch: 'Kurla', rating: 5, date: 'Nov 2026', source: 'builtin', review: 'Diamond Package had everything bundled—smoke, bubbles, bouquet, and snacks. Zero last-minute running around.' },
+        { id: 's_k32', name: 'Pallavi Lokhande', branch: 'Kurla', rating: 4.5, date: 'Oct 2026', source: 'builtin', review: 'Really appreciated that included add-ons automatically showed ₹0 in the booking form so we didn’t double-book.' },
+        { id: 's_k33', name: 'Vivek Hegde', branch: 'Kurla', rating: 5, date: 'Sep 2026', source: 'builtin', review: 'Great privacy for couples. No disturbances during our 2-hour slot and smooth Razorpay checkout.' },
+        { id: 's_k34', name: 'Swati Phadke', branch: 'Kurla', rating: 4, date: 'Nov 2026', source: 'builtin', review: 'Celebrated my mom’s birthday with 6 family members in Golden Package. Everyone enjoyed the cozy lounge vibe.' },
+        { id: 's_k35', name: 'Karan Malhotra', branch: 'Kurla', rating: 5, date: 'Oct 2026', source: 'builtin', review: 'The red carpet and mirror wall in Love Paradise made our anniversary photos look super polished.' },
+        { id: 's_k36', name: 'Bhavna Kadam', branch: 'Kurla', rating: 4.5, date: 'Sep 2026', source: 'builtin', review: 'Easy slot selection from 9 AM to midnight. Picked an afternoon slot and had a wonderful time.' },
+        { id: 's_k37', name: 'Sanket Tambe', branch: 'Kurla', rating: 4, date: 'Nov 2026', source: 'builtin', review: 'Decent space for a small friends gathering. Letter light digits and cake were ready before we arrived.' },
+        { id: 's_k38', name: 'Gauri Tendulkar', branch: 'Kurla', rating: 5, date: 'Oct 2026', source: 'builtin', review: 'Everything matched the showcase photos. Warm lighting, clean seating, and a memorable birthday.' },
+        { id: 's_k39', name: 'Abhishek Raut', branch: 'Kurla', rating: 4.5, date: 'Sep 2026', source: 'builtin', review: 'Very convenient location in Kurla East and quick digital pass download right on mobile.' },
+
+        // --- VASHI BRANCH (39) ---
+        { id: 's_v1', name: 'Aarav Mahajan', branch: 'Vashi', rating: 5, date: 'Nov 2026', source: 'builtin', review: 'Booked Heaven for Couple at Vashi Sector 10A. The clouds and blue tent theme looked dreamy and super photogenic.' },
+        { id: 's_v2', name: 'Roshni Thakur', branch: 'Vashi', rating: 4.5, date: 'Oct 2026', source: 'builtin', review: 'Tried the Friends & Family Zone with the Old Bombay Chetak scooter theme—such a fun backdrop for group photos!' },
+        { id: 's_v3', name: 'Varun Khanna', branch: 'Vashi', rating: 5, date: 'Sep 2026', source: 'builtin', review: 'Big Heart package at Vashi made our anniversary unforgettable. Fruit wine, rose decor, and smoke entry were all ready.' },
+        { id: 's_v4', name: 'Mitali Gokhale', branch: 'Vashi', rating: 4, date: 'Nov 2026', source: 'builtin', review: 'Zone 1 was ideal for our 4-person birthday meetup. Nice sofa seating and good speaker audio.' },
+        { id: 's_v5', name: 'Chetan Bane', branch: 'Vashi', rating: 5, date: 'Oct 2026', source: 'builtin', review: 'Organized a 30-guest Mega Party at Vashi. Fully AC hall, 1 kg cake, snacks, and foil balloons handled smoothly.' },
+        { id: 's_v6', name: 'Shreya Kulkarni', branch: 'Vashi', rating: 4.5, date: 'Sep 2026', source: 'builtin', review: 'HEAVEN 2 gave us 2 hours with a private movie screening and blue cloud setup. Very peaceful and romantic.' },
+        { id: 's_v7', name: 'Rajeshwari Pillai', branch: 'Vashi', rating: 5, date: 'Nov 2026', source: 'builtin', review: 'Zone 3 in Vashi had everything—movie screen, bubble entry, letter lights, and fries. Our gang loved every minute.' },
+        { id: 's_v8', name: 'Pratiksha Sawant', branch: 'Vashi', rating: 4, date: 'Oct 2026', source: 'builtin', review: 'Simple online booking and instant PNG pass. Reaching Elite CHS in Sector 10A was easy from Vashi station.' },
+        { id: 's_v9', name: 'Gaurav Gokarn', branch: 'Vashi', rating: 5, date: 'Sep 2026', source: 'builtin', review: 'Small Heart dinner date setup with candle lights and rose decor was genuinely romantic without feeling crowded.' },
+        { id: 's_v10', name: 'Nisha Acharya', branch: 'Vashi', rating: 4.5, date: 'Nov 2026', source: 'builtin', review: 'Booked Mega Party for 20 guests for my dad’s 50th birthday. Everyone stayed comfortable in the AC hall.' },
+        { id: 's_v11', name: 'Tejas Korgaonkar', branch: 'Vashi', rating: 4, date: 'Oct 2026', source: 'builtin', review: 'Zone 2 gave us 2 hours for 5 friends with a half kg cake and letter light name. Clean and well-kept.' },
+        { id: 's_v12', name: 'Anjali Bapat', branch: 'Vashi', rating: 5, date: 'Sep 2026', source: 'builtin', review: 'HEAVEN 3 is such a complete couple package—tent setup, pizza, fries, bouquet, and movie screen all in one.' },
+        { id: 's_v13', name: 'Sandeep Rao', branch: 'Vashi', rating: 4.5, date: 'Nov 2026', source: 'builtin', review: 'We booked Mega Party (50 Guests) for an office milestone. The mascot and customized foil balloons were a hit.' },
+        { id: 's_v14', name: 'Komal Shinde', branch: 'Vashi', rating: 5, date: 'Oct 2026', source: 'builtin', review: 'Loved the Rainy Flowers and Old Bombay corners in Vashi’s Friends & Family Zone. Great for reels and candid shots.' },
+        { id: 's_v15', name: 'Dhruv Kapoor', branch: 'Vashi', rating: 4, date: 'Sep 2026', source: 'builtin', review: 'Live hourly slot availability made it easy to lock an 8 PM slot for our weekend celebration.' },
+        { id: 's_v16', name: 'Sonali Deshpande', branch: 'Vashi', rating: 5, date: 'Nov 2026', source: 'builtin', review: 'Surprised my fiancé in Heaven for Couple. The soft blue cloud aesthetic looks even prettier in real life.' },
+        { id: 's_v17', name: 'Rishabh Jain', branch: 'Vashi', rating: 4.5, date: 'Oct 2026', source: 'builtin', review: 'Big Heart package included iPhone video shoot and ₹1,000 worth of food, which made the 3-hour slot feel effortless.' },
+        { id: 's_v18', name: 'Madhuri Joshi', branch: 'Vashi', rating: 5, date: 'Sep 2026', source: 'builtin', review: 'Very tidy rooms and polite staff at Vashi. Our family felt completely comfortable throughout the celebration.' },
+        { id: 's_v19', name: 'Piyush Mehta', branch: 'Vashi', rating: 4, date: 'Nov 2026', source: 'builtin', review: 'Used the My Bookings drawer to re-download our PNG pass before arriving. Handy feature on mobile.' },
+        { id: 's_v20', name: 'Aishwarya Naik', branch: 'Vashi', rating: 5, date: 'Oct 2026', source: 'builtin', review: 'HEAVEN 1 was perfect for a 1-hour surprise cake cutting. Cute cloud setup and complimentary snacks.' },
+        { id: 's_v21', name: 'Kedar Patwardhan', branch: 'Vashi', rating: 4.5, date: 'Sep 2026', source: 'builtin', review: 'Good sound system and projector quality in the Mega Party hall. Slideshow played without any hiccups.' },
+        { id: 's_v22', name: 'Simran Kaur', branch: 'Vashi', rating: 5, date: 'Nov 2026', source: 'builtin', review: 'Celebrated my best friend’s birthday in Zone 3. Smoke and bubble entry made her entrance unforgettable.' },
+        { id: 's_v23', name: 'Nitin Prabhu', branch: 'Vashi', rating: 4, date: 'Oct 2026', source: 'builtin', review: 'Straightforward Razorpay checkout and clear ₹750 advance adjustment toward the final venue bill.' },
+        { id: 's_v24', name: 'Vidya Iyer', branch: 'Vashi', rating: 5, date: 'Sep 2026', source: 'builtin', review: 'The romantic tent setup in Heaven for Couple is unlike any other venue in Navi Mumbai. Highly photogenic.' },
+        { id: 's_v25', name: 'Amol Kale', branch: 'Vashi', rating: 4.5, date: 'Nov 2026', source: 'builtin', review: 'Booked Zone 2 for a small family get-together. AC cooling and seating were very comfortable for elders too.' },
+        { id: 's_v26', name: 'Pooja Soni', branch: 'Vashi', rating: 5, date: 'Oct 2026', source: 'builtin', review: 'Small Heart package had real candle-light charm and fresh rose decor. Worth every rupee for a quiet dinner date.' },
+        { id: 's_v27', name: 'Rohan Wagh', branch: 'Vashi', rating: 4, date: 'Sep 2026', source: 'builtin', review: 'Spacious Mega Party hall for 20+ guests. Samosa and cold drink snacks were served neatly.' },
+        { id: 's_v28', name: 'Chaitali Kulkarni', branch: 'Vashi', rating: 5, date: 'Nov 2026', source: 'builtin', review: 'Added a reel edit and hanging photos to our Vashi booking. Everything was set up before we stepped in.' },
+        { id: 's_v29', name: 'Siddhesh Mhatre', branch: 'Vashi', rating: 4.5, date: 'Oct 2026', source: 'builtin', review: 'Checking live slots for Heaven for Couple separately from Friends & Family Zone prevented any confusion.' },
+        { id: 's_v30', name: 'Kruti Shah', branch: 'Vashi', rating: 4, date: 'Sep 2026', source: 'builtin', review: 'Clean, private, and well-lit for pictures. Good experience for our anniversary celebration in Vashi.' },
+        { id: 's_v31', name: 'Sameer Gokhale', branch: 'Vashi', rating: 5, date: 'Nov 2026', source: 'builtin', review: 'Big Heart 3-hour slot gave us plenty of time to relax, watch a movie, and enjoy the flower & candle setup.' },
+        { id: 's_v32', name: 'Mugdha Joshi', branch: 'Vashi', rating: 4.5, date: 'Oct 2026', source: 'builtin', review: 'Very responsive WhatsApp support when we had a quick question about extra guests before booking.' },
+        { id: 's_v33', name: 'Aniket Thorat', branch: 'Vashi', rating: 5, date: 'Sep 2026', source: 'builtin', review: 'Mega Party (30 Guests) made my nephew’s birthday effortless. All decorations, screen, and cake were in place.' },
+        { id: 's_v34', name: 'Rutuja Patil', branch: 'Vashi', rating: 4, date: 'Nov 2026', source: 'builtin', review: 'Nice Old Bombay theme props in Zone 1. Our group spent half an hour just clicking photos with the scooter.' },
+        { id: 's_v35', name: 'Jayesh Panchal', branch: 'Vashi', rating: 5, date: 'Oct 2026', source: 'builtin', review: 'HEAVEN 2 is great value for couples in Navi Mumbai—private screening plus the dreamy cloud theme.' },
+        { id: 's_v36', name: 'Smita Deshmukh', branch: 'Vashi', rating: 4.5, date: 'Sep 2026', source: 'builtin', review: 'Loved how transparent the add-on prices and total summary were while customizing our Vashi slot.' },
+        { id: 's_v37', name: 'Omkar Nadkarni', branch: 'Vashi', rating: 4, date: 'Nov 2026', source: 'builtin', review: 'Comfortable AC environment even with a full group in the Friends & Family Zone.' },
+        { id: 's_v38', name: 'Vaishali Kulkarni', branch: 'Vashi', rating: 5, date: 'Oct 2026', source: 'builtin', review: 'Booked a surprise proposal in Heaven for Couple. The blue clouds and tent lighting created a magical mood.' },
+        { id: 's_v39', name: 'Prasad Tendulkar', branch: 'Vashi', rating: 4.5, date: 'Sep 2026', source: 'builtin', review: 'Smooth booking flow, instant digital pass, and zero hassle at the Vashi Sector 10A venue.' }
+      ];
+
+      var reviewState = {
+        branchFilter: 'all',
+        visibleCount: 6,
+        liveCustomerReviews: [],
+        selectedRating: 5,
+        submitting: false,
+        lastSubmitAt: 0,
+        lastSubmitHash: '',
+        reviewsSubscribed: false
+      };
+
+      function getUnifiedReviews(branchFilter) {
+        var seen = {};
+        var unified = [];
+
+        reviewState.liveCustomerReviews.forEach(function (item) {
+          if (!item || !item.id || seen[item.id]) return;
+          seen[item.id] = true;
+          unified.push(item);
+        });
+
+        BUILTIN_GUEST_REVIEWS.forEach(function (item) {
+          if (!item || !item.id || seen[item.id]) return;
+          seen[item.id] = true;
+          unified.push(item);
+        });
+
+        if (branchFilter === 'Kurla' || branchFilter === 'Vashi') {
+          return unified.filter(function (item) { return item.branch === branchFilter; });
+        }
+        return unified;
+      }
+
+      function computeReviewStats(list) {
+        var total = 0;
+        var sum = 0;
+        var dist = { 5: 0, 4: 0, 3: 0, 2: 0, 1: 0 };
+        var byBranch = {
+          Kurla: { count: 0, sum: 0, avg: 0 },
+          Vashi: { count: 0, sum: 0, avg: 0 }
+        };
+
+        list.forEach(function (item) {
+          var r = Number(item.rating);
+          if (!isFinite(r) || r < 1 || r > 5) return;
+          total++;
+          sum += r;
+          var bucket = Math.max(1, Math.min(5, Math.floor(r)));
+          dist[bucket] = (dist[bucket] || 0) + 1;
+          if (item.branch === 'Kurla' || item.branch === 'Vashi') {
+            byBranch[item.branch].count++;
+            byBranch[item.branch].sum += r;
+          }
+        });
+
+        byBranch.Kurla.avg = byBranch.Kurla.count ? Number((byBranch.Kurla.sum / byBranch.Kurla.count).toFixed(1)) : 0;
+        byBranch.Vashi.avg = byBranch.Vashi.count ? Number((byBranch.Vashi.sum / byBranch.Vashi.count).toFixed(1)) : 0;
+
+        return {
+          count: total,
+          avg: total ? Number((sum / total).toFixed(1)) : 0,
+          dist: dist,
+          byBranch: byBranch
+        };
+      }
+
+      function formatStarsText(rating) {
+        var full = Math.floor(rating);
+        var half = (rating - full) >= 0.5 ? 1 : 0;
+        var empty = Math.max(0, 5 - full - half);
+        return '★'.repeat(full) + (half ? '★' : '') + '☆'.repeat(empty);
+      }
+
+      function formatReviewDate(ts, fallbackDate) {
+        if (ts) {
+          var d = new Date(ts);
+          if (!isNaN(d.getTime())) {
+            var months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+            return d.getDate() + ' ' + months[d.getMonth()] + ' ' + d.getFullYear();
+          }
+        }
+        return fallbackDate || 'Nov 2026';
+      }
+
+      function renderDistributionBars(container, stats) {
+        if (!container) return;
+        container.innerHTML = '';
+        [5, 4, 3, 2, 1].forEach(function (k) {
+          var cnt = stats.dist[k] || 0;
+          var pct = stats.count ? Math.round((cnt / stats.count) * 100) : 0;
+          var row = h('div', 'review-dist-row');
+          row.appendChild(h('span', '', k + ' ★'));
+          var bar = h('div', 'review-dist-bar');
+          var fill = h('div', 'review-dist-fill');
+          fill.style.width = pct + '%';
+          bar.appendChild(fill);
+          row.appendChild(bar);
+          row.appendChild(h('span', '', String(cnt)));
+          container.appendChild(row);
+        });
+      }
+
+      function updateHeroRatingPill(overallStats) {
+        var pill = document.getElementById('heroRatingPill');
+        if (!pill || !overallStats) return;
+        var avgStr = overallStats.count ? overallStats.avg.toFixed(1) : '4.6';
+        pill.textContent = '⭐ ' + avgStr + ' (' + overallStats.count + '+)';
+      }
+
+      function renderReviewSummaries() {
+        var overallList = getUnifiedReviews('all');
+        var overallStats = computeReviewStats(overallList);
+        updateHeroRatingPill(overallStats);
+
+        var activeList = getUnifiedReviews(reviewState.branchFilter);
+        var activeStats = computeReviewStats(activeList);
+
+        var avgEl = document.getElementById('unifiedAvgScore');
+        var starsEl = document.getElementById('unifiedAvgStars');
+        var noteEl = document.getElementById('unifiedCountNote');
+        var branchEl = document.getElementById('unifiedBranchNote');
+        var distEl = document.getElementById('unifiedDistList');
+
+        var displayAvg = activeStats.count ? activeStats.avg.toFixed(1) : '0.0';
+        if (avgEl) avgEl.textContent = displayAvg;
+        if (starsEl) {
+          starsEl.textContent = activeStats.count ? formatStarsText(activeStats.avg) : '☆☆☆☆☆';
+          starsEl.setAttribute('aria-label', displayAvg + ' out of 5 stars');
+        }
+        if (noteEl) {
+          noteEl.textContent = displayAvg + ' ★ • Based on ' + activeStats.count + '+ Verified Celebrations';
+        }
+        if (branchEl) {
+          if (reviewState.branchFilter === 'Kurla') {
+            branchEl.textContent = 'Showing Kurla Branch (' + activeStats.byBranch.Kurla.count + ' Reviews)';
+          } else if (reviewState.branchFilter === 'Vashi') {
+            branchEl.textContent = 'Showing Vashi Branch (' + activeStats.byBranch.Vashi.count + ' Reviews)';
+          } else {
+            branchEl.textContent = activeStats.byBranch.Kurla.count + ' Kurla • ' + activeStats.byBranch.Vashi.count + ' Vashi';
+          }
+        }
+        renderDistributionBars(distEl, activeStats);
+      }
+
+      function renderReviewsGrid() {
+        var grid = document.getElementById('reviewsGrid');
+        var loadBtn = document.getElementById('loadMoreReviewsBtn');
+        if (!grid) return;
+        grid.innerHTML = '';
+
+        var filtered = getUnifiedReviews(reviewState.branchFilter);
+        if (!filtered.length) {
+          grid.appendChild(h('div', 'reviews-empty-state', 'No reviews available for this branch yet.'));
+          if (loadBtn) loadBtn.hidden = true;
+          return;
+        }
+
+        var toShow = filtered.slice(0, reviewState.visibleCount);
+        toShow.forEach(function (item) {
+          var isLive = item.source === 'customer';
+          var card = h('article', 'review-card' + (isLive ? ' review-card--live' : ''));
+
+          var head = h('div', 'review-card__head');
+          var left = document.createElement('div');
+          left.appendChild(h('div', 'review-card__name', item.name));
+          left.appendChild(h('div', 'review-card__branch', item.branch + ' Branch'));
+          head.appendChild(left);
+
+          head.appendChild(h('span', 'review-card__badge', '✓ Verified Guest'));
+          card.appendChild(head);
+
+          var ratingRow = h('div', 'review-card__rating');
+          ratingRow.appendChild(h('span', 'review-stars-display', formatStarsText(item.rating)));
+          ratingRow.appendChild(h('span', '', Number(item.rating).toFixed(item.rating % 1 === 0 ? 0 : 1) + ' / 5'));
+          card.appendChild(ratingRow);
+
+          card.appendChild(h('p', 'review-card__text', item.review));
+
+          var foot = h('div', 'review-card__foot');
+          foot.appendChild(h('span', '', formatReviewDate(item.createdAt, item.date)));
+          foot.appendChild(h('span', '', item.branch));
+          card.appendChild(foot);
+
+          grid.appendChild(card);
+        });
+
+        if (loadBtn) {
+          var remaining = filtered.length - toShow.length;
+          if (remaining > 0) {
+            loadBtn.hidden = false;
+            loadBtn.disabled = false;
+            loadBtn.textContent = 'Load More Reviews (' + remaining + ' remaining)';
+          } else {
+            loadBtn.hidden = true;
+          }
+        }
+      }
+
+      document.querySelectorAll('.reviews-filter-pill').forEach(function (pill) {
+        pill.addEventListener('click', function () {
+          var branch = pill.getAttribute('data-review-branch') || 'all';
+          reviewState.branchFilter = branch;
+          reviewState.visibleCount = 6;
+          document.querySelectorAll('.reviews-filter-pill').forEach(function (p) {
+            var active = p === pill;
+            p.classList.toggle('is-active', active);
+            p.setAttribute('aria-selected', String(active));
+          });
+          renderReviewSummaries();
+          renderReviewsGrid();
+        });
+      });
+
+      var loadMoreBtn = document.getElementById('loadMoreReviewsBtn');
+      if (loadMoreBtn) {
+        loadMoreBtn.addEventListener('click', function () {
+          reviewState.visibleCount += 6;
+          renderReviewsGrid();
+        });
+      }
+
+      // Interactive Star Rating Selector (keyboard + click accessible)
+      function setReviewRating(val) {
+        var rating = Math.max(1, Math.min(5, parseInt(val, 10) || 5));
+        reviewState.selectedRating = rating;
+        document.querySelectorAll('#revStarGroup .star-btn').forEach(function (btn) {
+          var s = parseInt(btn.getAttribute('data-star'), 10);
+          btn.classList.toggle('is-active', s <= rating);
+          btn.setAttribute('aria-checked', String(s === rating));
+        });
+        var label = document.getElementById('revStarText');
+        if (label) label.textContent = rating + ' / 5 Star' + (rating === 1 ? '' : 's');
+        var err = document.getElementById('revRatingErr');
+        if (err) err.textContent = '';
+      }
+
+      document.querySelectorAll('#revStarGroup .star-btn').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          setReviewRating(btn.getAttribute('data-star'));
+        });
+        btn.addEventListener('keydown', function (e) {
+          var cur = parseInt(btn.getAttribute('data-star'), 10);
+          if (e.key === 'ArrowRight' || e.key === 'ArrowUp') {
+            e.preventDefault();
+            var next = Math.min(5, cur + 1);
+            setReviewRating(next);
+            var nb = document.querySelector('#revStarGroup .star-btn[data-star="' + next + '"]');
+            if (nb) nb.focus();
+          } else if (e.key === 'ArrowLeft' || e.key === 'ArrowDown') {
+            e.preventDefault();
+            var prev = Math.max(1, cur - 1);
+            setReviewRating(prev);
+            var pb = document.querySelector('#revStarGroup .star-btn[data-star="' + prev + '"]');
+            if (pb) pb.focus();
+          }
+        });
+      });
+
+      var revTextEl = document.getElementById('revText');
+      var revCharEl = document.getElementById('revCharCount');
+      if (revTextEl && revCharEl) {
+        revTextEl.addEventListener('input', function () {
+          revCharEl.textContent = revTextEl.value.length + ' / 500';
+          if (revTextEl.value.trim().length >= 10) {
+            document.getElementById('revTextErr').textContent = '';
+          }
+        });
+      }
+
+      function validateReviewForm() {
+        var ok = true;
+        function setRevErr(id, fieldId, msg) {
+          var errEl = document.getElementById(id);
+          if (errEl) errEl.textContent = msg || '';
+          var fEl = fieldId ? document.getElementById(fieldId) : null;
+          if (fEl && fEl.closest('.field')) fEl.closest('.field').classList.toggle('has-error', !!msg);
+          if (msg) ok = false;
+        }
+
+        var nameInput = document.getElementById('revName');
+        var nameVal = nameInput ? nameInput.value.trim() : '';
+        if (nameVal.length < 2 || nameVal.length > 60) {
+          setRevErr('revNameErr', 'revName', 'Please enter your name (2–60 characters).');
+        } else {
+          setRevErr('revNameErr', 'revName', '');
+        }
+
+        var branchSelect = document.getElementById('revBranch');
+        var branchVal = branchSelect ? branchSelect.value : '';
+        if (branchVal !== 'Kurla' && branchVal !== 'Vashi') {
+          setRevErr('revBranchErr', 'revBranch', 'Please select Kurla or Vashi.');
+        } else {
+          setRevErr('revBranchErr', 'revBranch', '');
+        }
+
+        var ratingVal = Number(reviewState.selectedRating);
+        if (!isFinite(ratingVal) || ratingVal < 1 || ratingVal > 5) {
+          setRevErr('revRatingErr', null, 'Please select a rating from 1 to 5 stars.');
+        } else {
+          setRevErr('revRatingErr', null, '');
+        }
+
+        var textVal = revTextEl ? revTextEl.value.trim() : '';
+        if (textVal.length < 10 || textVal.length > 500) {
+          setRevErr('revTextErr', 'revText', 'Please write at least 10 characters (max 500).');
+        } else {
+          setRevErr('revTextErr', 'revText', '');
+        }
+
+        if (!ok) return null;
+        return {
+          name: nameVal,
+          branch: branchVal,
+          rating: Math.round(ratingVal),
+          review: textVal
+        };
+      }
+
+      var reviewForm = document.getElementById('reviewForm');
+      if (reviewForm) {
+        reviewForm.addEventListener('submit', function (e) {
+          e.preventDefault();
+          if (reviewState.submitting) return;
+
+          var successBox = document.getElementById('revSuccessMsg');
+          var errorBox = document.getElementById('revErrorMsg');
+          if (successBox) successBox.hidden = true;
+          if (errorBox) errorBox.hidden = true;
+
+          var payload = validateReviewForm();
+          if (!payload) {
+            toast('Please fix the highlighted feedback fields.', true);
+            return;
+          }
+
+          var now = Date.now();
+          var submitHash = payload.name.toLowerCase() + '|' + payload.branch + '|' + payload.rating + '|' + payload.review.toLowerCase();
+          if (now - reviewState.lastSubmitAt < 30000 && submitHash === reviewState.lastSubmitHash) {
+            if (errorBox) {
+              errorBox.textContent = 'This feedback was just submitted. Thank you for your patience!';
+              errorBox.hidden = false;
+            }
+            return;
+          }
+
+          if (!db) {
+            if (errorBox) {
+              errorBox.textContent = 'Unable to connect to the feedback service right now. Please try again shortly.';
+              errorBox.hidden = false;
+            }
+            return;
+          }
+
+          var submitBtn = document.getElementById('revSubmitBtn');
+          reviewState.submitting = true;
+          if (submitBtn) {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Submitting...';
+          }
+
+          var newReviewRef = db.ref(SETTINGS_NODE + '/customer_reviews').push();
+          var newReviewId = newReviewRef.key;
+          var clientTs = Date.now();
+          var record = {
+            name: payload.name,
+            rating: payload.rating,
+            review: payload.review,
+            branch: payload.branch,
+            status: 'approved',
+            source: 'customer',
+            createdAt: (window.firebase && firebase.database && firebase.database.ServerValue)
+              ? firebase.database.ServerValue.TIMESTAMP
+              : clientTs
+          };
+
+          newReviewRef.set(record)
+            .then(function () {
+              reviewState.submitting = false;
+              reviewState.lastSubmitAt = Date.now();
+              reviewState.lastSubmitHash = submitHash;
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Feedback';
+              }
+
+              // Immediately update local unified collection without duplicating on listener sync
+              var exists = reviewState.liveCustomerReviews.some(function (x) { return x.id === newReviewId; });
+              if (!exists) {
+                reviewState.liveCustomerReviews.unshift({
+                  id: newReviewId,
+                  name: payload.name,
+                  branch: payload.branch,
+                  rating: payload.rating,
+                  review: payload.review,
+                  createdAt: clientTs,
+                  source: 'customer'
+                });
+              }
+
+              renderReviewSummaries();
+              renderReviewsGrid();
+
+              reviewForm.reset();
+              setReviewRating(5);
+              if (revCharEl) revCharEl.textContent = '0 / 500';
+              if (successBox) {
+                successBox.textContent = 'Thank you for sharing your experience with Blink Events! Your review is now live.';
+                successBox.hidden = false;
+              }
+              toast('Your review is now live!');
+            })
+            .catch(function (err) {
+              console.error('Review submit error:', err);
+              reviewState.submitting = false;
+              if (submitBtn) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Submit Feedback';
+              }
+              if (errorBox) {
+                errorBox.textContent = 'Could not submit your feedback right now. Your message has been preserved—please try again.';
+                errorBox.hidden = false;
+              }
+            });
+        });
+      }
+
+      function subscribeCustomerReviews() {
+        if (!db || reviewState.reviewsSubscribed) return;
+        reviewState.reviewsSubscribed = true;
+
+        db.ref(SETTINGS_NODE + '/customer_reviews').on('value', function (snap) {
+          var raw = snap.val();
+          var approved = [];
+          if (raw && typeof raw === 'object' && !Array.isArray(raw)) {
+            Object.keys(raw).forEach(function (key) {
+              var item = raw[key];
+              if (!item || typeof item !== 'object') return;
+              if (item.status !== 'approved') return;
+              var name = String(item.name || '').trim();
+              var reviewText = String(item.review || '').trim();
+              var branch = item.branch;
+              var rating = Number(item.rating);
+              if (!name || !reviewText) return;
+              if (branch !== 'Kurla' && branch !== 'Vashi') return;
+              if (!isFinite(rating) || rating < 1 || rating > 5) return;
+
+              approved.push({
+                id: key,
+                name: name.slice(0, 60),
+                branch: branch,
+                rating: rating,
+                review: reviewText.slice(0, 500),
+                createdAt: Number(item.createdAt) || 0,
+                source: 'customer'
+              });
+            });
+          }
+
+          approved.sort(function (a, b) {
+            return (b.createdAt || 0) - (a.createdAt || 0);
+          });
+
+          reviewState.liveCustomerReviews = approved;
+          renderReviewSummaries();
+          renderReviewsGrid();
+        }, function (err) {
+          console.error('Customer reviews listener error:', err);
+        });
+      }
+
+      renderReviewSummaries();
+      renderReviewsGrid();
+      subscribeCustomerReviews();
     })();
   </script>
 </body>

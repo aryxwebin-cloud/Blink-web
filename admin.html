@@ -655,7 +655,7 @@
     table {
       width: 100%;
       border-collapse: collapse;
-      min-width: 1100px;
+      min-width: 1120px;
     }
     th {
       text-align: left;
@@ -676,7 +676,7 @@
       font-size: 0.83rem;
     }
     tbody tr:hover { background: rgba(212, 175, 55, 0.04); }
-    tr.is-cancelled { opacity: 0.56; }
+    tr.is-cancelled { opacity: 0.62; }
     .td-val { min-width: 0; }
     .pill-group {
       display: inline-flex;
@@ -709,21 +709,46 @@
     .pill--pay-pending { background: var(--warn-bg); border-color: rgba(251, 191, 36, 0.4); color: var(--warn); }
     .pill--pay-cash { background: var(--ok-bg); border-color: rgba(52, 211, 153, 0.45); color: var(--ok); }
     .pill--pay-online { background: rgba(96, 165, 250, 0.14); border-color: rgba(96, 165, 250, 0.45); color: #93C5FD; }
-    .venue-pay-select {
-      margin-top: 6px;
-      width: 100%;
-      max-width: 210px;
-      min-height: 34px;
-      padding: 5px 10px;
-      border-radius: 8px;
-      border: 1px solid var(--border-gold);
-      background: var(--bg-charcoal);
-      color: var(--text);
-      font-size: 0.76rem;
-      font-weight: 600;
-      color-scheme: dark;
+
+    /* One-Tap Venue Payment Quick Controls */
+    .pay-btn-group {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 5px;
+      margin-top: 7px;
+      max-width: 100%;
     }
-    .venue-pay-select:disabled { opacity: 0.5; cursor: wait; }
+    .pay-btn {
+      border: 1px solid rgba(255, 255, 255, 0.14);
+      background: rgba(255, 255, 255, 0.04);
+      color: var(--text-muted);
+      padding: 4px 9px;
+      border-radius: 8px;
+      font-size: 0.72rem;
+      font-weight: 600;
+      transition: background 0.15s, border-color 0.15s, color 0.15s;
+    }
+    .pay-btn:hover:not(:disabled) {
+      border-color: var(--gold);
+      color: var(--text);
+    }
+    .pay-btn:disabled { opacity: 0.5; cursor: wait; }
+    .pay-btn.is-active-cash {
+      background: var(--ok-bg);
+      border-color: rgba(52, 211, 153, 0.65);
+      color: var(--ok);
+    }
+    .pay-btn.is-active-online {
+      background: rgba(96, 165, 250, 0.18);
+      border-color: rgba(96, 165, 250, 0.65);
+      color: #93C5FD;
+    }
+    .pay-btn.is-active-pending {
+      background: var(--warn-bg);
+      border-color: rgba(251, 191, 36, 0.65);
+      color: var(--warn);
+    }
+
     .row-actions { display: flex; flex-wrap: wrap; gap: 6px; }
     .mono { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: 0.76rem; color: var(--text-muted); word-break: break-all; }
     .subline { font-size: 0.75rem; color: var(--text-muted); margin-top: 2px; }
@@ -911,6 +936,85 @@
       margin-top: auto;
     }
 
+    /* ---------- Smart Quick Booking Add-ons & Calculator ---------- */
+    .pkg-hint {
+      margin-top: 6px;
+      font-size: 0.78rem;
+      color: var(--gold-light);
+      background: rgba(212, 175, 55, 0.08);
+      border: 1px solid var(--border-gold);
+      border-radius: 8px;
+      padding: 6px 10px;
+    }
+    .addons-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      margin-top: 4px;
+    }
+    .addon-check {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      padding: 8px 10px;
+      border-radius: var(--radius-md);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      background: var(--bg-input);
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: border-color 0.15s, background 0.15s;
+      min-width: 0;
+    }
+    .addon-check:hover { border-color: var(--border-gold-strong); }
+    .addon-check.is-checked {
+      border-color: var(--gold);
+      background: rgba(212, 175, 55, 0.09);
+    }
+    .addon-check-left {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      min-width: 0;
+    }
+    .addon-check-left input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      min-height: 16px;
+      accent-color: var(--gold);
+      flex-shrink: 0;
+      margin: 0;
+    }
+    .addon-check-name {
+      color: var(--text);
+      font-weight: 500;
+      overflow-wrap: anywhere;
+    }
+    .addon-check-price {
+      color: var(--gold-light);
+      font-weight: 700;
+      font-size: 0.77rem;
+      white-space: nowrap;
+      flex-shrink: 0;
+    }
+    .total-label-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+    .override-pill {
+      font-size: 0.68rem;
+      font-weight: 700;
+      text-transform: uppercase;
+      padding: 2px 8px;
+      border-radius: 999px;
+      background: var(--warn-bg);
+      color: var(--warn);
+      border: 1px solid rgba(251, 191, 36, 0.45);
+    }
+
     /* ---------- Empty / Loading / Error States ---------- */
     .state-box {
       text-align: center;
@@ -946,7 +1050,7 @@
       overflow-y: auto;
     }
     .modal {
-      width: min(620px, 100%);
+      width: min(640px, 100%);
       max-height: 92vh;
       overflow-y: auto;
       background: linear-gradient(175deg, #1B1B22, #111115);
@@ -990,7 +1094,7 @@
       letter-spacing: 0.06em;
       color: var(--gold-light);
     }
-    .field input, .field select {
+    .field input:not([type="checkbox"]), .field select {
       width: 100%;
       min-height: 44px;
       padding: 10px 12px;
@@ -1001,7 +1105,7 @@
       font-size: 0.88rem;
       color-scheme: dark;
     }
-    .field input:focus, .field select:focus {
+    .field input:not([type="checkbox"]):focus, .field select:focus {
       outline: none;
       border-color: var(--gold);
       box-shadow: 0 0 0 3px rgba(212, 175, 55, 0.18);
@@ -1224,8 +1328,8 @@
         max-width: 100%;
         text-align: center;
       }
-      .venue-pay-select {
-        max-width: 100%;
+      .pay-btn-group {
+        justify-content: flex-end;
       }
       .row-actions { justify-content: flex-end; max-width: 100%; }
     }
@@ -1233,6 +1337,7 @@
       .kpi-grid { grid-template-columns: 1fr; }
       .slot-grid { grid-template-columns: repeat(2, 1fr); }
       .form-grid { grid-template-columns: 1fr; }
+      .addons-grid { grid-template-columns: 1fr; }
       .panel { padding: 16px; }
       .action-bar { padding: 16px; }
       .action-bar-btns { width: 100%; }
@@ -1304,7 +1409,7 @@
       </form>
 
       <div class="security-note">
-        <strong>Security Notice:</strong> This PIN gate is a client-side UI lock (default demo PIN: <code>1234</code>). For production deployment, enforce Firebase Authentication and Realtime Database / Storage Security Rules to protect branch records, rates, and media.
+        <strong>Security Notice:</strong> This PIN gate is a client-side UI lock (default demo PIN: <code>1234</code>). For production deployment, enforce Firebase Authentication and Realtime Database Security Rules to protect branch records, rates, and media.
       </div>
     </div>
   </section>
@@ -1340,8 +1445,6 @@
         </div>
         <div class="action-bar-btns">
           <button type="button" class="btn btn--gold" id="openQuickBookBtn">➕ Add WhatsApp / Walk-In Booking</button>
-          <button type="button" class="btn btn--outline btn--sm" id="seedDemoBookingsBtn">🧪 Seed Demo Bookings (Nov 22–28)</button>
-          <button type="button" class="btn btn--danger btn--sm" id="clearDemoBookingsBtn">🧹 Clear Demo Bookings</button>
         </div>
       </div>
 
@@ -1561,7 +1664,7 @@
           <div class="panel-head">
             <div>
               <h2 class="panel-title" id="photosHeading">🖼️ Photos &amp; Gallery Manager</h2>
-              <p class="panel-sub">Upload, replace, reorder, or delete real photographs in Firebase Storage (<code>site_settings/gallery</code>) across all 6 Kurla &amp; Vashi venue zones.</p>
+              <p class="panel-sub">Upload, replace, reorder, or delete compressed photographs directly in Firebase Realtime Database (<code>site_settings/gallery</code>) across all 6 Kurla &amp; Vashi venue zones.</p>
             </div>
           </div>
 
@@ -1581,7 +1684,7 @@
                 </select>
               </div>
               <div class="field">
-                <label for="galleryUploadInput">Select Image(s) (JPG, PNG, WebP • Max 5 MB each)</label>
+                <label for="galleryUploadInput">Select Image(s) (JPG, PNG, WebP • Auto-compressed to JPEG ≤1080px)</label>
                 <input type="file" id="galleryUploadInput" accept=".jpg,.jpeg,.png,.webp,image/jpeg,image/png,image/webp" multiple>
               </div>
               <button type="button" class="btn btn--gold" id="uploadPhotosBtn">⬆️ Upload to Gallery</button>
@@ -1651,13 +1754,13 @@
     <footer class="footer">© 2026 Blink Events. All Rights Reserved.</footer>
   </div>
 
-  <!-- ==================== MODAL: QUICK WHATSAPP / WALK-IN BOOKING ==================== -->
+  <!-- ==================== MODAL: SMART WHATSAPP / WALK-IN BOOKING ==================== -->
   <div class="modal-backdrop" id="quickBookModal" hidden role="dialog" aria-modal="true" aria-labelledby="qbTitle">
     <div class="modal">
       <div class="modal-head">
         <div>
           <h3 id="qbTitle">Add WhatsApp / Walk-In Booking</h3>
-          <div class="panel-sub">Atomically locks all occupied hours and syncs with the customer website.</div>
+          <div class="panel-sub">Smart package pricing, live add-ons, and atomic slot locking across Kurla &amp; Vashi.</div>
         </div>
         <button type="button" class="modal-close" data-close-modal="quickBookModal" aria-label="Close">✕</button>
       </div>
@@ -1679,6 +1782,11 @@
               <option value="heaven_couple">Heaven for Couple (Vashi)</option>
               <option value="mega_party">Mega Party Hall (Vashi)</option>
             </select>
+          </div>
+          <div class="field field--full">
+            <label for="qbPackageSelect">Select Package</label>
+            <select id="qbPackageSelect" required></select>
+            <div id="qbPackageHint" class="pkg-hint"></div>
           </div>
           <div class="field">
             <label for="qbBookingSource">Booking Source</label>
@@ -1712,24 +1820,33 @@
             <input type="tel" id="qbWhatsapp" placeholder="10-digit mobile number" inputmode="tel" required>
           </div>
           <div class="field">
-            <label for="qbPackage">Package Name</label>
-            <input type="text" id="qbPackage" placeholder="e.g. Royal Gold Celebration" maxlength="80" required>
-          </div>
-          <div class="field">
             <label for="qbPersons">Total Persons</label>
-            <input type="number" id="qbPersons" min="1" max="100" value="4" required>
-          </div>
-          <div class="field">
-            <label for="qbTotal">Total Amount (₹)</label>
-            <input type="number" id="qbTotal" min="0" step="1" placeholder="2500" required>
+            <input type="number" id="qbPersons" min="1" max="150" value="2" required>
           </div>
           <div class="field">
             <label for="qbAdvance">Advance Collected (₹)</label>
             <input type="number" id="qbAdvance" min="0" step="1" value="750" required>
           </div>
+
           <div class="field field--full">
+            <label>Optional Add-Ons (Live Prices)</label>
+            <div class="addons-grid" id="qbAddonsGrid"></div>
+          </div>
+
+          <div class="field">
+            <div class="total-label-row">
+              <label for="qbTotal">Total Amount (₹)</label>
+              <span id="qbOverrideBadge" class="override-pill" hidden>Manual Override</span>
+              <button type="button" id="qbRestoreAutoBtn" class="btn btn--outline btn--xs" hidden>↻ Auto</button>
+            </div>
+            <input type="number" id="qbTotal" min="0" step="1" placeholder="1500" required>
+          </div>
+          <div class="field">
             <label for="qbBalance">Balance at Venue (Auto-calculated)</label>
             <input type="text" id="qbBalance" readonly>
+          </div>
+          <div class="field field--full">
+            <div id="qbCalcBreakdown" class="subline"></div>
           </div>
         </div>
 
@@ -1858,7 +1975,7 @@
       <div class="modal-note" id="rpNote" hidden></div>
       <div class="modal-actions">
         <button type="button" class="btn btn--outline" data-close-modal="replacePhotoModal" id="rpCancelBtn">Cancel</button>
-        <button type="button" class="btn btn--gold" id="rpConfirmBtn">Upload &amp; Replace</button>
+        <button type="button" class="btn btn--gold" id="rpConfirmBtn">Compress &amp; Replace</button>
       </div>
     </div>
   </div>
@@ -1880,10 +1997,9 @@
 
   <div class="toast-host" id="toastHost" aria-live="polite"></div>
 
-  <!-- Firebase v8 SDK (App, Realtime Database, Storage) -->
+  <!-- Firebase v8 SDK (App & Realtime Database) -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-storage.js"></script>
 
   <script>
     (function () {
@@ -1900,7 +2016,8 @@
       var BRANCHES = ['Kurla', 'Vashi'];
       var ROOMS = ['couples', 'family', 'heaven_couple', 'mega_party'];
       var GALLERY_CATEGORIES = ['kurla_couples', 'kurla_family', 'vashi_couples', 'vashi_family', 'vashi_heaven', 'vashi_mega'];
-      var MAX_PHOTO_BYTES = 5 * 1024 * 1024;
+      var MAX_INPUT_PHOTO_BYTES = 15 * 1024 * 1024;
+      var MAX_RTDB_DATA_URL_BYTES = 950 * 1024;
       var ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
 
       var ROOM_LABELS = {
@@ -1927,36 +2044,82 @@
       var VENUE_ADVANCE_CREDIT = 750;
       var OPERATING_HOURS = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 
-      var DEFAULT_PACKAGE_PRICES = {
-        paradise_1: { label: 'Kurla — Love Paradise 1 (1 Hr)', price: 999 },
-        paradise_2: { label: 'Kurla — Love Paradise 2 (2 Hrs)', price: 1699 },
-        paradise_3: { label: 'Kurla — Love Paradise 3 (3 Hrs)', price: 2299 },
-        silver: { label: 'Kurla — Silver Celebration (2 Hrs)', price: 1999 },
-        golden: { label: 'Kurla — Golden Celebration (3 Hrs)', price: 2699 },
-        diamond: { label: 'Kurla — Diamond Celebration (3 Hrs)', price: 3499 },
-        vashi_small_heart: { label: 'Vashi — Dinner Date Small Heart', price: 1499 },
-        vashi_big_heart: { label: 'Vashi — Dinner Date Big Heart', price: 1999 },
-        vashi_zone_1: { label: 'Vashi — Friends & Family Zone 1', price: 1999 },
-        vashi_zone_2: { label: 'Vashi — Friends & Family Zone 2', price: 2699 },
-        vashi_zone_3: { label: 'Vashi — Friends & Family Zone 3', price: 3499 },
-        vashi_heaven_1: { label: 'Vashi — Heaven 1 (Couple)', price: 1999 },
-        vashi_heaven_2: { label: 'Vashi — Heaven 2 (Couple)', price: 2499 },
-        vashi_heaven_3: { label: 'Vashi — Heaven 3 (Couple)', price: 2999 },
-        vashi_mega_20: { label: 'Vashi — Mega Party Hall (20 Guests)', price: 4999 },
-        vashi_mega_30: { label: 'Vashi — Mega Party Hall (30 Guests)', price: 6999 },
-        vashi_mega_50: { label: 'Vashi — Mega Party Hall (50 Guests)', price: 9999 }
+      var PACKAGE_MASTER_DATA = {
+        Kurla: {
+          couples: [
+            { id: 'paradise_1', name: 'Paradise 1', duration: 1, price: 1500, baseGuests: 2, extraGuest: 300 },
+            { id: 'paradise_2', name: 'Paradise 2', duration: 2, price: 2500, baseGuests: 2, extraGuest: 300 },
+            { id: 'paradise_3', name: 'Paradise 3', duration: 3, price: 4000, baseGuests: 2, extraGuest: 300 }
+          ],
+          family: [
+            { id: 'silver', name: 'Silver Package', duration: 1, price: 1499, baseGuests: 4, extraGuest: 199 },
+            { id: 'golden', name: 'Golden Package', duration: 2, price: 2999, baseGuests: 6, extraGuest: 250 },
+            { id: 'diamond', name: 'Diamond Package', duration: 3, price: 4500, baseGuests: 8, extraGuest: 299 }
+          ]
+        },
+        Vashi: {
+          couples: [
+            { id: 'vashi_small_heart', name: 'Small Heart', duration: 2, price: 2999, baseGuests: 2, extraGuest: 299 },
+            { id: 'vashi_big_heart', name: 'Big Heart', duration: 3, price: 4999, baseGuests: 2, extraGuest: 299 }
+          ],
+          family: [
+            { id: 'vashi_zone_1', name: 'Zone 1', duration: 1, price: 1799, baseGuests: 4, extraGuest: 299 },
+            { id: 'vashi_zone_2', name: 'Zone 2', duration: 2, price: 2999, baseGuests: 5, extraGuest: 299 },
+            { id: 'vashi_zone_3', name: 'Zone 3', duration: 3, price: 5999, baseGuests: 8, extraGuest: 299 }
+          ],
+          heaven_couple: [
+            { id: 'vashi_heaven_1', name: 'HEAVEN 1', duration: 1, price: 1500, baseGuests: 2, extraGuest: 299 },
+            { id: 'vashi_heaven_2', name: 'HEAVEN 2', duration: 2, price: 2500, baseGuests: 2, extraGuest: 299 },
+            { id: 'vashi_heaven_3', name: 'HEAVEN 3', duration: 3, price: 4000, baseGuests: 2, extraGuest: 299 }
+          ],
+          mega_party: [
+            { id: 'vashi_mega_20', name: 'Mega Party 20 Guests', duration: 3, price: 14999, baseGuests: 20, extraGuest: 300 },
+            { id: 'vashi_mega_30', name: 'Mega Party 30 Guests', duration: 3, price: 19999, baseGuests: 30, extraGuest: 300 },
+            { id: 'vashi_mega_50', name: 'Mega Party 50 Guests', duration: 3, price: 24999, baseGuests: 50, extraGuest: 300 }
+          ]
+        }
       };
 
-      var DEFAULT_ADDON_PRICES = {
-        fog_entry: { label: 'Dry Ice Fog Entry', price: 499 },
-        cold_pyro: { label: 'Cold Pyro (Pair)', price: 399 },
-        led_marquee: { label: 'LED Marquee Letters', price: 299 },
-        rose_bouquet: { label: 'Fresh Rose Bouquet', price: 349 },
-        cake_half_kg: { label: 'Celebration Cake (0.5 Kg)', price: 499 },
-        cake_one_kg: { label: 'Celebration Cake (1 Kg)', price: 899 },
-        photography_mini: { label: 'Mini Photoshoot (25 Photos)', price: 799 },
-        helium_balloons: { label: 'Helium Balloon Bunch', price: 299 }
+      var DEFAULT_PACKAGE_PRICES = {
+        paradise_1: { label: 'Kurla — Paradise 1 (1 Hr)', price: 1500 },
+        paradise_2: { label: 'Kurla — Paradise 2 (2 Hrs)', price: 2500 },
+        paradise_3: { label: 'Kurla — Paradise 3 (3 Hrs)', price: 4000 },
+        silver: { label: 'Kurla — Silver Package (1 Hr)', price: 1499 },
+        golden: { label: 'Kurla — Golden Package (2 Hrs)', price: 2999 },
+        diamond: { label: 'Kurla — Diamond Package (3 Hrs)', price: 4500 },
+        vashi_small_heart: { label: 'Vashi — Small Heart (2 Hrs)', price: 2999 },
+        vashi_big_heart: { label: 'Vashi — Big Heart (3 Hrs)', price: 4999 },
+        vashi_zone_1: { label: 'Vashi — Zone 1 (1 Hr)', price: 1799 },
+        vashi_zone_2: { label: 'Vashi — Zone 2 (2 Hrs)', price: 2999 },
+        vashi_zone_3: { label: 'Vashi — Zone 3 (3 Hrs)', price: 5999 },
+        vashi_heaven_1: { label: 'Vashi — HEAVEN 1 (1 Hr)', price: 1500 },
+        vashi_heaven_2: { label: 'Vashi — HEAVEN 2 (2 Hrs)', price: 2500 },
+        vashi_heaven_3: { label: 'Vashi — HEAVEN 3 (3 Hrs)', price: 4000 },
+        vashi_mega_20: { label: 'Vashi — Mega Party 20 Guests (3 Hrs)', price: 14999 },
+        vashi_mega_30: { label: 'Vashi — Mega Party 30 Guests (3 Hrs)', price: 19999 },
+        vashi_mega_50: { label: 'Vashi — Mega Party 50 Guests (3 Hrs)', price: 24999 }
       };
+
+      var ADDON_MASTER_LIST = [
+        { id: 'fog_entry', label: 'Fog / Smoke Entry', price: 500 },
+        { id: 'bubble_entry', label: 'Bubble Entry', price: 300 },
+        { id: 'projector_screen', label: 'Projector / Screen', price: 500 },
+        { id: 'telephone_booth', label: 'Telephone Booth', price: 500 },
+        { id: 'hanging_photos', label: 'Hanging Photos', price: 300 },
+        { id: 'half_kg_cake', label: 'Half Kg Cake', price: 450 },
+        { id: 'flower_bouquet', label: 'Flower Bouquet', price: 400 },
+        { id: 'letter_light_name', label: 'Letter Light Name', price: 300 },
+        { id: 'letter_light_digit', label: 'Letter Light Digit', price: 300 },
+        { id: 'iphone_shoot', label: 'iPhone Shoot', price: 400 },
+        { id: 'reel_edit', label: 'Reel Edit', price: 500 },
+        { id: 'candle_decor', label: 'Candle Decor', price: 500 },
+        { id: 'rose_decor', label: 'Rose Decor', price: 1000 }
+      ];
+
+      var DEFAULT_ADDON_PRICES = ADDON_MASTER_LIST.reduce(function (acc, item) {
+        acc[item.id] = { label: item.label, price: item.price };
+        return acc;
+      }, {});
 
       var DEFAULT_REELS = {
         kurla_couples: 'https://www.instagram.com/reel/DfRXAUiIG4V/?dmpr=YWYyM3BrZmxsOTR3',
@@ -1986,7 +2149,6 @@
         authenticated: false,
         activeModule: 'operations',
         db: null,
-        storage: null,
         connected: false,
         bookingsLoaded: false,
         bookingsError: null,
@@ -2016,6 +2178,11 @@
         slotRoom: 'couples',
         slotDate: '',
         submittingBooking: false,
+        isUploadingPhotos: false,
+        isReplacingPhoto: false,
+        deletingKeys: {},
+        updatingPaymentKeys: {},
+        qbManualTotalOverride: false,
         replaceTarget: null
       };
 
@@ -2185,7 +2352,6 @@
           if (!window.firebase) throw new Error('Firebase SDK did not load.');
           if (!firebase.apps.length) firebase.initializeApp(firebaseConfig);
           state.db = firebase.database();
-          state.storage = typeof firebase.storage === 'function' ? firebase.storage() : null;
         } catch (err) {
           state.bookingsError = 'Unable to initialize Firebase. Check internet connectivity.';
           state.slotLocksError = state.bookingsError;
@@ -2247,6 +2413,9 @@
           };
           renderRatesManager();
           renderGalleryManager();
+          if (!$('quickBookModal').hidden) {
+            refreshQuickBookLivePrices();
+          }
         }, function (err) {
           showToast('Failed to load site_settings: ' + (err && err.message ? err.message : 'Permission error'), 'err');
         });
@@ -2255,6 +2424,11 @@
       function normalizeVenuePaymentMode(mode) {
         if (mode === 'cash' || mode === 'online') return mode;
         return 'pending';
+      }
+
+      function normalizeVenuePaymentStatus(status, mode) {
+        if (status === 'completed' || status === 'pending') return status;
+        return (mode === 'cash' || mode === 'online') ? 'completed' : 'pending';
       }
 
       /* Normalize both new multi-branch schema and any legacy records safely */
@@ -2297,6 +2471,9 @@
           balanceAtVenue = Math.max(0, totalVal - venueAdvance);
         }
 
+        var vMode = normalizeVenuePaymentMode(raw.venuePaymentMode);
+        var vStatus = normalizeVenuePaymentStatus(raw.venuePaymentStatus, vMode);
+
         return {
           _key: key,
           bookingId: raw.bookingId || key,
@@ -2325,14 +2502,14 @@
           venueAdvance: venueAdvance,
           onlinePaymentAmount: onlinePaid,
           balanceAtVenue: balanceAtVenue,
-          venuePaymentMode: normalizeVenuePaymentMode(raw.venuePaymentMode),
+          venuePaymentMode: vMode,
+          venuePaymentStatus: vStatus,
           venuePaidAt: raw.venuePaidAt ? Number(raw.venuePaidAt) : null,
           bookingStatus: status,
           status: status,
           source: source,
           bookingSource: bookingSource,
           isOfflineBlock: isOfflineBlock,
-          isDemoSeed: Boolean(raw.isDemoSeed),
           createdAt: raw.createdAt || '',
           updatedAt: raw.updatedAt || ''
         };
@@ -2465,10 +2642,10 @@
           }
 
           var bal = Math.max(0, Number(b.balanceAtVenue || 0));
-          if (b.venuePaymentMode === 'cash') {
+          if (b.venuePaymentStatus === 'completed' && b.venuePaymentMode === 'cash') {
             cashCollected += bal;
             cashCount += 1;
-          } else if (b.venuePaymentMode === 'online') {
+          } else if (b.venuePaymentStatus === 'completed' && b.venuePaymentMode === 'online') {
             onlineCollected += bal;
             onlineCount += 1;
           } else {
@@ -2491,9 +2668,9 @@
       }
 
       /* =====================================================================
-         8. VENUE BALANCE PAYMENT MODE UPDATES
+         8. ONE-TAP VENUE BALANCE PAYMENT COMPLETION
          ===================================================================== */
-      function updateVenuePaymentMode(booking, newMode, selectEl) {
+      async function setVenuePaymentAction(booking, actionMode, btnGroupEl) {
         if (!state.authenticated || !state.db) {
           showToast('Authorization required to update payment records.', 'err');
           return;
@@ -2502,29 +2679,52 @@
           showToast('Only confirmed customer bookings can be updated.', 'err');
           return;
         }
-        if (['pending', 'cash', 'online'].indexOf(newMode) === -1) return;
+        if (['pending', 'cash', 'online'].indexOf(actionMode) === -1) return;
+        if (state.updatingPaymentKeys[booking._key]) return;
 
-        var prevMode = booking.venuePaymentMode || 'pending';
-        if (selectEl) selectEl.disabled = true;
+        state.updatingPaymentKeys[booking._key] = true;
+        var buttons = btnGroupEl ? Array.prototype.slice.call(btnGroupEl.querySelectorAll('button')) : [];
+        buttons.forEach(function (b) { b.disabled = true; });
 
-        var payload = {
-          venuePaymentMode: newMode,
-          venuePaidAt: (newMode === 'cash' || newMode === 'online') ? Date.now() : null
-        };
+        var payload;
+        if (actionMode === 'cash') {
+          payload = {
+            venuePaymentMode: 'cash',
+            venuePaymentStatus: 'completed',
+            venuePaidAt: Date.now()
+          };
+        } else if (actionMode === 'online') {
+          payload = {
+            venuePaymentMode: 'online',
+            venuePaymentStatus: 'completed',
+            venuePaidAt: Date.now()
+          };
+        } else {
+          payload = {
+            venuePaymentMode: 'pending',
+            venuePaymentStatus: 'pending',
+            venuePaidAt: null
+          };
+        }
 
-        state.db.ref(BOOKINGS_PATH + '/' + booking._key).update(payload).then(function () {
-          var label = newMode === 'cash' ? 'Cash Paid at Venue' : newMode === 'online' ? 'GPay / UPI Paid at Venue' : 'Pending';
-          showToast('Payment mode for ' + booking.bookingId + ' updated to ' + label + '.', 'ok');
-        }).catch(function (err) {
-          if (selectEl) selectEl.value = prevMode;
-          showToast('Failed to update venue payment mode: ' + (err && err.message ? err.message : 'Database error'), 'err');
-        }).then(function () {
-          if (selectEl) selectEl.disabled = false;
-        });
+        try {
+          await state.db.ref(BOOKINGS_PATH + '/' + booking._key).update(payload);
+          var label = actionMode === 'cash'
+            ? 'Venue balance marked PAID (Cash)'
+            : actionMode === 'online'
+              ? 'Venue balance marked PAID (Online)'
+              : 'Venue payment marked PENDING';
+          showToast(booking.bookingId + ': ' + label + '.', 'ok');
+        } catch (err) {
+          showToast('Failed to update venue payment: ' + (err && err.message ? err.message : 'Database error'), 'err');
+        } finally {
+          delete state.updatingPaymentKeys[booking._key];
+          buttons.forEach(function (b) { b.disabled = false; });
+        }
       }
 
       /* =====================================================================
-         9. RENDER BOOKINGS TABLE (SAFE TEXT RENDERING & MOBILE WRAP)
+         9. RENDER BOOKINGS TABLE (SAFE TEXT RENDERING, PAYMENT & DELETE)
          ===================================================================== */
       function makeTd(label) {
         var td = document.createElement('td');
@@ -2632,7 +2832,7 @@
           c4.val.appendChild(pkEl);
           c4.val.appendChild(gsEl);
 
-          /* Col 5: Financial Breakdown & Venue Balance Payment Mode */
+          /* Col 5: Financial Breakdown & One-Tap Venue Payment Controls */
           var c5 = makeTd('Financial Breakdown');
           var totEl = document.createElement('div');
           totEl.innerHTML = 'Total: <strong></strong>';
@@ -2652,24 +2852,45 @@
           c5.val.appendChild(balEl);
 
           if (b.bookingStatus === 'confirmed' && !b.isOfflineBlock) {
-            var paySelect = document.createElement('select');
-            paySelect.className = 'venue-pay-select';
-            paySelect.setAttribute('aria-label', 'Venue balance payment mode for ' + b.bookingId);
-            [
-              { val: 'pending', label: '⏳ Pending' },
-              { val: 'cash', label: '💵 Cash Paid at Venue' },
-              { val: 'online', label: '📱 GPay / UPI Paid at Venue' }
-            ].forEach(function (opt) {
-              var o = document.createElement('option');
-              o.value = opt.val;
-              o.textContent = opt.label;
-              paySelect.appendChild(o);
+            var payBtnGroup = document.createElement('div');
+            payBtnGroup.className = 'pay-btn-group';
+            payBtnGroup.setAttribute('role', 'group');
+            payBtnGroup.setAttribute('aria-label', 'Venue balance payment controls for ' + b.bookingId);
+
+            var cashBtn = document.createElement('button');
+            cashBtn.type = 'button';
+            cashBtn.className = 'pay-btn' + (b.venuePaymentStatus === 'completed' && b.venuePaymentMode === 'cash' ? ' is-active-cash' : '');
+            cashBtn.textContent = '💵 Cash Paid';
+            cashBtn.addEventListener('click', function () {
+              setVenuePaymentAction(b, 'cash', payBtnGroup);
             });
-            paySelect.value = b.venuePaymentMode || 'pending';
-            paySelect.addEventListener('change', function () {
-              updateVenuePaymentMode(b, paySelect.value, paySelect);
+
+            var onlineBtn = document.createElement('button');
+            onlineBtn.type = 'button';
+            onlineBtn.className = 'pay-btn' + (b.venuePaymentStatus === 'completed' && b.venuePaymentMode === 'online' ? ' is-active-online' : '');
+            onlineBtn.textContent = '📱 Online Paid';
+            onlineBtn.addEventListener('click', function () {
+              setVenuePaymentAction(b, 'online', payBtnGroup);
             });
-            c5.val.appendChild(paySelect);
+
+            var pendBtn = document.createElement('button');
+            pendBtn.type = 'button';
+            pendBtn.className = 'pay-btn' + (b.venuePaymentStatus !== 'completed' ? ' is-active-pending' : '');
+            pendBtn.textContent = '⏳ Pending';
+            pendBtn.addEventListener('click', function () {
+              setVenuePaymentAction(b, 'pending', payBtnGroup);
+            });
+
+            if (state.updatingPaymentKeys[b._key]) {
+              cashBtn.disabled = true;
+              onlineBtn.disabled = true;
+              pendBtn.disabled = true;
+            }
+
+            payBtnGroup.appendChild(cashBtn);
+            payBtnGroup.appendChild(onlineBtn);
+            payBtnGroup.appendChild(pendBtn);
+            c5.val.appendChild(payBtnGroup);
           }
 
           /* Col 6: Source & Status */
@@ -2684,29 +2905,23 @@
           srcSpan.textContent = b.bookingSource || b.source;
           stGroup.appendChild(stPill);
           stGroup.appendChild(srcSpan);
-          if (b.isDemoSeed) {
-            var demoPill = document.createElement('span');
-            demoPill.className = 'pill pill--pay-pending';
-            demoPill.textContent = '🧪 DEMO';
-            stGroup.appendChild(demoPill);
-          }
           if (b.bookingStatus === 'confirmed' && !b.isOfflineBlock) {
             var payPill = document.createElement('span');
-            if (b.venuePaymentMode === 'cash') {
+            if (b.venuePaymentStatus === 'completed' && b.venuePaymentMode === 'cash') {
               payPill.className = 'pill pill--pay-cash';
-              payPill.textContent = '💵 Cash Paid';
-            } else if (b.venuePaymentMode === 'online') {
+              payPill.textContent = '✅ VENUE PAID (CASH)';
+            } else if (b.venuePaymentStatus === 'completed' && b.venuePaymentMode === 'online') {
               payPill.className = 'pill pill--pay-online';
-              payPill.textContent = '📱 GPay / UPI';
+              payPill.textContent = '✅ VENUE PAID (ONLINE)';
             } else {
               payPill.className = 'pill pill--pay-pending';
-              payPill.textContent = '⏳ Venue Pending';
+              payPill.textContent = '⏳ VENUE PAYMENT PENDING';
             }
             stGroup.appendChild(payPill);
           }
           c6.val.appendChild(stGroup);
 
-          /* Col 7: Actions */
+          /* Col 7: Actions (Always includes Permanent Delete) */
           var c7 = makeTd('Actions');
           var actions = document.createElement('div');
           actions.className = 'row-actions';
@@ -2742,6 +2957,16 @@
             });
             actions.appendChild(cancelBtn);
           }
+
+          var deleteBtn = document.createElement('button');
+          deleteBtn.type = 'button';
+          deleteBtn.className = 'btn btn--danger btn--sm';
+          deleteBtn.textContent = state.deletingKeys[b._key] ? 'Deleting…' : '🗑️ Delete';
+          deleteBtn.disabled = Boolean(state.deletingKeys[b._key]);
+          deleteBtn.addEventListener('click', function () {
+            promptPermanentDeleteBooking(b);
+          });
+          actions.appendChild(deleteBtn);
 
           c7.val.appendChild(actions);
 
@@ -2892,7 +3117,7 @@
       }
 
       /* =====================================================================
-         11. ATOMIC SLOT LOCKING, BOOKING CREATION, CANCELLATION & BLOCKING
+         11. ATOMIC SLOT LOCKING, BOOKING CREATION, CANCELLATION & PERMANENT DELETE
          ===================================================================== */
       function getRequiredHours(startHour, durationHours) {
         var hrs = [];
@@ -3006,160 +3231,76 @@
         });
       }
 
-      /* =====================================================================
-         11B. DEMO SEED GENERATOR (2026-11-22 TO 2026-11-28) & CLEANUP
-         ===================================================================== */
-      var DEMO_SEED_PLAN = [
-        { branch: 'Kurla', roomType: 'couples', date: '2026-11-22', startHour: 12, durationHours: 2, source: 'Online', name: 'Aarav Sharma', phone: '9820112233', pkg: 'Love Paradise 2 (2 Hrs)', persons: 2, total: 1699, advance: 750, onlinePaid: 795, payMode: 'pending' },
-        { branch: 'Vashi', roomType: 'heaven_couple', date: '2026-11-22', startHour: 18, durationHours: 2, source: 'Online', name: 'Priya Deshmukh', phone: '9820223344', pkg: 'Heaven 1 (Couple)', persons: 2, total: 1999, advance: 750, onlinePaid: 795, payMode: 'pending' },
-        { branch: 'Kurla', roomType: 'family', date: '2026-11-23', startHour: 16, durationHours: 3, source: 'WhatsApp', name: 'Rohan Kulkarni', phone: '9820334455', pkg: 'Golden Celebration (3 Hrs)', persons: 8, total: 2699, advance: 750, onlinePaid: 0, payMode: 'pending' },
-        { branch: 'Vashi', roomType: 'couples', date: '2026-11-23', startHour: 19, durationHours: 2, source: 'Walk-In', name: 'Sneha Patil', phone: '9820445566', pkg: 'Dinner Date Big Heart', persons: 2, total: 1999, advance: 1000, onlinePaid: 0, payMode: 'cash' },
-        { branch: 'Vashi', roomType: 'mega_party', date: '2026-11-24', startHour: 15, durationHours: 3, source: 'Online', name: 'Vikram Joshi', phone: '9820556677', pkg: 'Mega Party Hall (30 Guests)', persons: 28, total: 6999, advance: 750, onlinePaid: 795, payMode: 'pending' },
-        { branch: 'Kurla', roomType: 'couples', date: '2026-11-24', startHour: 20, durationHours: 2, source: 'WhatsApp', name: 'Ananya Iyer', phone: '9820667788', pkg: 'Love Paradise 2 (2 Hrs)', persons: 2, total: 1699, advance: 750, onlinePaid: 0, payMode: 'online' },
-        { branch: 'Vashi', roomType: 'family', date: '2026-11-25', startHour: 13, durationHours: 3, source: 'Walk-In', name: 'Siddharth Mehta', phone: '9820778899', pkg: 'Friends & Family Zone 2', persons: 10, total: 2699, advance: 1000, onlinePaid: 0, payMode: 'pending' },
-        { branch: 'Vashi', roomType: 'heaven_couple', date: '2026-11-25', startHour: 21, durationHours: 2, source: 'Online', name: 'Kavya Nair', phone: '9820889900', pkg: 'Heaven 2 (Couple)', persons: 2, total: 2499, advance: 750, onlinePaid: 795, payMode: 'pending' },
-        { branch: 'Kurla', roomType: 'family', date: '2026-11-26', startHour: 18, durationHours: 3, source: 'Online', name: 'Arjun Verma', phone: '9820990011', pkg: 'Diamond Celebration (3 Hrs)', persons: 12, total: 3499, advance: 750, onlinePaid: 795, payMode: 'pending' },
-        { branch: 'Vashi', roomType: 'couples', date: '2026-11-26', startHour: 11, durationHours: 2, source: 'WhatsApp', name: 'Meera Kapoor', phone: '9821001122', pkg: 'Dinner Date Small Heart', persons: 2, total: 1499, advance: 750, onlinePaid: 0, payMode: 'pending' },
-        { branch: 'Vashi', roomType: 'mega_party', date: '2026-11-27', startHour: 19, durationHours: 3, source: 'WhatsApp', name: 'Kabir Malhotra', phone: '9821112233', pkg: 'Mega Party Hall (50 Guests)', persons: 45, total: 9999, advance: 2000, onlinePaid: 0, payMode: 'pending' },
-        { branch: 'Kurla', roomType: 'couples', date: '2026-11-28', startHour: 17, durationHours: 3, source: 'Walk-In', name: 'Diya Chatterjee', phone: '9821223344', pkg: 'Love Paradise 3 (3 Hrs)', persons: 2, total: 2299, advance: 750, onlinePaid: 0, payMode: 'cash' }
-      ];
-
-      function seedDemoBookings() {
-        if (!state.authenticated || !state.db) {
-          showToast('Authorization or database connection unavailable.', 'err');
-          return;
+      async function permanentlyDeleteBookingAndLocks(booking) {
+        if (!booking || !booking._key) {
+          throw new Error('Missing booking identifier.');
         }
-        openConfirmModal(
-          'Seed 12 Demo Bookings (Nov 22–28)?',
-          'This will insert 12 realistic test bookings across 2026-11-22 to 2026-11-28 for Kurla and Vashi (all 4 room types, mixing Online, WhatsApp, and Walk-In) and lock their slot hours. All test records are tagged with isDemoSeed: true so you can clear them cleanly anytime.',
-          'Seed 12 Demo Bookings',
-          function () {
-            $('cmConfirmBtn').disabled = true;
-            $('cmConfirmBtn').textContent = 'Seeding…';
+        var bookingKey = booking._key;
+        var bookingId = booking.bookingId || bookingKey;
+        var branch = booking.branch || 'Kurla';
+        var date = booking.bookingDate || '';
+        var updates = {};
+        updates[BOOKINGS_PATH + '/' + bookingKey] = null;
 
-            var inserted = 0;
-            var skipped = 0;
-            var chain = Promise.resolve();
+        if (branch && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
+          var readPaths = ROOMS.map(function (rm) {
+            return {
+              path: SLOT_LOCKS_PATH + '/' + branch + '/' + rm + '/' + date,
+              ref: state.db.ref(SLOT_LOCKS_PATH + '/' + branch + '/' + rm + '/' + date)
+            };
+          });
+          readPaths.push({
+            path: SLOT_LOCKS_PATH + '/' + branch + '/' + date,
+            ref: state.db.ref(SLOT_LOCKS_PATH + '/' + branch + '/' + date)
+          });
 
-            DEMO_SEED_PLAN.forEach(function (item, idx) {
-              chain = chain.then(function () {
-                var prefix = item.branch === 'Vashi' ? 'BEV' : 'BEK';
-                var bookingId = prefix + '-DEMO-' + pad2(idx + 1) + '-' + Date.now().toString(36).slice(-4).toUpperCase();
-                var record = {
-                  bookingId: bookingId,
-                  branch: item.branch,
-                  roomType: item.roomType,
-                  roomLabel: getRoomLabel(item.roomType),
-                  customerName: item.name,
-                  contactNumber: item.phone,
-                  whatsappNumber: item.phone,
-                  celebrationType: item.source === 'Online' ? 'Birthday / Surprise' : item.source,
-                  bookingDate: item.date,
-                  date: item.date,
-                  startHour: item.startHour,
-                  startTime: formatHour12(item.startHour),
-                  endTime: formatHour12(item.startHour + item.durationHours),
-                  slot: formatRange12(item.startHour, item.durationHours),
-                  durationHours: item.durationHours,
-                  packageName: item.pkg,
-                  packagePrice: item.total,
-                  totalPersons: item.persons,
-                  extraGuests: 0,
-                  extraGuestCharge: 0,
-                  selectedAddons: [],
-                  addonsTotal: 0,
-                  totalBookingValue: item.total,
-                  venueAdvance: item.advance,
-                  onlinePaymentAmount: item.onlinePaid,
-                  balanceAtVenue: Math.max(0, item.total - item.advance),
-                  venuePaymentMode: item.payMode,
-                  bookingStatus: 'confirmed',
-                  status: 'confirmed',
-                  bookingSource: item.source,
-                  source: item.source,
-                  isDemoSeed: true,
-                  createdAt: new Date().toISOString()
-                };
-                return commitAtomicBooking(record).then(function () {
-                  inserted += 1;
-                }).catch(function (err) {
-                  if (err && err.code === 'SLOT_CONFLICT') {
-                    skipped += 1;
-                  } else {
-                    throw err;
-                  }
-                });
-              });
-            });
+          var snapshots = await Promise.all(readPaths.map(function (item) {
+            return item.ref.once('value');
+          }));
 
-            chain.then(function () {
-              $('confirmModal').hidden = true;
-              showToast('Seeded ' + inserted + ' demo booking(s)' + (skipped ? ' (' + skipped + ' skipped due to existing slot locks).' : '.'), 'ok');
-            }).catch(function (err) {
-              showToast('Demo seed failed: ' + (err && err.message ? err.message : 'Database error'), 'err');
-            }).then(function () {
-              $('cmConfirmBtn').disabled = false;
-              $('cmConfirmBtn').textContent = 'Proceed';
-            });
-          }
-        );
-      }
-
-      function clearDemoBookings() {
-        if (!state.authenticated || !state.db) {
-          showToast('Authorization or database connection unavailable.', 'err');
-          return;
-        }
-        var demoList = state.bookings.filter(function (b) { return b.isDemoSeed === true; });
-        if (!demoList.length) {
-          showToast('No demo seed bookings found to clear.', 'ok');
-          return;
-        }
-
-        openConfirmModal(
-          'Clear All Demo Bookings?',
-          'This will permanently remove ' + demoList.length + ' demo booking(s) (isDemoSeed: true) and release their slot locks across Kurla and Vashi. Real customer bookings will not be affected.',
-          'Clear ' + demoList.length + ' Demo Bookings',
-          function () {
-            $('cmConfirmBtn').disabled = true;
-            $('cmConfirmBtn').textContent = 'Clearing…';
-
-            var updates = {};
-            var lockChecks = [];
-
-            demoList.forEach(function (b) {
-              updates[BOOKINGS_PATH + '/' + b._key] = null;
-              var rm = normalizeRoomType(b.roomType);
-              if (rm && b.bookingDate) {
-                var ref = state.db.ref(SLOT_LOCKS_PATH + '/' + b.branch + '/' + rm + '/' + b.bookingDate);
-                lockChecks.push(ref.once('value').then(function (snap) {
-                  var locks = snap.val() || {};
-                  Object.keys(locks).forEach(function (hh) {
-                    if (locks[hh] && locks[hh].bookingId === b.bookingId) {
-                      updates[SLOT_LOCKS_PATH + '/' + b.branch + '/' + rm + '/' + b.bookingDate + '/' + hh] = null;
-                    }
-                  });
-                }));
+          snapshots.forEach(function (snap, idx) {
+            var val = snap.val();
+            if (!val || typeof val !== 'object') return;
+            var basePath = readPaths[idx].path;
+            Object.keys(val).forEach(function (hh) {
+              if (val[hh] && val[hh].bookingId === bookingId) {
+                updates[basePath + '/' + hh] = null;
               }
             });
+          });
+        }
 
-            Promise.all(lockChecks).then(function () {
-              return state.db.ref().update(updates);
-            }).then(function () {
+        await state.db.ref().update(updates);
+      }
+
+      function promptPermanentDeleteBooking(booking) {
+        if (!booking || !booking._key || state.deletingKeys[booking._key]) return;
+        var label = booking.customerName + ' (' + booking.bookingId + ')';
+        openConfirmModal(
+          'Permanently Delete Booking Record?',
+          'Are you sure you want to permanently delete ' + label + ' on ' + formatPrettyDate(booking.bookingDate) + ' (' + booking.slot + ')? This removes the record from Firebase and clears its slot locks. This cannot be undone.',
+          '🗑️ Permanently Delete',
+          async function () {
+            if (state.deletingKeys[booking._key]) return;
+            state.deletingKeys[booking._key] = true;
+            $('cmConfirmBtn').disabled = true;
+            $('cmConfirmBtn').textContent = 'Deleting…';
+            renderBookingsTable();
+            try {
+              await permanentlyDeleteBookingAndLocks(booking);
               $('confirmModal').hidden = true;
-              showToast('Cleared ' + demoList.length + ' demo booking(s) and released their slot locks.', 'ok');
-            }).catch(function (err) {
-              showToast('Failed to clear demo bookings: ' + (err && err.message ? err.message : 'Database error'), 'err');
-            }).then(function () {
+              showToast('Deleted booking ' + booking.bookingId + ' and cleared associated slot locks.', 'ok');
+            } catch (err) {
+              showToast(err && err.message ? err.message : 'Failed to delete booking record.', 'err');
+            } finally {
+              delete state.deletingKeys[booking._key];
               $('cmConfirmBtn').disabled = false;
               $('cmConfirmBtn').textContent = 'Proceed';
-            });
+              renderBookingsTable();
+            }
           }
         );
       }
-
-      $('seedDemoBookingsBtn').addEventListener('click', seedDemoBookings);
-      $('clearDemoBookingsBtn').addEventListener('click', clearDemoBookings);
 
       /* =====================================================================
          12. WHATSAPP CONFIRMATION URL BUILDER
@@ -3192,7 +3333,7 @@
       }
 
       /* =====================================================================
-         13. QUICK BOOKING MODAL
+         13. SMART WHATSAPP / WALK-IN BOOKING MODAL
          ===================================================================== */
       function populateStartHourOptions() {
         var sel = $('qbStartHour');
@@ -3205,34 +3346,241 @@
         });
       }
 
-      function updateQuickBookBalance() {
-        var total = Math.max(0, Number($('qbTotal').value) || 0);
+      function getLivePackagePrice(pkg) {
+        var overrides = state.siteSettings.packagePrices || {};
+        var ov = overrides[pkg.id];
+        if (typeof ov === 'number' && isFinite(ov) && ov >= 0) return Math.round(ov);
+        if (ov && typeof ov === 'object' && ov.price !== undefined && !isNaN(Number(ov.price))) {
+          return Math.round(Number(ov.price));
+        }
+        return pkg.price;
+      }
+
+      function getLiveAddonPrice(addon) {
+        var overrides = state.siteSettings.addonPrices || {};
+        var ov = overrides[addon.id];
+        if (typeof ov === 'number' && isFinite(ov) && ov >= 0) return Math.round(ov);
+        if (ov && typeof ov === 'object' && ov.price !== undefined && !isNaN(Number(ov.price))) {
+          return Math.round(Number(ov.price));
+        }
+        return addon.price;
+      }
+
+      function getAvailableRoomsForBranch(branch) {
+        return branch === 'Kurla' ? ['couples', 'family'] : ['couples', 'family', 'heaven_couple', 'mega_party'];
+      }
+
+      function syncQuickBookRoomOptions(preferredRoom) {
+        var branch = $('qbBranch').value;
+        var allowed = getAvailableRoomsForBranch(branch);
+        var roomSel = $('qbRoom');
+        Array.prototype.slice.call(roomSel.options).forEach(function (opt) {
+          var ok = allowed.indexOf(opt.value) !== -1;
+          opt.hidden = !ok;
+          opt.disabled = !ok;
+        });
+        var target = (preferredRoom && allowed.indexOf(preferredRoom) !== -1)
+          ? preferredRoom
+          : (allowed.indexOf(roomSel.value) !== -1 ? roomSel.value : allowed[0]);
+        roomSel.value = target;
+      }
+
+      function getSelectedQuickBookPackage() {
+        var branch = $('qbBranch').value;
+        var room = $('qbRoom').value;
+        var pkgId = $('qbPackageSelect').value;
+        var list = (PACKAGE_MASTER_DATA[branch] && PACKAGE_MASTER_DATA[branch][room]) || [];
+        for (var i = 0; i < list.length; i++) {
+          if (list[i].id === pkgId) return list[i];
+        }
+        return list[0] || null;
+      }
+
+      function populateQuickBookPackages(preservePkgId) {
+        var branch = $('qbBranch').value;
+        var room = $('qbRoom').value;
+        var sel = $('qbPackageSelect');
+        var list = (PACKAGE_MASTER_DATA[branch] && PACKAGE_MASTER_DATA[branch][room]) || [];
+        sel.innerHTML = '';
+
+        list.forEach(function (pkg) {
+          var livePrice = getLivePackagePrice(pkg);
+          var opt = document.createElement('option');
+          opt.value = pkg.id;
+          opt.textContent = pkg.name + ' (' + pkg.duration + ' hr • ' + formatMoney(livePrice) + ')';
+          sel.appendChild(opt);
+        });
+
+        var hasMatch = preservePkgId && list.some(function (p) { return p.id === preservePkgId; });
+        if (hasMatch) {
+          sel.value = preservePkgId;
+        } else if (list.length) {
+          sel.value = list[0].id;
+        }
+        applySelectedPackageBehavior(true);
+      }
+
+      function renderQuickBookAddons() {
+        var grid = $('qbAddonsGrid');
+        var prevChecked = {};
+        grid.querySelectorAll('input[type="checkbox"]:checked').forEach(function (cb) {
+          prevChecked[cb.value] = true;
+        });
+        grid.innerHTML = '';
+
+        ADDON_MASTER_LIST.forEach(function (addon) {
+          var livePrice = getLiveAddonPrice(addon);
+          var lbl = document.createElement('label');
+          lbl.className = 'addon-check' + (prevChecked[addon.id] ? ' is-checked' : '');
+
+          var left = document.createElement('span');
+          left.className = 'addon-check-left';
+          var cb = document.createElement('input');
+          cb.type = 'checkbox';
+          cb.value = addon.id;
+          cb.checked = Boolean(prevChecked[addon.id]);
+          cb.setAttribute('data-addon-label', addon.label);
+          cb.setAttribute('data-addon-price', String(livePrice));
+          cb.addEventListener('change', function () {
+            lbl.classList.toggle('is-checked', cb.checked);
+            recalculateQuickBookPricing();
+          });
+
+          var nameSpan = document.createElement('span');
+          nameSpan.className = 'addon-check-name';
+          nameSpan.textContent = addon.label;
+
+          left.appendChild(cb);
+          left.appendChild(nameSpan);
+
+          var priceSpan = document.createElement('span');
+          priceSpan.className = 'addon-check-price';
+          priceSpan.textContent = formatMoney(livePrice);
+
+          lbl.appendChild(left);
+          lbl.appendChild(priceSpan);
+          grid.appendChild(lbl);
+        });
+      }
+
+      function getSelectedQuickBookAddons() {
+        var selected = [];
+        $('qbAddonsGrid').querySelectorAll('input[type="checkbox"]:checked').forEach(function (cb) {
+          selected.push({
+            id: cb.value,
+            name: cb.getAttribute('data-addon-label') || cb.value,
+            price: Math.max(0, Number(cb.getAttribute('data-addon-price')) || 0)
+          });
+        });
+        return selected;
+      }
+
+      function applySelectedPackageBehavior(resetPersonsToBase) {
+        var pkg = getSelectedQuickBookPackage();
+        if (!pkg) return;
+
+        $('qbDuration').value = String(pkg.duration);
+        $('qbPersons').min = String(pkg.baseGuests);
+        if (resetPersonsToBase || Number($('qbPersons').value) < pkg.baseGuests) {
+          $('qbPersons').value = String(pkg.baseGuests);
+        }
+        $('qbPackageHint').textContent = 'Base: ' + pkg.baseGuests + ' guests included • Extra guest: ' + formatMoney(pkg.extraGuest) + '/person';
+        recalculateQuickBookPricing();
+      }
+
+      function recalculateQuickBookPricing() {
+        var pkg = getSelectedQuickBookPackage();
+        var packagePrice = pkg ? getLivePackagePrice(pkg) : 0;
+        var baseGuests = pkg ? pkg.baseGuests : 1;
+        var extraGuestPrice = pkg ? pkg.extraGuest : 0;
+        var selectedPersons = Math.max(1, Number($('qbPersons').value) || baseGuests);
+        var extraGuests = Math.max(0, selectedPersons - baseGuests);
+        var extraGuestCharges = extraGuests * extraGuestPrice;
+
+        var selectedAddons = getSelectedQuickBookAddons();
+        var addonsTotal = selectedAddons.reduce(function (sum, a) { return sum + a.price; }, 0);
+        var autoTotal = Math.max(0, Math.round(packagePrice + extraGuestCharges + addonsTotal));
+
+        if (!state.qbManualTotalOverride) {
+          $('qbTotal').value = String(autoTotal);
+        }
+
+        var finalTotal = Math.max(0, Number($('qbTotal').value) || 0);
         var adv = Math.max(0, Number($('qbAdvance').value) || 0);
-        var bal = Math.max(0, total - adv);
+        var bal = Math.max(0, finalTotal - adv);
         $('qbBalance').value = formatMoney(bal);
+
+        $('qbOverrideBadge').hidden = !state.qbManualTotalOverride;
+        $('qbRestoreAutoBtn').hidden = !state.qbManualTotalOverride;
+
+        var parts = ['Package: ' + formatMoney(packagePrice)];
+        if (extraGuests > 0) parts.push('Extra Guests (' + extraGuests + '): ' + formatMoney(extraGuestCharges));
+        if (addonsTotal > 0) parts.push('Add-ons (' + selectedAddons.length + '): ' + formatMoney(addonsTotal));
+        parts.push('Auto Total: ' + formatMoney(autoTotal));
+        $('qbCalcBreakdown').textContent = parts.join(' + ');
+
+        return {
+          pkg: pkg,
+          packagePrice: packagePrice,
+          extraGuests: extraGuests,
+          extraGuestCharges: extraGuestCharges,
+          selectedAddons: selectedAddons,
+          addonsTotal: addonsTotal,
+          autoTotal: autoTotal,
+          finalTotal: finalTotal,
+          advance: adv,
+          balance: bal
+        };
+      }
+
+      function refreshQuickBookLivePrices() {
+        var prevPkgId = $('qbPackageSelect').value;
+        populateQuickBookPackages(prevPkgId);
+        renderQuickBookAddons();
+        recalculateQuickBookPricing();
       }
 
       function openQuickBookModal(prefillBranch, prefillDate, prefillHour, prefillRoom) {
         $('quickBookForm').reset();
+        state.qbManualTotalOverride = false;
         $('qbBranch').value = prefillBranch || state.slotBranch || 'Kurla';
-        $('qbRoom').value = normalizeRoomType(prefillRoom) || normalizeRoomType(state.slotRoom) || 'couples';
+        syncQuickBookRoomOptions(normalizeRoomType(prefillRoom) || normalizeRoomType(state.slotRoom) || 'couples');
         $('qbBookingSource').value = 'Walk-In';
         $('qbDate').value = prefillDate || state.slotDate || getKolkataTodayISO();
         $('qbDate').min = getKolkataTodayISO();
         $('qbStartHour').value = String(prefillHour || 18);
-        $('qbDuration').value = prefillHour && prefillHour >= 22 ? String(24 - prefillHour) : '3';
         $('qbAdvance').value = '750';
-        $('qbPersons').value = '4';
         $('qbNote').hidden = true;
         $('qbWhatsappBtn').hidden = true;
         $('qbSubmitBtn').disabled = false;
         $('qbSubmitBtn').textContent = 'Confirm & Lock Slots';
-        updateQuickBookBalance();
+
+        renderQuickBookAddons();
+        populateQuickBookPackages(null);
         $('quickBookModal').hidden = false;
       }
 
-      $('qbTotal').addEventListener('input', updateQuickBookBalance);
-      $('qbAdvance').addEventListener('input', updateQuickBookBalance);
+      $('qbBranch').addEventListener('change', function () {
+        syncQuickBookRoomOptions(null);
+        populateQuickBookPackages(null);
+      });
+      $('qbRoom').addEventListener('change', function () {
+        populateQuickBookPackages(null);
+      });
+      $('qbPackageSelect').addEventListener('change', function () {
+        applySelectedPackageBehavior(true);
+      });
+      $('qbPersons').addEventListener('input', recalculateQuickBookPricing);
+      $('qbAdvance').addEventListener('input', recalculateQuickBookPricing);
+      $('qbTotal').addEventListener('input', function () {
+        state.qbManualTotalOverride = true;
+        recalculateQuickBookPricing();
+      });
+      $('qbRestoreAutoBtn').addEventListener('click', function () {
+        state.qbManualTotalOverride = false;
+        recalculateQuickBookPricing();
+      });
+
       $('openQuickBookBtn').addEventListener('click', function () {
         openQuickBookModal(state.branchFilter === 'Vashi' ? 'Vashi' : 'Kurla', state.slotDate || getKolkataTodayISO(), 18);
       });
@@ -3250,19 +3598,23 @@
 
         var branch = $('qbBranch').value;
         var roomType = $('qbRoom').value;
+        var allowedRooms = getAvailableRoomsForBranch(branch);
         var bookingSource = $('qbBookingSource').value;
         var date = $('qbDate').value;
         var startHour = Number($('qbStartHour').value);
         var duration = Number($('qbDuration').value);
         var name = $('qbName').value.trim().replace(/\s+/g, ' ');
         var whatsapp = normalizePhone10($('qbWhatsapp').value);
-        var pkg = $('qbPackage').value.trim();
         var persons = Number($('qbPersons').value);
-        var total = Number($('qbTotal').value);
-        var advance = Number($('qbAdvance').value);
+        var totalRaw = $('qbTotal').value.trim();
+        var advanceRaw = $('qbAdvance').value.trim();
+        var total = Number(totalRaw);
+        var advance = Number(advanceRaw);
+        var calc = recalculateQuickBookPricing();
 
         if (BRANCHES.indexOf(branch) === -1) return showFormErr('Please select a valid branch (Kurla or Vashi).');
-        if (ROOMS.indexOf(roomType) === -1) return showFormErr('Please select a valid room.');
+        if (allowedRooms.indexOf(roomType) === -1) return showFormErr('Selected room is not available for ' + branch + '.');
+        if (!calc.pkg) return showFormErr('Please select a valid package.');
         if (['Walk-In', 'WhatsApp'].indexOf(bookingSource) === -1) return showFormErr('Please select a valid Booking Source (Walk-In or WhatsApp).');
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || date < getKolkataTodayISO()) return showFormErr('Please select today or a future booking date.');
         if (isNaN(startHour) || startHour < 9 || startHour > 23) return showFormErr('Start hour must be between 09:00 AM and 11:00 PM.');
@@ -3270,12 +3622,11 @@
         if (startHour + duration > 24) return showFormErr('Selected duration exceeds 12:00 AM closing time. Choose an earlier start hour or shorter duration.');
         if (name.length < 2) return showFormErr('Please enter the customer name.');
         if (!whatsapp) return showFormErr('Please enter a valid 10-digit Indian WhatsApp number.');
-        if (pkg.length < 2) return showFormErr('Please enter a package name.');
-        if (isNaN(persons) || persons < 1) return showFormErr('Total persons must be at least 1.');
-        if (isNaN(total) || total < 0) return showFormErr('Please enter a valid total amount.');
-        if (isNaN(advance) || advance < 0) return showFormErr('Please enter a valid advance amount.');
+        if (isNaN(persons) || persons < calc.pkg.baseGuests) return showFormErr('Total persons must be at least ' + calc.pkg.baseGuests + ' for ' + calc.pkg.name + '.');
+        if (totalRaw === '' || isNaN(total) || total < 0 || !isFinite(total)) return showFormErr('Please enter a valid total amount.');
+        if (advanceRaw === '' || isNaN(advance) || advance < 0 || !isFinite(advance)) return showFormErr('Please enter a valid advance amount.');
 
-        var balanceAtVenue = Math.max(0, total - advance);
+        var balanceAtVenue = Math.max(0, Math.round(total) - Math.round(advance));
         var bookingId = generateBookingId(branch);
         var record = {
           bookingId: bookingId,
@@ -3293,18 +3644,21 @@
           endTime: formatHour12(startHour + duration),
           slot: formatRange12(startHour, duration),
           durationHours: duration,
-          packageName: pkg,
-          packagePrice: total,
+          packageId: calc.pkg.id,
+          packageName: calc.pkg.name + ' (' + duration + ' Hr' + (duration > 1 ? 's' : '') + ')',
+          packagePrice: calc.packagePrice,
           totalPersons: persons,
-          extraGuests: 0,
-          extraGuestCharge: 0,
-          selectedAddons: [],
-          addonsTotal: 0,
-          totalBookingValue: total,
-          venueAdvance: advance,
+          extraGuests: calc.extraGuests,
+          extraGuestCharge: calc.extraGuestCharges,
+          selectedAddons: calc.selectedAddons,
+          addonsTotal: calc.addonsTotal,
+          totalBookingValue: Math.round(total),
+          manualTotalOverride: state.qbManualTotalOverride,
+          venueAdvance: Math.round(advance),
           onlinePaymentAmount: 0,
           balanceAtVenue: balanceAtVenue,
           venuePaymentMode: 'pending',
+          venuePaymentStatus: 'pending',
           bookingStatus: 'confirmed',
           status: 'confirmed',
           bookingSource: bookingSource,
@@ -3444,7 +3798,9 @@
             addRow('Full Window', linkedBooking.slot + ' (' + linkedBooking.durationHours + ' hr)');
             addRow('Package', linkedBooking.packageName);
             addRow('Total / Venue Bal.', formatMoney(linkedBooking.totalBookingValue) + ' / ' + formatMoney(linkedBooking.balanceAtVenue));
-            addRow('Venue Payment', (linkedBooking.venuePaymentMode || 'pending').toUpperCase());
+            addRow('Venue Payment', linkedBooking.venuePaymentStatus === 'completed'
+              ? ('PAID (' + linkedBooking.venuePaymentMode.toUpperCase() + ')')
+              : 'PENDING');
           } else {
             addRow('Record Note', 'Orphaned or external lock (no matching booking document found).');
           }
@@ -4261,17 +4617,105 @@
       });
 
       /* =====================================================================
-         19. PHOTO & GALLERY MANAGER (FIREBASE STORAGE + site_settings/gallery)
+         19. PHOTO & GALLERY MANAGER (DIRECT CANVAS COMPRESSION -> RTDB DATA URL)
          ===================================================================== */
       function validateImageFile(file) {
         if (!file) return 'No file selected.';
+        if (file.size === 0) return '"' + file.name + '" is an empty file.';
         if (ALLOWED_IMAGE_TYPES.indexOf(file.type) === -1) {
           return '"' + file.name + '" is not a supported format (JPG, JPEG, PNG, WebP only).';
         }
-        if (file.size > MAX_PHOTO_BYTES) {
-          return '"' + file.name + '" exceeds the 5 MB upload limit.';
+        if (file.size > MAX_INPUT_PHOTO_BYTES) {
+          return '"' + file.name + '" exceeds the 15 MB input file limit.';
         }
         return '';
+      }
+
+      function readFileAsDataURL(file) {
+        return new Promise(function (resolve, reject) {
+          var reader = new FileReader();
+          reader.onload = function () { resolve(reader.result); };
+          reader.onerror = function () { reject(new Error('Failed to read "' + file.name + '".')); };
+          reader.readAsDataURL(file);
+        });
+      }
+
+      function loadImageElement(src, fileName) {
+        return new Promise(function (resolve, reject) {
+          var img = new Image();
+          img.onload = function () { resolve(img); };
+          img.onerror = function () { reject(new Error('Unable to decode image "' + fileName + '".')); };
+          img.src = src;
+        });
+      }
+
+      function canvasToJpegBlob(canvas, quality) {
+        return new Promise(function (resolve, reject) {
+          if (typeof canvas.toBlob === 'function') {
+            canvas.toBlob(function (blob) {
+              if (!blob) reject(new Error('JPEG compression failed.'));
+              else resolve(blob);
+            }, 'image/jpeg', quality);
+          } else {
+            try {
+              var dataUrl = canvas.toDataURL('image/jpeg', quality);
+              var bin = atob(dataUrl.split(',')[1]);
+              var arr = new Uint8Array(bin.length);
+              for (var i = 0; i < bin.length; i++) arr[i] = bin.charCodeAt(i);
+              resolve(new Blob([arr], { type: 'image/jpeg' }));
+            } catch (err) {
+              reject(err);
+            }
+          }
+        });
+      }
+
+      function blobToDataURL(blob) {
+        return new Promise(function (resolve, reject) {
+          var reader = new FileReader();
+          reader.onload = function () { resolve(reader.result); };
+          reader.onerror = function () { reject(new Error('Failed to convert compressed image to Data URL.')); };
+          reader.readAsDataURL(blob);
+        });
+      }
+
+      async function compressImageToDataURL(file) {
+        var rawSrc = await readFileAsDataURL(file);
+        var img = await loadImageElement(rawSrc, file.name);
+        var origW = img.naturalWidth || img.width;
+        var origH = img.naturalHeight || img.height;
+        if (!origW || !origH) {
+          throw new Error('Invalid image dimensions for "' + file.name + '".');
+        }
+
+        var targetW = origW > 1080 ? 1080 : origW;
+        var targetH = origW > 1080 ? Math.round(origH * (1080 / origW)) : origH;
+
+        var canvas = document.createElement('canvas');
+        canvas.width = targetW;
+        canvas.height = targetH;
+        var ctx = canvas.getContext('2d');
+        if (!ctx) throw new Error('Canvas 2D context is unavailable.');
+        ctx.fillStyle = '#FFFFFF';
+        ctx.fillRect(0, 0, targetW, targetH);
+        ctx.drawImage(img, 0, 0, targetW, targetH);
+
+        var qualities = [0.78, 0.68, 0.56];
+        var finalDataUrl = '';
+        for (var qIdx = 0; qIdx < qualities.length; qIdx++) {
+          var blob = await canvasToJpegBlob(canvas, qualities[qIdx]);
+          var candidate = await blobToDataURL(blob);
+          finalDataUrl = candidate;
+          if (candidate.length <= 360 * 1024) break;
+        }
+
+        if (!finalDataUrl || finalDataUrl.indexOf('data:image/jpeg;base64,') !== 0) {
+          throw new Error('Image conversion produced an invalid Data URL.');
+        }
+        if (finalDataUrl.length > MAX_RTDB_DATA_URL_BYTES) {
+          throw new Error('Compressed image "' + file.name + '" (' + Math.round(finalDataUrl.length / 1024) + ' KB) is too large for Realtime Database.');
+        }
+        return finalDataUrl;
       }
 
       function getSortedGalleryItems(category) {
@@ -4283,7 +4727,6 @@
             id: id,
             category: category,
             url: item.url,
-            storagePath: item.storagePath || '',
             order: Number(item.order) || 999
           };
         }).filter(Boolean).sort(function (a, b) {
@@ -4299,25 +4742,6 @@
           if (!existing[cand]) return cand;
         }
         return category + '_' + Date.now().toString(36);
-      }
-
-      function uploadFileToStorage(storagePath, file, onProgress) {
-        if (!state.storage) {
-          return Promise.reject(new Error('Firebase Storage SDK is not available.'));
-        }
-        return new Promise(function (resolve, reject) {
-          var ref = state.storage.ref(storagePath);
-          var task = ref.put(file, { contentType: file.type });
-          task.on('state_changed', function (snap) {
-            if (onProgress && snap.totalBytes > 0) {
-              onProgress(Math.round((snap.bytesTransferred / snap.totalBytes) * 100));
-            }
-          }, function (err) {
-            reject(err);
-          }, function () {
-            task.snapshot.ref.getDownloadURL().then(resolve, reject);
-          });
-        });
       }
 
       $('galleryUploadInput').addEventListener('change', function () {
@@ -4351,11 +4775,13 @@
         });
       });
 
-      $('uploadPhotosBtn').addEventListener('click', function () {
-        if (!state.authenticated || !state.db || !state.storage) {
-          showToast('Firebase Storage or authentication is unavailable.', 'err');
+      $('uploadPhotosBtn').addEventListener('click', async function () {
+        if (!state.authenticated || !state.db) {
+          showToast('Database or authentication is unavailable.', 'err');
           return;
         }
+        if (state.isUploadingPhotos) return;
+
         var category = $('uploadCategorySelect').value;
         if (GALLERY_CATEGORIES.indexOf(category) === -1) return;
 
@@ -4380,60 +4806,52 @@
         var btn = $('uploadPhotosBtn');
         var progWrap = $('uploadProgressWrap');
         var progBar = $('uploadProgressBar');
+        state.isUploadingPhotos = true;
         btn.disabled = true;
-        btn.textContent = 'Uploading…';
+        btn.textContent = 'Compressing & Saving…';
         progWrap.hidden = false;
-        progBar.style.width = '0%';
+        progBar.style.width = '5%';
         fb.hidden = true;
 
         var existingList = getSortedGalleryItems(category);
         var nextOrder = existingList.length ? (existingList[existingList.length - 1].order + 1) : 1;
         var completed = 0;
 
-        var chain = Promise.resolve();
-        files.forEach(function (file) {
-          chain = chain.then(function () {
+        try {
+          for (var idx = 0; idx < files.length; idx++) {
+            var file = files[idx];
             var slotId = generatePhotoSlotId(category);
-            var ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
-            var storagePath = 'site_settings/gallery/' + category + '/' + slotId + '_' + Date.now() + '.' + ext;
             var orderNum = nextOrder++;
-            return uploadFileToStorage(storagePath, file, function (pct) {
-              var overall = Math.round(((completed + pct / 100) / files.length) * 100);
-              progBar.style.width = overall + '%';
-            }).then(function (downloadUrl) {
-              return state.db.ref(SITE_SETTINGS_PATH + '/gallery/' + category + '/' + slotId).set({
-                url: downloadUrl,
-                storagePath: storagePath,
-                order: orderNum,
-                updatedAt: new Date().toISOString()
-              }).catch(function (dbErr) {
-                /* Clean up orphaned storage file if DB write fails */
-                return state.storage.ref(storagePath).delete().then(function () { throw dbErr; }, function () { throw dbErr; });
-              });
-            }).then(function () {
-              completed += 1;
-              progBar.style.width = Math.round((completed / files.length) * 100) + '%';
-            });
-          });
-        });
+            var dataUrl = await compressImageToDataURL(file);
+            progBar.style.width = Math.round(((idx + 0.6) / files.length) * 100) + '%';
 
-        chain.then(function () {
+            await state.db.ref(SITE_SETTINGS_PATH + '/gallery/' + category + '/' + slotId).set({
+              url: dataUrl,
+              order: orderNum,
+              updatedAt: new Date().toISOString()
+            });
+
+            completed += 1;
+            progBar.style.width = Math.round((completed / files.length) * 100) + '%';
+          }
+
           $('galleryUploadInput').value = '';
           $('uploadPreviewStrip').innerHTML = '';
           $('uploadPreviewStrip').hidden = true;
           fb.className = 'modal-note is-ok';
-          fb.textContent = 'Uploaded ' + completed + ' photograph(s) to ' + category + ' gallery.';
+          fb.textContent = 'Saved ' + completed + ' compressed photograph(s) to ' + category + ' gallery.';
           fb.hidden = false;
-          showToast('Uploaded ' + completed + ' photo(s) to ' + category + '.', 'ok');
-        }).catch(function (err) {
+          showToast('Saved ' + completed + ' photo(s) to ' + category + '.', 'ok');
+        } catch (err) {
           fb.className = 'modal-note is-err';
-          fb.textContent = 'Upload failed: ' + (err && err.message ? err.message : 'Storage or permission error.');
+          fb.textContent = 'Upload failed: ' + (err && err.message ? err.message : 'Compression or database write error.');
           fb.hidden = false;
           showToast('Photo upload failed.', 'err');
-        }).then(function () {
+        } finally {
+          state.isUploadingPhotos = false;
           btn.disabled = false;
           btn.textContent = '⬆️ Upload to Gallery';
-        });
+        }
       });
 
       /* Replace Photo Workflow */
@@ -4452,50 +4870,44 @@
         $('rpFileMeta').textContent = file.name + ' (' + Math.round(file.size / 1024) + ' KB)';
         $('rpNote').hidden = true;
         $('rpConfirmBtn').disabled = false;
-        $('rpConfirmBtn').textContent = 'Upload & Replace';
+        $('rpConfirmBtn').textContent = 'Compress & Replace';
         $('replacePhotoModal').hidden = false;
       });
 
-      $('rpConfirmBtn').addEventListener('click', function () {
-        if (!state.replaceTarget || !state.replaceTarget.file || !state.db || !state.storage) return;
+      $('rpConfirmBtn').addEventListener('click', async function () {
+        if (!state.replaceTarget || !state.replaceTarget.file || !state.db) return;
+        if (state.isReplacingPhoto) return;
+
         var target = state.replaceTarget;
         var file = target.file;
         var btn = $('rpConfirmBtn');
         var note = $('rpNote');
+        state.isReplacingPhoto = true;
         btn.disabled = true;
-        btn.textContent = 'Replacing…';
+        btn.textContent = 'Compressing & Saving…';
         note.className = 'modal-note';
-        note.textContent = 'Uploading new photograph to Firebase Storage…';
+        note.textContent = 'Compressing photograph and saving to Realtime Database…';
         note.hidden = false;
 
-        var ext = (file.name.split('.').pop() || 'jpg').toLowerCase().replace(/[^a-z0-9]/g, '');
-        var newStoragePath = 'site_settings/gallery/' + target.category + '/' + target.id + '_' + Date.now() + '.' + ext;
-
-        /* Upload new file first, update DB reference, and only then clean up old storage object */
-        uploadFileToStorage(newStoragePath, file).then(function (newUrl) {
-          return state.db.ref(SITE_SETTINGS_PATH + '/gallery/' + target.category + '/' + target.id).update({
-            url: newUrl,
-            storagePath: newStoragePath,
+        try {
+          var newDataUrl = await compressImageToDataURL(file);
+          await state.db.ref(SITE_SETTINGS_PATH + '/gallery/' + target.category + '/' + target.id).update({
+            url: newDataUrl,
             order: target.order,
             updatedAt: new Date().toISOString()
-          }).catch(function (dbErr) {
-            return state.storage.ref(newStoragePath).delete().then(function () { throw dbErr; }, function () { throw dbErr; });
           });
-        }).then(function () {
-          if (target.storagePath && target.storagePath !== newStoragePath) {
-            return state.storage.ref(target.storagePath).delete().catch(function () { /* Ignore if already removed */ });
-          }
-        }).then(function () {
           $('replacePhotoModal').hidden = true;
           $('replacePhotoInput').value = '';
           state.replaceTarget = null;
           showToast('Replaced ' + target.id + ' in ' + target.category + ' gallery.', 'ok');
-        }).catch(function (err) {
+        } catch (err) {
           note.className = 'modal-note is-err';
           note.textContent = 'Replace failed: ' + (err && err.message ? err.message : 'Error');
+        } finally {
+          state.isReplacingPhoto = false;
           btn.disabled = false;
-          btn.textContent = 'Upload & Replace';
-        });
+          btn.textContent = 'Compress & Replace';
+        }
       });
 
       function reorderGalleryPhoto(category, index, delta) {
@@ -4522,25 +4934,21 @@
       function promptDeleteGalleryPhoto(item) {
         openConfirmModal(
           'Delete Gallery Photograph?',
-          'Permanently delete "' + item.id + '" from ' + item.category.toUpperCase() + ' gallery and remove its file from Firebase Storage?',
+          'Permanently delete "' + item.id + '" from ' + item.category.toUpperCase() + ' gallery?',
           'Delete Photo',
-          function () {
+          async function () {
             $('cmConfirmBtn').disabled = true;
             $('cmConfirmBtn').textContent = 'Deleting…';
-            /* Remove DB reference first so customer website never points to a deleted storage object */
-            state.db.ref(SITE_SETTINGS_PATH + '/gallery/' + item.category + '/' + item.id).remove().then(function () {
-              if (item.storagePath && state.storage) {
-                return state.storage.ref(item.storagePath).delete().catch(function () { /* Ignore missing object */ });
-              }
-            }).then(function () {
+            try {
+              await state.db.ref(SITE_SETTINGS_PATH + '/gallery/' + item.category + '/' + item.id).remove();
               $('confirmModal').hidden = true;
               showToast('Deleted ' + item.id + ' from ' + item.category + ' gallery.', 'ok');
-            }).catch(function (err) {
+            } catch (err) {
               showToast('Failed to delete photo: ' + (err && err.message ? err.message : 'Error'), 'err');
-            }).then(function () {
+            } finally {
               $('cmConfirmBtn').disabled = false;
               $('cmConfirmBtn').textContent = 'Proceed';
-            });
+            }
           }
         );
       }
