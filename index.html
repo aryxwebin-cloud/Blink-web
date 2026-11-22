@@ -1383,6 +1383,7 @@
       color: #fecdd3;
     }
   </style>
+  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
   <!-- ================= NAVIGATION ================= -->
@@ -2043,7 +2044,6 @@
   <!-- Firebase v8 + Razorpay Checkout -->
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
   <script>
     (function () {
@@ -2061,7 +2061,7 @@
       };
 
       var PAYMENT_CONFIG = {
-        razorpayKey: 'rzp_test_TyPqbXmV5yrlSJ',
+        razorpayKey: 'rzp_test_U3FOXcag8QFMIo',
         venueAdvance: 750,
         gatewayFee: 45,
         expectedOnlineTotal: 795,
@@ -3944,10 +3944,10 @@
               key: PAYMENT_CONFIG.razorpayKey,
               amount: orderData.amount || pricing.onlinePaymentAmount * 100, // 79500 paise
               currency: orderData.currency || 'INR',
-              name: BRAND.name + ' (' + bookingBranch + ')',
-              description: pricing.pkg.name + ' (' + roomLabel + ') \u2022 ' + slotStr + ' (' + formatDate(bookingDate) + ')',
-              prefill: { name: clean.customerName, contact: clean.contactNumber },
-              theme: { color: '#D4AF37' },
+              name: 'Blink Events',
+              description: bookingBranch + ' Branch — ' + pricing.pkg.name + ' (' + roomLabel + ') \u2022 ' + slotStr + ' (' + formatDate(bookingDate) + ')',
+              prefill: { name: clean.customerName, email: clean.customerEmail || '', contact: clean.contactNumber },
+              theme: { color: '#20B152' },
               handler: function (response) {
                 paid = true;
                 var nowIso = new Date().toISOString();
