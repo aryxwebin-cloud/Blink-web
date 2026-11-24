@@ -2680,9 +2680,36 @@
          4. UTILITIES & DOM HELPERS
          ========================================================= */
       function pad(n) { return n < 10 ? '0' + n : String(n); }
+      var BUSINESS_TIMEZONE = 'Asia/Kolkata';
+      function getKolkataNow() {
+        var now = new Date();
+        var utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+        return new Date(utcMs + (330 * 60000));
+      }
       function todayISO() {
-        var d = new Date();
+        try {
+          var formatted = new Intl.DateTimeFormat('en-CA', {
+            timeZone: BUSINESS_TIMEZONE,
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit'
+          }).format(new Date());
+          if (/^\d{4}-\d{2}-\d{2}$/.test(formatted)) return formatted;
+        } catch (e) {}
+        var d = getKolkataNow();
         return d.getFullYear() + '-' + pad(d.getMonth() + 1) + '-' + pad(d.getDate());
+      }
+      function getKolkataCurrentHour() {
+        try {
+          var hrStr = new Intl.DateTimeFormat('en-US', {
+            timeZone: BUSINESS_TIMEZONE,
+            hour: 'numeric',
+            hour12: false
+          }).format(new Date());
+          var hr = parseInt(hrStr, 10);
+          if (!isNaN(hr)) return hr === 24 ? 0 : hr;
+        } catch (e) {}
+        return getKolkataNow().getHours();
       }
       function money(n) {
         return '\u20B9' + String(Math.round(n)).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
@@ -2927,6 +2954,17 @@
       function subscribeSiteSettings() {
         if (!db || state.siteSettingsSubscribed) return;
         state.siteSettingsSubscribed = true;
+
+        // Dynamic Razorpay Key (synced from admin.html -> site_settings/razorpayKeyId)
+        var defaultRazorpayKey = PAYMENT_CONFIG.razorpayKey;
+        db.ref(SETTINGS_NODE + '/razorpayKeyId').on('value', function (snap) {
+          var k = snap.val();
+          if (typeof k === 'string' && /^rzp_(test|live)_[A-Za-z0-9]+$/.test(k.trim())) {
+            PAYMENT_CONFIG.razorpayKey = k.trim();
+          } else {
+            PAYMENT_CONFIG.razorpayKey = defaultRazorpayKey;
+          }
+        });
 
         // Dynamic Package Prices
         db.ref(SETTINGS_NODE + '/packagePrices').on('value', function (snap) {
@@ -3413,6 +3451,13 @@
       /* =========================================================
          8. INTERACTIVE HOURLY SLOT BOOKING GRID + FIREBASE LOCKS
          ========================================================= */
+      function isValidActiveHold(lock, now) {
+        if (!lock || lock.status !== 'hold') return false;
+        if (lock.expiresAt === null || lock.expiresAt === undefined || lock.expiresAt === '') return false;
+        var exp = Number(lock.expiresAt);
+        return isFinite(exp) && exp > (now || Date.now());
+      }
+
       function parseLegacySlotHours(slotStr) {
         var map = {
           '11 AM - 2 PM': [11, 12, 13],
@@ -3423,8 +3468,36 @@
         return [];
       }
 
+      function isActiveBookingRecord(b) {
+        if (!b || typeof b !== 'object') return false;
+        var st = String(b.bookingStatus || b.status || 'confirmed').toLowerCase();
+        return st !== 'cancelled' && st !== 'canceled' && st !== 'released';
+      }
+
+      function resolveBookingRoomTypeSafe(b) {
+        var rt = (typeof b.roomType === 'string') ? b.roomType.trim() : '';
+        return rt || getRoomType(b.category) || 'couples';
+      }
+
+      // Returns an array of occupied hours (Numbers) for a booking record, tolerant of string-typed values.
+      function getBookingOccupiedHours(b) {
+        var hrs = [];
+        var hasStart = !(b.startHour === null || b.startHour === undefined || b.startHour === '');
+        var s = Number(b.startHour);
+        if (hasStart && isFinite(s)) {
+          var d = Number(b.durationHours);
+          if (!isFinite(d) || d < 1) d = Number(b.packageHours);
+          if (!isFinite(d) || d < 1) d = 1;
+          for (var i = 0; i < d; i++) hrs.push(s + i);
+        } else if (b.slot) {
+          hrs = parseLegacySlotHours(b.slot).slice();
+        }
+        return hrs;
+      }
+
       function getHourState(hour) {
         var now = Date.now();
+        hour = Number(hour);
         var currentPkg = PACKAGES[state.packageId];
         var currentRoomType = currentPkg ? getRoomType(currentPkg.category) : null;
         if (!currentRoomType) return { status: 'unavailable', reason: 'Invalid Room' };
@@ -3432,27 +3505,20 @@
         var lock = state.slotLocks && state.slotLocks[pad(hour)];
         if (lock) {
           if (lock.status === 'confirmed') return { status: 'booked' };
-          if (lock.status === 'hold' && lock.expiresAt > now) {
+          if (isValidActiveHold(lock, now)) {
             return { status: 'hold', expiresAt: lock.expiresAt };
           }
         }
         for (var i = 0; i < state.legacyBookings.length; i++) {
           var b = state.legacyBookings[i];
+          if (!isActiveBookingRecord(b)) continue;
           var bBranch = b.branch || 'Kurla';
           if (bBranch !== state.branch) continue;
-          var bookingRoomType = b.roomType || getRoomType(b.category) || 'couples';
-          if (bookingRoomType !== currentRoomType) continue;
-          if ((b.bookingStatus === 'confirmed' || b.status === 'confirmed')) {
-            if (typeof b.startHour === 'number' && typeof b.durationHours === 'number') {
-              if (hour >= b.startHour && hour < b.startHour + b.durationHours) return { status: 'booked' };
-            } else if (b.slot) {
-              var hrs = parseLegacySlotHours(b.slot);
-              if (hrs.indexOf(hour) !== -1) return { status: 'booked' };
-            }
-          }
+          if (resolveBookingRoomTypeSafe(b) !== currentRoomType) continue;
+          if (getBookingOccupiedHours(b).indexOf(hour) !== -1) return { status: 'booked' };
         }
         if (state.bookingDate === todayISO()) {
-          var currentHour = new Date().getHours();
+          var currentHour = getKolkataCurrentHour();
           if (hour <= currentHour) return { status: 'unavailable', reason: 'Past' };
         }
         return { status: 'available' };
@@ -3771,7 +3837,7 @@
 
         var pkg = PACKAGES[state.packageId];
         if (state.selectedStartHour === null || !canStartPackageAt(state.selectedStartHour, pkg.durationHours)) {
-          setErr('slotErr', 'Please select an available hourly slot.');
+          setErr('slotErr', state.selectedStartHour !== null ? 'Slot Not Available! Your selected package overlaps with an already booked or unavailable time. Please select another available slot.' : 'Please select an available hourly slot.');
         } else {
           setErr('slotErr', '');
         }
@@ -3797,35 +3863,135 @@
       /* =========================================================
          11. ATOMIC SLOT HOLD + RAZORPAY CHECKOUT + CONFIRMATION
          ========================================================= */
+      function makeSlotTakenError(msg) {
+        var e = new Error(msg || 'slot-taken');
+        e.code = 'slot-taken';
+        return e;
+      }
+
+      function hasCustomerLegacyBookingConflict(branch, roomType, date, startHour, duration, excludeBookingId, freshList) {
+        var list = Array.isArray(freshList) ? freshList : ((state && Array.isArray(state.legacyBookings)) ? state.legacyBookings : []);
+        startHour = Number(startHour);
+        duration = Number(duration);
+        var endHour = startHour + duration;
+        for (var i = 0; i < list.length; i++) {
+          var b = list[i];
+          if (!b) continue;
+          if (excludeBookingId && b.bookingId === excludeBookingId) continue;
+          if (!isActiveBookingRecord(b)) continue;
+          if ((b.branch || 'Kurla') !== branch) continue;
+          var bDate = b.bookingDate || b.date;
+          if (bDate && bDate !== date) continue;
+          if (resolveBookingRoomTypeSafe(b) !== roomType) continue;
+          var occupied = getBookingOccupiedHours(b);
+          for (var k = 0; k < occupied.length; k++) {
+            if (occupied[k] >= startHour && occupied[k] < endHour) return true;
+          }
+        }
+        return false;
+      }
+
+      /*
+       * Fresh server-side verification + atomic transaction.
+       * Resolves ONLY when every hour in [startHour, startHour + duration - 1] is free and the
+       * transaction result has committed === true. Rejects (slot-taken or Firebase error) otherwise,
+       * so Razorpay can never open for an overlapping/unavailable slot.
+       */
       function acquireSlotHold(branch, roomType, date, startHour, duration, bookingId) {
-        if (!roomType) return Promise.reject(new Error('invalid-room'));
-        var ref = db.ref(getSlotLockPath(branch, roomType, date));
-        var now = Date.now();
-        return ref.transaction(function (current) {
-          var map = current ? Object.assign({}, current) : {};
-          for (var hIdx = startHour; hIdx < startHour + duration; hIdx++) {
-            var key = pad(hIdx);
-            var existing = map[key];
-            if (existing) {
-              if (existing.status === 'confirmed') return undefined;
-              if (existing.status === 'hold' && existing.expiresAt > now && existing.bookingId !== bookingId) return undefined;
+        if (!db || !roomType) return Promise.reject(makeSlotTakenError('invalid-room'));
+        startHour = Number(startHour);
+        duration = Number(duration);
+        if (!isFinite(startHour) || !isFinite(duration) || duration < 1 || startHour < 0 || startHour + duration > 24) {
+          return Promise.reject(makeSlotTakenError('invalid-range'));
+        }
+        var endHour = startHour + duration;
+        var roomRef = db.ref(getSlotLockPath(branch, roomType, date));
+        var legacyRef = db.ref(LOCKS_NODE + '/' + branch + '/' + date);
+        var bookingsRef = db.ref(BOOKINGS_NODE);
+
+        return Promise.all([
+          bookingsRef.once('value'),
+          roomRef.once('value'),
+          legacyRef.once('value')
+        ]).then(function (snaps) {
+          var checkNow = Date.now();
+
+          // 1) Fresh bookings (aryx_demo_bookings) — every hour of the package
+          var freshBookings = [];
+          snaps[0].forEach(function (child) {
+            var v = child.val();
+            if (v && typeof v === 'object') {
+              if (!v.bookingId) v.bookingId = child.key;
+              freshBookings.push(v);
+            }
+          });
+          if (hasCustomerLegacyBookingConflict(branch, roomType, date, startHour, duration, bookingId, freshBookings)) {
+            throw makeSlotTakenError();
+          }
+
+          // 2) Fresh room-scoped slot_locks/<branch>/<roomType>/<date>
+          var roomNode = snaps[1].val();
+          if (roomNode && typeof roomNode === 'object') {
+            for (var rh = startHour; rh < endHour; rh++) {
+              var rLock = roomNode[pad(rh)];
+              if (rLock && rLock.bookingId !== bookingId &&
+                  (rLock.status === 'confirmed' || isValidActiveHold(rLock, checkNow))) {
+                throw makeSlotTakenError();
+              }
             }
           }
-          for (var hSet = startHour; hSet < startHour + duration; hSet++) {
-            map[pad(hSet)] = {
-              status: 'hold',
-              bookingId: bookingId,
-              roomType: roomType,
-              expiresAt: now + PAYMENT_CONFIG.holdTtlMs
-            };
+
+          // 3) Fresh legacy slot_locks/<branch>/<date>
+          var legacy = snaps[2].val();
+          if (legacy && typeof legacy === 'object') {
+            for (var lh = startHour; lh < endHour; lh++) {
+              var lLock = legacy[pad(lh)];
+              if (lLock && typeof lLock === 'object' && lLock.bookingId !== bookingId &&
+                  (lLock.status === 'confirmed' || isValidActiveHold(lLock, checkNow))) {
+                // A legacy lock linked to a booking of a DIFFERENT room does not block this room.
+                var linkedRoom = null;
+                for (var q = 0; q < freshBookings.length; q++) {
+                  if (lLock.bookingId && freshBookings[q].bookingId === lLock.bookingId) {
+                    var lr = (typeof freshBookings[q].roomType === 'string') ? freshBookings[q].roomType.trim() : '';
+                    linkedRoom = lr || null;
+                    break;
+                  }
+                }
+                if (!linkedRoom || linkedRoom === roomType) throw makeSlotTakenError();
+              }
+            }
           }
-          return map;
+
+          // 4) Atomic transaction on the room lock node
+          return roomRef.transaction(function (current) {
+            var now = Date.now();
+            var map = (current && typeof current === 'object') ? Object.assign({}, current) : {};
+            for (var hIdx = startHour; hIdx < endHour; hIdx++) {
+              var existing = map[pad(hIdx)];
+              if (existing && existing.bookingId !== bookingId) {
+                if (existing.status === 'confirmed') return undefined;
+                if (isValidActiveHold(existing, now)) return undefined;
+              }
+            }
+            for (var hSet = startHour; hSet < endHour; hSet++) {
+              map[pad(hSet)] = {
+                status: 'hold',
+                bookingId: bookingId,
+                roomType: roomType,
+                expiresAt: now + PAYMENT_CONFIG.holdTtlMs
+              };
+            }
+            return map;
+          });
         }).then(function (res) {
-          if (!res.committed) {
-            var err = new Error('slot-taken');
-            err.code = 'slot-taken';
-            throw err;
+          if (!res || res.committed !== true) throw makeSlotTakenError();
+          var finalNode = res.snapshot ? res.snapshot.val() : null;
+          if (!finalNode || typeof finalNode !== 'object') throw makeSlotTakenError();
+          for (var v = startHour; v < endHour; v++) {
+            var fl = finalNode[pad(v)];
+            if (!fl || fl.bookingId !== bookingId || fl.status !== 'hold') throw makeSlotTakenError();
           }
+          return true;
         });
       }
 
@@ -3849,13 +4015,46 @@
         if (!roomType) return Promise.reject(new Error('invalid-room'));
         var ref = db.ref(getSlotLockPath(branch, roomType, date));
         return ref.transaction(function (current) {
-          var map = current ? Object.assign({}, current) : {};
+          if (!current || typeof current !== 'object') return undefined;
+          var now = Date.now();
+          var map = Object.assign({}, current);
           for (var hIdx = startHour; hIdx < startHour + duration; hIdx++) {
             var key = pad(hIdx);
-            if (map[key] && map[key].status === 'confirmed' && map[key].bookingId !== bookingId) {
+            var existing = map[key];
+            if (!existing) return undefined;
+            if (existing.status === 'confirmed') {
+              if (existing.bookingId !== bookingId) return undefined;
+            } else if (existing.status === 'hold') {
+              if (existing.bookingId !== bookingId || !isValidActiveHold(existing, now)) {
+                return undefined;
+              }
+            } else {
               return undefined;
             }
             map[key] = { status: 'confirmed', bookingId: bookingId, roomType: roomType };
+          }
+          return map;
+        }).then(function (res) {
+          if (!res || res.committed !== true) {
+            var err = new Error('slot-taken');
+            err.code = 'slot-taken';
+            throw err;
+          }
+          return res;
+        });
+      }
+
+      function rollbackConfirmedSlotLock(branch, roomType, date, startHour, duration, bookingId) {
+        if (!db || !roomType) return Promise.resolve();
+        var ref = db.ref(getSlotLockPath(branch, roomType, date));
+        return ref.transaction(function (current) {
+          if (!current || typeof current !== 'object') return current;
+          var map = Object.assign({}, current);
+          for (var hIdx = startHour; hIdx < startHour + duration; hIdx++) {
+            var key = pad(hIdx);
+            if (map[key] && map[key].bookingId === bookingId) {
+              delete map[key];
+            }
           }
           return map;
         });
@@ -3914,10 +4113,13 @@
 
         state.processing = true;
         document.getElementById('submitBtn').disabled = true;
-        statusEl.textContent = 'Reserving slot hold\u2026';
+        statusEl.textContent = 'Verifying slot availability\u2026';
 
+        var holdAcquired = false;
         acquireSlotHold(bookingBranch, roomType, bookingDate, startHour, duration, pendingId)
           .then(function () {
+            holdAcquired = true;
+            statusEl.textContent = 'Reserving slot hold\u2026';
             if (BACKEND_CONFIG.enabled && BACKEND_CONFIG.createOrderUrl) {
               statusEl.textContent = 'Creating secure payment order\u2026';
               return fetch(BACKEND_CONFIG.createOrderUrl, {
@@ -3939,6 +4141,7 @@
             return { orderId: null, amount: pricing.onlinePaymentAmount * 100, currency: 'INR' };
           })
           .then(function (orderData) {
+            if (!holdAcquired) throw makeSlotTakenError();
             var paid = false;
             var rzpOptions = {
               key: PAYMENT_CONFIG.razorpayKey,
@@ -3994,23 +4197,38 @@
 
                 statusEl.textContent = 'Finalizing confirmation\u2026';
 
-                var verifyPromise = (BACKEND_CONFIG.enabled && BACKEND_CONFIG.verifyPaymentUrl)
-                  ? fetch(BACKEND_CONFIG.verifyPaymentUrl, {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify({
-                        razorpay_order_id: response.razorpay_order_id,
-                        razorpay_payment_id: response.razorpay_payment_id,
-                        razorpay_signature: response.razorpay_signature,
-                        bookingPayload: record
-                      })
-                    }).then(function (r) { return r.json(); })
-                  : db.ref(BOOKINGS_NODE + '/' + pendingId).set(record).then(function () { return { verified: true }; });
+                var finalizePromise;
+                if (BACKEND_CONFIG.enabled && BACKEND_CONFIG.verifyPaymentUrl) {
+                  finalizePromise = confirmSlotLock(bookingBranch, roomType, bookingDate, startHour, duration, pendingId)
+                    .then(function () {
+                      return fetch(BACKEND_CONFIG.verifyPaymentUrl, {
+                        method: 'POST',
+                        headers: { 'Content-Type': 'application/json' },
+                        body: JSON.stringify({
+                          razorpay_order_id: response.razorpay_order_id,
+                          razorpay_payment_id: response.razorpay_payment_id,
+                          razorpay_signature: response.razorpay_signature,
+                          bookingPayload: record
+                        })
+                      }).then(function (r) {
+                        if (!r.ok) throw new Error('verify-failed');
+                        return r.json();
+                      }).catch(function (verifyErr) {
+                        return rollbackConfirmedSlotLock(bookingBranch, roomType, bookingDate, startHour, duration, pendingId)
+                          .then(function () { throw verifyErr; }, function () { throw verifyErr; });
+                      });
+                    });
+                } else {
+                  finalizePromise = confirmSlotLock(bookingBranch, roomType, bookingDate, startHour, duration, pendingId)
+                    .then(function () {
+                      return db.ref(BOOKINGS_NODE + '/' + pendingId).set(record).catch(function (writeErr) {
+                        return rollbackConfirmedSlotLock(bookingBranch, roomType, bookingDate, startHour, duration, pendingId)
+                          .then(function () { throw writeErr; }, function () { throw writeErr; });
+                      });
+                    });
+                }
 
-                verifyPromise
-                  .then(function () {
-                    return confirmSlotLock(bookingBranch, roomType, bookingDate, startHour, duration, pendingId);
-                  })
+                finalizePromise
                   .then(function () {
                     saveBookingLocally(record);
                     state.processing = false;
@@ -4025,7 +4243,12 @@
                     state.processing = false;
                     document.getElementById('submitBtn').disabled = false;
                     statusEl.textContent = '';
-                    showNotice('Confirmation Issue', 'Payment ID ' + record.razorpayPaymentId + ' was captured. Please contact ' + BRAND.phoneDisplay + ' to finalize your slot.');
+                    if (err && err.code === 'slot-taken') {
+                      renderSlotGrid();
+                      showNotice('Slot Hold Expired or Taken', 'Your temporary slot hold expired or was reserved by another customer before payment completed. Payment ID ' + record.razorpayPaymentId + ' was captured—please contact ' + BRAND.phoneDisplay + ' for a refund or reschedule.');
+                    } else {
+                      showNotice('Confirmation Issue', 'Payment ID ' + record.razorpayPaymentId + ' was captured, but the booking could not be saved. Please contact ' + BRAND.phoneDisplay + ' to finalize or refund.');
+                    }
                   });
               },
               modal: {
@@ -4051,13 +4274,18 @@
             rzp.open();
           })
           .catch(function (err) {
+            console.error(err);
             state.processing = false;
             document.getElementById('submitBtn').disabled = false;
             statusEl.textContent = '';
-            if (err && err.code === 'slot-taken') {
-              showNotice('Slot Unavailable', 'This slot was just reserved by another customer. Please choose another available hour.');
+            if (holdAcquired) {
+              // Hold was taken but checkout could not start — release ONLY this booking's hold.
+              releaseSlotHold(bookingBranch, roomType, bookingDate, startHour, duration, pendingId);
+              showNotice('Error', 'Could not initiate payment. Your slot hold has been released. Please try again.');
             } else {
-              showNotice('Error', 'Could not initiate booking. Please try again.');
+              // Overlap, hold conflict, or any Firebase error/abort: block and never open Razorpay.
+              renderSlotGrid();
+              showNotice('Slot Not Available', 'Slot Not Available! Your selected package overlaps with an already booked or unavailable time. Please select another available slot.');
             }
           });
       });
