@@ -58,6 +58,7 @@
        BASE & RESET
        ========================================================= */
     *, *::before, *::after { box-sizing: border-box; }
+    [hidden] { display: none !important; }
     html {
       scroll-behavior: smooth;
       scroll-padding-top: calc(var(--nav-h) + 12px);
@@ -626,22 +627,133 @@
       max-width: 620px; margin: 0 auto 32px;
     }
     .pkg-tab {
-      padding: 11px 12px; border-radius: 999px;
+      padding: 10px 14px; min-height: 54px; border-radius: 14px;
       background: var(--card); border: 1.5px solid var(--line);
       color: var(--text-muted); font-family: var(--font-head); font-weight: 600; font-size: 0.86rem;
-      line-height: 1.25; display: flex; align-items: center; justify-content: center; text-align: center;
+      line-height: 1.3; display: flex; align-items: center; justify-content: center; text-align: center;
       cursor: pointer; transition: all .22s var(--ease);
+      -webkit-tap-highlight-color: transparent;
     }
-    .pkg-tab[hidden] { display: none; }
-    .pkg-tabs--vashi { gap: 8px; max-width: 660px; }
-    .pkg-tabs--vashi .pkg-tab { padding: 9px 10px; font-size: 0.76rem; min-height: 42px; }
-    @media (min-width: 640px) {
-      .pkg-tabs--vashi .pkg-tab { padding: 11px 14px; font-size: 0.84rem; }
-    }
+    .pkg-tab:hover { border-color: var(--gold); color: var(--gold-soft); }
     .pkg-tab.is-active {
       background: linear-gradient(135deg, rgba(212, 175, 55, 0.22), rgba(244, 114, 182, 0.16));
       border-color: var(--gold); color: var(--gold-soft);
       box-shadow: 0 8px 24px rgba(212, 175, 55, 0.16);
+    }
+    .vashi-nav-wrap {
+      max-width: 780px;
+      margin: 0 auto 28px;
+      display: grid;
+      gap: 12px;
+    }
+    .vashi-audience-tabs {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      max-width: 620px;
+      width: 100%;
+      margin: 0 auto;
+    }
+    .vashi-audience-tab {
+      position: relative;
+      padding: 10px 14px;
+      min-height: 54px;
+      border-radius: 14px;
+      background: var(--card);
+      border: 1.5px solid var(--line);
+      color: var(--text-muted);
+      font-family: var(--font-head);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .22s var(--ease);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .vashi-audience-tab__title {
+      font-weight: 700;
+      font-size: 0.84rem;
+      line-height: 1.2;
+      letter-spacing: 0.02em;
+    }
+    .vashi-audience-tab__sub {
+      font-weight: 500;
+      font-size: 0.7rem;
+      line-height: 1.2;
+      color: var(--text-muted);
+    }
+    .vashi-audience-tab:hover { border-color: var(--gold); color: var(--gold-soft); }
+    .vashi-audience-tab.is-active {
+      background: linear-gradient(135deg, rgba(212, 175, 55, 0.24), rgba(244, 114, 182, 0.16));
+      border-color: var(--gold);
+      color: var(--gold-soft);
+      box-shadow: 0 8px 24px rgba(212, 175, 55, 0.16);
+    }
+    .vashi-audience-tab.is-active .vashi-audience-tab__sub { color: var(--rose); }
+    .vashi-audience-tab.is-active::after {
+      content: "\2713";
+      position: absolute;
+      top: 6px;
+      right: 9px;
+      font-size: 0.7rem;
+      line-height: 1;
+      color: var(--gold);
+    }
+    .vashi-theme-label {
+      text-align: center;
+      font-size: 0.74rem;
+      font-weight: 500;
+      letter-spacing: 0.04em;
+      color: var(--text-muted);
+      opacity: 0.85;
+      margin-top: 2px;
+    }
+    .vashi-subthemes {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 8px;
+      width: 100%;
+      max-width: 780px;
+      margin: 0 auto;
+    }
+    .vashi-theme-card {
+      padding: 10px 10px;
+      min-height: 54px;
+      border-radius: 12px;
+      background: #0d0d12;
+      border: 1px solid rgba(212, 175, 55, 0.3);
+      color: var(--text-muted);
+      font-family: var(--font-head);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 3px;
+      text-align: center;
+      cursor: pointer;
+      transition: all .2s var(--ease);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .vashi-theme-card__name { font-weight: 600; font-size: 0.76rem; line-height: 1.25; }
+    .vashi-theme-card__meta { font-weight: 500; font-size: 0.68rem; line-height: 1.2; color: var(--gold-soft); opacity: 0.9; }
+    .vashi-theme-card:hover { border-color: var(--gold-soft); color: #fff; }
+    .vashi-theme-card.is-active {
+      background: linear-gradient(135deg, var(--gold-soft), var(--gold));
+      border-color: #fff;
+      color: #140f03;
+      box-shadow: 0 6px 18px rgba(212, 175, 55, 0.26);
+    }
+    .vashi-theme-card.is-active .vashi-theme-card__meta { color: #3a2c06; opacity: 1; }
+    @media (min-width: 640px) {
+      .vashi-audience-tab__title { font-size: 0.92rem; }
+      .vashi-audience-tab__sub { font-size: 0.76rem; }
+      .vashi-subthemes[data-count="4"] { grid-template-columns: repeat(4, 1fr); }
+      .vashi-subthemes[data-count="2"] { max-width: 420px; }
+      .vashi-theme-card__name { font-size: 0.82rem; }
+      .vashi-theme-card__meta { font-size: 0.72rem; }
     }
     .pkg-cat-note {
       text-align: center; color: var(--rose); font-size: 0.88rem; font-weight: 500;
@@ -691,12 +803,70 @@
       margin: 12px 0 4px; line-height: 1.1;
     }
     .pkg-card__meta { font-size: 0.8rem; color: var(--text-muted); margin-bottom: 16px; padding-bottom: 14px; border-bottom: 1px solid rgba(255,255,255,0.08); }
-    .pkg-card__list { display: grid; gap: 9px; margin-bottom: 22px; flex: 1; }
-    .pkg-card__list li { display: flex; gap: 9px; align-items: flex-start; font-size: 0.86rem; color: #e2e2e8; }
-    .pkg-card__list li::before {
+    .pkg-card__features { display: flex; flex-direction: column; margin-bottom: 18px; flex: 1; }
+    .pkg-card__list { display: grid; gap: 9px; }
+    .pkg-card__list li, .pkg-card__more-list li { display: flex; gap: 9px; align-items: flex-start; font-size: 0.86rem; color: #e2e2e8; }
+    .pkg-card__list li::before, .pkg-card__more-list li::before {
       content: "✓"; flex: none; width: 18px; height: 18px; border-radius: 50%;
       display: grid; place-items: center; font-size: 0.7rem; font-weight: 700;
       background: rgba(212, 175, 55, 0.16); color: var(--gold-soft); margin-top: 2px;
+    }
+    .pkg-card__more-wrap {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows .3s var(--ease), opacity .24s var(--ease);
+    }
+    .pkg-card__more-wrap.is-expanded {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+    .pkg-card__more-inner { overflow: hidden; }
+    .pkg-card__more-list { display: grid; gap: 9px; margin-top: 9px; }
+    .pkg-card__toggle {
+      background: none;
+      border: none;
+      padding: 4px 0;
+      margin-top: 8px;
+      font-family: var(--font-head);
+      font-size: 0.78rem;
+      font-weight: 600;
+      color: var(--gold-soft);
+      text-align: left;
+      align-self: flex-start;
+      cursor: pointer;
+      transition: color .18s var(--ease);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pkg-card__toggle:hover { color: #fff; text-decoration: underline; }
+    .pkg-card__reel-wrap {
+      display: flex;
+      justify-content: flex-start;
+      margin: 6px 0 14px;
+    }
+    .pkg-card__reel-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      width: auto;
+      min-height: auto;
+      padding: 5px 12px;
+      border-radius: 999px;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.45);
+      color: var(--gold-soft);
+      font-family: var(--font-head);
+      font-size: 0.74rem;
+      font-weight: 600;
+      letter-spacing: 0.01em;
+      text-decoration: none;
+      transition: background .2s var(--ease), border-color .2s var(--ease), color .2s var(--ease);
+      -webkit-tap-highlight-color: transparent;
+    }
+    .pkg-card__reel-link:hover {
+      background: rgba(212, 175, 55, 0.22);
+      border-color: var(--gold);
+      color: #fff;
     }
     .pkg-card .btn { width: 100%; }
 
@@ -1531,11 +1701,18 @@
           <p>Choose between intimate Love Paradise suites for couples or spacious Celebration Packages for friends and family.</p>
         </div>
 
-        <div class="pkg-tabs" id="pkgTabs" role="tablist" aria-label="Package Categories">
-          <button type="button" class="pkg-tab is-active" id="catTabLove" data-category="love_paradise" role="tab" aria-selected="true">❤️ LOVE PARADISE</button>
-          <button type="button" class="pkg-tab" id="catTabCeleb" data-category="celebration" role="tab" aria-selected="false">👑 CELEBRATION PACKAGES</button>
-          <button type="button" class="pkg-tab" id="catTabHeaven" data-category="heaven_couple" role="tab" aria-selected="false" hidden>💙 HEAVEN FOR COUPLE</button>
-          <button type="button" class="pkg-tab" id="catTabVashi3" data-category="mega_party" role="tab" aria-selected="false" hidden>🎉 MEGA PARTY PACKAGES</button>
+        <div class="pkg-tabs" id="pkgTabs" role="tablist" aria-label="Kurla Package Categories">
+          <button type="button" class="pkg-tab is-active" id="catTabLove" data-category="love_paradise" role="tab" aria-selected="true">❤️ LOVE PARADISE (COUPLES)</button>
+          <button type="button" class="pkg-tab" id="catTabCeleb" data-category="celebration" role="tab" aria-selected="false">👑 CELEBRATION PACKAGES (FAMILY &amp; GROUPS)</button>
+        </div>
+
+        <div class="vashi-nav-wrap" id="vashiNavWrap" hidden>
+          <div class="vashi-audience-tabs" role="tablist" aria-label="Vashi Audience Selection">
+            <button type="button" class="vashi-audience-tab is-active" id="vashiAudCouples" data-audience="couples" role="tab" aria-selected="true"><span class="vashi-audience-tab__title">❤️ FOR COUPLES</span><span class="vashi-audience-tab__sub">4 Romantic Themes</span></button>
+            <button type="button" class="vashi-audience-tab" id="vashiAudFamily" data-audience="family_groups" role="tab" aria-selected="false"><span class="vashi-audience-tab__title">👑 FOR FAMILY &amp; GROUPS</span><span class="vashi-audience-tab__sub">2 Group &amp; Party Zones</span></button>
+          </div>
+          <div class="vashi-theme-label" id="vashiThemeLabel">Choose Your Setup Theme:</div>
+          <div class="vashi-subthemes" id="vashiSubThemes" role="tablist" aria-label="Vashi Setup Themes" data-count="4"></div>
         </div>
         <p class="pkg-cat-note" id="pkgCatNote">Couples Packages &bull; Base Guests: 2 &bull; Extra Guest: ₹300 per person</p>
 
@@ -2114,7 +2291,9 @@
         'vashi_couples',
         'vashi_family',
         'vashi_heaven',
-        'vashi_mega'
+        'vashi_mega',
+        'vashi_dinner_luxury',
+        'vashi_dinner_royal'
       ];
 
       function getDefaultGalleryForKey(roomKey) {
@@ -2132,6 +2311,8 @@
           vashi_family: 'Vashi — Friends & Family Zone',
           vashi_heaven: 'Vashi — Heaven for Couple',
           vashi_mega: 'Vashi — Mega Party Hall',
+          vashi_dinner_luxury: 'Vashi — ₹9,000 Luxury Dinner Setup',
+          vashi_dinner_royal: 'Vashi — ₹20,000 Royal Proposal Package',
           couples: 'Couples Room',
           family: 'Family Room'
         };
@@ -2139,7 +2320,7 @@
       }
 
       function isCouplesGalleryKey(roomKey) {
-        return roomKey === 'kurla_couples' || roomKey === 'vashi_couples' || roomKey === 'vashi_heaven' || roomKey === 'couples';
+        return roomKey === 'kurla_couples' || roomKey === 'vashi_couples' || roomKey === 'vashi_heaven' || roomKey === 'vashi_dinner_luxury' || roomKey === 'vashi_dinner_royal' || roomKey === 'couples';
       }
 
       var VENUE_GALLERY = {
@@ -2148,7 +2329,9 @@
         vashi_couples: DEFAULT_VENUE_GALLERY.couples.slice(),
         vashi_family: DEFAULT_VENUE_GALLERY.family.slice(),
         vashi_heaven: DEFAULT_VENUE_GALLERY.couples.slice(),
-        vashi_mega: DEFAULT_VENUE_GALLERY.family.slice()
+        vashi_mega: DEFAULT_VENUE_GALLERY.family.slice(),
+        vashi_dinner_luxury: DEFAULT_VENUE_GALLERY.couples.slice(),
+        vashi_dinner_royal: DEFAULT_VENUE_GALLERY.couples.slice()
       };
 
       var ADDONS = [
@@ -2185,7 +2368,7 @@
             'Aesthetic Mirror Wall',
             'Sofa Seating',
             'Party Speakers',
-            'Complimentary Snacks Hamper'
+            'Snacks Hamper (Complimentary)'
           ]
         },
         paradise_2: {
@@ -2200,8 +2383,13 @@
           featured: true,
           includedAddons: ['cake_half_kg'],
           features: [
-            'Everything in Paradise 1',
+            'Birthday Setup',
+            'Red Romantic Setup',
+            'Aesthetic Mirror Wall',
+            'Sofa Seating',
+            'Party Speakers',
             'Movie Screening',
+            'Snacks Hamper (Complimentary)',
             'Half Kg Cake'
           ]
         },
@@ -2213,16 +2401,23 @@
           durationHours: 3,
           baseGuests: 2,
           extraGuestRate: 300,
-          badge: 'ALL-INCLUSIVE',
+          badge: '',
           featured: false,
-          includedAddons: ['fog_smoke', 'hanging_photo', 'cake_half_kg', 'candle_decor'],
+          includedAddons: ['fog_smoke', 'hanging_photo', 'cake_half_kg', 'candle_decor', 'screen_setup', 'letter_name', 'flower_bouquet'],
           features: [
-            'Everything in Paradise 2',
+            'Birthday Setup',
+            'Red Romantic Setup',
+            'Aesthetic Mirror Wall',
+            'Sofa Seating',
+            'Party Speakers',
+            'Movie Screening',
             'Smoke Entry',
             'Letter Light Name',
             'Candle Decor',
             'Hanging Photos (12)',
             'Flower Bouquet',
+            'Half Kg Cake',
+            'Snacks Hamper',
             '2 French Fries'
           ]
         },
@@ -2236,12 +2431,12 @@
           extraGuestRate: 199,
           badge: '',
           featured: false,
-          includedAddons: [],
+          includedAddons: ['letter_name', 'screen_setup'],
           features: [
             'Balloon Decoration',
             'Letter Lights Name',
             'Movie Screening',
-            'Sound Access',
+            'Sounds Access',
             'Snacks Hamper'
           ]
         },
@@ -2255,11 +2450,15 @@
           extraGuestRate: 250,
           badge: '',
           featured: true,
-          includedAddons: ['telephone_booth', 'cake_half_kg'],
+          includedAddons: ['letter_name', 'screen_setup', 'telephone_booth', 'cake_half_kg'],
           features: [
-            'Everything in Silver',
+            'Balloon Decoration',
+            'Letter Lights Name',
+            'Movie Screening',
+            'Sounds Access',
             'Telephone Decoration',
-            'Half Kg Cake'
+            'Snacks Hamper',
+            'Cake (Half Kg)'
           ]
         },
         diamond: {
@@ -2272,16 +2471,20 @@
           extraGuestRate: 299,
           badge: 'GRAND GROUP PACK',
           featured: false,
-          includedAddons: ['fog_smoke', 'bubble_entry', 'telephone_booth', 'hanging_photo', 'cake_half_kg'],
+          includedAddons: ['letter_name', 'screen_setup', 'flower_bouquet', 'fog_smoke', 'bubble_entry', 'telephone_booth', 'hanging_photo', 'cake_half_kg'],
           features: [
-            'Everything in Golden',
+            'Balloon Decoration',
+            'Letter Lights Name',
+            'Movie Screening',
+            'Sounds Access',
             'Bouquet',
-            'Hanging Photo (8 Pics)',
-            'Surprise Video',
-            'Message Box',
+            'Telephone Decoration',
+            'Hanging Photo (12 Pics)',
+            'Cake (Half Kg)',
             'Smoke Entry',
             'Bubble Entry',
             'Board Games',
+            'Snacks Hamper',
             '2 Fries'
           ]
         },
@@ -2317,7 +2520,12 @@
           featured: true,
           includedAddons: ['candle_decor', 'rose_decor', 'hanging_photo', 'fog_smoke', 'bubble_entry', 'letter_name', 'iphone_shoot', 'cake_half_kg', 'flower_bouquet'],
           features: [
-            'Everything in Small Heart',
+            'Red Heart Theme',
+            'Red Balloon Decor',
+            'Candle Light Setup',
+            'Rose Decor',
+            'Music (Speakers)',
+            'Half Kg Cake',
             'Hanging Photos Decor',
             'Smoke & Bubble Entry',
             'Letter Light Name',
@@ -2344,7 +2552,7 @@
             'Rainy Flowers Theme',
             'Sofa Seating',
             'Party Speakers',
-            'Complimentary Snacks Hamper'
+            'Snacks Hamper (Complimentary)'
           ]
         },
         vashi_zone_2: {
@@ -2359,7 +2567,12 @@
           featured: true,
           includedAddons: ['letter_name', 'cake_half_kg'],
           features: [
-            'Everything in Zone 1',
+            'Birthday Decor (Flower & Balloon)',
+            'Old Bombay Theme (Chetak 1970 Scooter)',
+            'Rainy Flowers Theme',
+            'Sofa Seating',
+            'Party Speakers',
+            'Snacks Hamper (Complimentary)',
             'Letter Light Name',
             'Half Kg Cake'
           ]
@@ -2372,17 +2585,25 @@
           durationHours: 3,
           baseGuests: 8,
           extraGuestRate: 299,
-          badge: 'ALL-INCLUSIVE ZONE',
+          badge: '',
           featured: false,
           includedAddons: ['screen_setup', 'letter_name', 'letter_digit', 'fog_smoke', 'bubble_entry', 'hanging_photo', 'flower_bouquet', 'cake_half_kg'],
           features: [
-            'Everything in Zone 2',
+            'Birthday Decor (Flower & Balloon)',
+            'Old Bombay Theme (Chetak 1970 Scooter)',
+            'Rainy Flowers Theme',
+            'Sofa Seating',
+            'Party Speakers',
             'Movie Screening',
+            'Letter Light Name',
             'Letter Light Digit',
-            'Smoke & Bubble Entry',
+            'Smoke Entry',
+            'Bubble Entry',
             'Hanging Photos Decor',
             'Flower Bouquet',
-            '2 French Fries'
+            'Snacks Hamper',
+            'Half Kg Cake',
+            '2 Fries'
           ]
         },
         vashi_heaven_1: {
@@ -2433,7 +2654,7 @@
           baseGuests: 2,
           extraGuestRate: 299,
           extraHourRate: 700,
-          badge: 'ALL-INCLUSIVE',
+          badge: '',
           featured: false,
           includedAddons: ['screen_setup', 'letter_name', 'candle_decor', 'fog_smoke', 'hanging_photo', 'flower_bouquet', 'cake_half_kg'],
           features: [
@@ -2528,6 +2749,69 @@
             'Customized Foil Balloon Decoration',
             'Mascot (Masscord)'
           ]
+        },
+        vashi_dinner_luxury: {
+          id: 'vashi_dinner_luxury',
+          category: 'dinner_luxury',
+          name: 'Indoor Dinner Setup (Luxury Celebration)',
+          price: 9000,
+          durationHours: 2,
+          baseGuests: 2,
+          extraGuestRate: 299,
+          extraHourRate: 1000,
+          badge: '',
+          featured: false,
+          includedAddons: ['fog_smoke', 'bubble_entry', 'screen_setup', 'hanging_photo', 'cake_half_kg', 'flower_bouquet', 'letter_name', 'letter_digit', 'iphone_shoot', 'candle_decor', 'rose_decor'],
+          features: [
+            'Red Balloon Decor',
+            'Candle Light Setup',
+            'Rose Decor',
+            'Hanging Photos Decor (24 Pics)',
+            'Smoke Entry',
+            'Bubble Entry',
+            'Letter Light Name',
+            'Letter Light Digit',
+            'Video Shoot (iPhone)',
+            'Music (Speakers)',
+            'Non-Alcoholic Fruit Wine (1)',
+            'Half Kg Cake',
+            'Flower Bouquet',
+            'Food Worth ₹1,000 Included',
+            'Movie Screen Setup'
+          ]
+        },
+        vashi_dinner_royal: {
+          id: 'vashi_dinner_royal',
+          category: 'dinner_royal',
+          name: 'Royal Proposal Package (Indoor Dinner Setup with AC)',
+          price: 20000,
+          durationHours: 3,
+          baseGuests: 2,
+          extraGuestRate: 299,
+          extraHourRate: 1000,
+          badge: 'ROYAL OFFER',
+          featured: true,
+          includedAddons: ['fog_smoke', 'bubble_entry', 'screen_setup', 'hanging_photo', 'cake_half_kg', 'flower_bouquet', 'letter_name', 'letter_digit', 'iphone_shoot', 'candle_decor', 'rose_decor'],
+          features: [
+            'Room Proposal Decoration (Red Theme)',
+            'Fully Air Conditioned Setup',
+            'Movie Screen Setup',
+            'Letter Light Name',
+            'Letter Light Digit',
+            'Hanging Photos Decor (36 Photos)',
+            'Smoke Entry',
+            'Bubble Entry',
+            'Customized Flower Bouquet',
+            'Music Setup (Speakers)',
+            'Half Kg Customized Cake',
+            'Non-Alcoholic Wine',
+            'Rose Petals Decor (Customized)',
+            'Hanging Rose Decor (Customized)',
+            'Candle Decor (Customized)',
+            'Hanging Candle Decor (Customized)',
+            'Video Shoot (iPhone)',
+            'Food Included (Worth ₹1,000)'
+          ]
         }
       };
 
@@ -2548,7 +2832,7 @@
       };
 
       var KURLA_PACKAGE_ORDER = ['paradise_1', 'paradise_2', 'paradise_3', 'silver', 'golden', 'diamond'];
-      var VASHI_PACKAGE_ORDER = ['vashi_small_heart', 'vashi_big_heart', 'vashi_zone_1', 'vashi_zone_2', 'vashi_zone_3', 'vashi_heaven_1', 'vashi_heaven_2', 'vashi_heaven_3', 'vashi_mega_20', 'vashi_mega_30', 'vashi_mega_50'];
+      var VASHI_PACKAGE_ORDER = ['vashi_small_heart', 'vashi_big_heart', 'vashi_zone_1', 'vashi_zone_2', 'vashi_zone_3', 'vashi_heaven_1', 'vashi_heaven_2', 'vashi_heaven_3', 'vashi_mega_20', 'vashi_mega_30', 'vashi_mega_50', 'vashi_dinner_luxury', 'vashi_dinner_royal'];
 
       var BRANCHES = {
         Kurla: {
@@ -2622,14 +2906,39 @@
         lightboxRoom: 'kurla_couples',
         lightboxIndex: 0,
         siteSettingsSubscribed: false,
-        instagramReelsRaw: {}
+        instagramReelsRaw: {},
+        packageReels: {},
+        expandedPackages: {},
+        vashiAudience: 'couples',
+        legacyRoomLocks: {},
+        activeLegacyRoomRef: null
       };
+
+      var VASHI_AUDIENCE_THEMES = {
+        couples: [
+          { category: 'love_paradise', label: 'Dinner Date', meta: '\u20B92,999 \u2013 \u20B94,999' },
+          { category: 'heaven_couple', label: 'Heaven for Couple', meta: '\u20B91,500 \u2013 \u20B94,000' },
+          { category: 'dinner_luxury', label: 'Luxury Dinner Setup', meta: '\u20B99,000' },
+          { category: 'dinner_royal', label: 'Royal Proposal Setup', meta: '\u20B920,000' }
+        ],
+        family_groups: [
+          { category: 'celebration', label: 'Friends & Family Zone', meta: '\u20B91,799 \u2013 \u20B95,999' },
+          { category: 'mega_party', label: 'Mega Party Hall', meta: '20\u201350 Guests' }
+        ]
+      };
+
+      function getVashiAudienceForCategory(cat) {
+        if (cat === 'celebration' || cat === 'mega_party') return 'family_groups';
+        return 'couples';
+      }
 
       function getRoomType(category) {
         if (category === 'love_paradise') return 'couples';
         if (category === 'celebration') return 'family';
         if (category === 'heaven_couple') return 'heaven_couple';
         if (category === 'mega_party') return 'mega_party';
+        if (category === 'dinner_luxury') return 'dinner_luxury';
+        if (category === 'dinner_royal') return 'dinner_royal';
         return null;
       }
 
@@ -2638,7 +2947,20 @@
         if (roomType === 'family') return 'Family Room';
         if (roomType === 'heaven_couple') return 'Heaven for Couple';
         if (roomType === 'mega_party') return 'Mega Party Hall';
+        if (roomType === 'dinner_luxury') return 'Luxury Dinner Room (\u20B99,000)';
+        if (roomType === 'dinner_royal') return 'Royal Proposal Room (\u20B920,000)';
+        if (roomType === 'premium_dinner') return 'Premium Dinner Setup';
         return '';
+      }
+
+      /* Legacy shared room (pre-split bookings only). Never used for NEW bookings. */
+      var LEGACY_PREMIUM_ROOM = 'premium_dinner';
+      function isDinnerRoomType(rt) { return rt === 'dinner_luxury' || rt === 'dinner_royal'; }
+      function resolveLegacyDinnerRoom(rec) {
+        var pid = rec && rec.packageId;
+        if (pid === 'vashi_dinner_luxury') return 'dinner_luxury';
+        if (pid === 'vashi_dinner_royal') return 'dinner_royal';
+        return LEGACY_PREMIUM_ROOM;
       }
 
       function getSlotLockPath(branch, roomType, date) {
@@ -2651,6 +2973,7 @@
         var rt = r.roomType ||
           (r.category ? getRoomType(r.category) : null) ||
           (r.packageId && PACKAGES[r.packageId] ? getRoomType(PACKAGES[r.packageId].category) : null);
+        if (rt === LEGACY_PREMIUM_ROOM) rt = resolveLegacyDinnerRoom(r);
         return getRoomLabel(rt) || 'Couples Room';
       }
 
@@ -2671,6 +2994,10 @@
           el.textContent = 'Showing Live Availability: ' + branchName + ' — Heaven for Couple';
         } else if (roomType === 'mega_party') {
           el.textContent = 'Showing Live Availability: ' + branchName + ' — Mega Party Hall';
+        } else if (roomType === 'dinner_luxury') {
+          el.textContent = 'Showing Live Availability: ' + branchName + ' — Luxury Dinner Room (₹9,000)';
+        } else if (roomType === 'dinner_royal') {
+          el.textContent = 'Showing Live Availability: ' + branchName + ' — Royal Proposal Room (₹20,000)';
         } else {
           el.textContent = 'Showing Live Availability: ' + branchName + ' — Family / Group Room';
         }
@@ -2739,7 +3066,25 @@
         return typeof v === 'number' && isFinite(v) && v > 0;
       }
       function isSafeHttpUrl(url) {
-        return typeof url === 'string' && /^https?:\/\//i.test(url.trim());
+        if (typeof url !== 'string') return false;
+        var s = url.trim();
+        if (!/^https?:\/\//i.test(s)) return false;
+        try {
+          var parsed = new URL(s);
+          return parsed.protocol === 'http:' || parsed.protocol === 'https:';
+        } catch (e) {
+          return false;
+        }
+      }
+      function resolvePackageReelUrl(pkgId, branchId) {
+        var custom = state.packageReels && state.packageReels[pkgId];
+        if (isSafeHttpUrl(custom)) return custom.trim();
+        var pkg = PACKAGES[pkgId];
+        if (branchId === 'Vashi' && pkg && isDinnerRoomType(pkg.category)) {
+          var pdReel = state.instagramReelsRaw && state.instagramReelsRaw.vashi_premium_dinner;
+          if (isSafeHttpUrl(pdReel)) return pdReel.trim();
+        }
+        return DEFAULT_INSTAGRAM_REELS[branchId] || DEFAULT_INSTAGRAM_REELS.Kurla;
       }
       function isValidImageUrl(url) {
         if (typeof url !== 'string') return false;
@@ -2815,18 +3160,27 @@
           love_paradise: 'https://www.instagram.com/reel/De1yhvDAw9N/?jplx=MWNnZno4cjhoOG1qNw==',
           celebration: 'https://www.instagram.com/reel/DfFK-8YgZ23/?knvt=ejZod205ZWk5dGli',
           heaven_couple: 'https://www.instagram.com/reel/DdLjdpQIkoV/?jplx=ZDh2NWN2bnRudWRk',
-          mega_party: ''
+          mega_party: '',
+          dinner_luxury: 'https://www.instagram.com/blinkevent_vashi',
+          dinner_royal: 'https://www.instagram.com/blinkevent_vashi'
         }
       };
+
+      function getActiveReelZoneKey() {
+        if (state.branch === 'Vashi' && isDinnerRoomType(state.category)) {
+          return 'vashi_premium_dinner';
+        }
+        return getActiveGalleryRoomKey();
+      }
 
       function updateCarouselInstagramPills() {
         var branchPill = document.getElementById('branchVideoPill');
         if (!branchPill) return;
-        var zoneKey = getActiveGalleryRoomKey();
+        var reelZoneKey = getActiveReelZoneKey();
         var rawReels = (state.instagramReelsRaw && typeof state.instagramReelsRaw === 'object') ? state.instagramReelsRaw : {};
-        var firebaseUrl = isSafeHttpUrl(rawReels[zoneKey]) ? rawReels[zoneKey].trim() : '';
+        var firebaseUrl = isSafeHttpUrl(rawReels[reelZoneKey]) ? rawReels[reelZoneKey].trim() : '';
         var branchReels = CATEGORY_REEL_URLS[state.branch] || {};
-        var fallbackUrl = (zoneKey === 'vashi_mega') ? '' : (branchReels[state.category] || '');
+        var fallbackUrl = (reelZoneKey === 'vashi_mega') ? '' : (branchReels[state.category] || '');
         var reelUrl = firebaseUrl || fallbackUrl;
         if (!isSafeHttpUrl(reelUrl)) {
           branchPill.hidden = true;
@@ -3015,6 +3369,14 @@
           BRANCHES.Kurla.instagramUrl = isSafeHttpUrl(kurlaUrl) ? kurlaUrl.trim() : DEFAULT_INSTAGRAM_REELS.Kurla;
           BRANCHES.Vashi.instagramUrl = isSafeHttpUrl(vashiUrl) ? vashiUrl.trim() : DEFAULT_INSTAGRAM_REELS.Vashi;
           renderBranchUI();
+          renderPackages();
+        });
+
+        // Dynamic Package-Wise Setup Reel Links
+        db.ref(SETTINGS_NODE + '/packageReels').on('value', function (snap) {
+          var pkgReels = snap.val();
+          state.packageReels = (pkgReels && typeof pkgReels === 'object' && !Array.isArray(pkgReels)) ? pkgReels : {};
+          renderPackages();
         });
 
         // Real-Time Venue Gallery Synchronization (site_settings/gallery -> all 6 branch/zone keys)
@@ -3053,6 +3415,8 @@
           if (cat === 'celebration') return 'vashi_family';
           if (cat === 'heaven_couple') return 'vashi_heaven';
           if (cat === 'mega_party') return 'vashi_mega';
+          if (cat === 'dinner_luxury') return 'vashi_dinner_luxury';
+          if (cat === 'dinner_royal') return 'vashi_dinner_royal';
           return 'vashi_couples';
         }
         if (cat === 'celebration') return 'kurla_family';
@@ -3293,39 +3657,75 @@
           var p = PACKAGES[pid];
           var opt = document.createElement('option');
           opt.value = p.id;
-          var zoneTag = p.category === 'heaven_couple' ? ' [Heaven]' : (p.category === 'mega_party' ? ' [Mega Party]' : '');
+          var zoneTag = p.category === 'heaven_couple' ? ' [Heaven]' : (p.category === 'mega_party' ? ' [Mega Party]' : (p.category === 'dinner_luxury' ? ' [Luxury Dinner]' : (p.category === 'dinner_royal' ? ' [Royal Proposal]' : '')));
           opt.textContent = p.name + zoneTag + ' (' + p.durationHours + ' Hr' + (p.durationHours > 1 ? 's' : '') + ') — ' + money(p.price);
           sel.appendChild(opt);
         });
         sel.value = state.packageId;
       }
 
+      function renderVashiTwoLevelNav() {
+        var subWrap = document.getElementById('vashiSubThemes');
+        if (!subWrap) return;
+        state.vashiAudience = getVashiAudienceForCategory(state.category);
+        document.querySelectorAll('.vashi-audience-tab').forEach(function (btn) {
+          var active = btn.getAttribute('data-audience') === state.vashiAudience;
+          btn.classList.toggle('is-active', active);
+          btn.setAttribute('aria-selected', String(active));
+        });
+        var themes = VASHI_AUDIENCE_THEMES[state.vashiAudience] || VASHI_AUDIENCE_THEMES.couples;
+        subWrap.innerHTML = '';
+        subWrap.setAttribute('data-count', String(themes.length));
+        themes.forEach(function (t) {
+          var active = t.category === state.category;
+          var card = h('button', 'vashi-theme-card' + (active ? ' is-active' : ''));
+          card.type = 'button';
+          card.setAttribute('role', 'tab');
+          card.setAttribute('aria-selected', String(active));
+          card.setAttribute('data-category', t.category);
+          card.appendChild(h('span', 'vashi-theme-card__name', t.label));
+          card.appendChild(h('span', 'vashi-theme-card__meta', t.meta));
+          card.addEventListener('click', function () {
+            if (state.category !== t.category) {
+              state.carouselIndex = 0;
+              state.category = t.category;
+              renderPackages();
+            }
+          });
+          subWrap.appendChild(card);
+        });
+      }
+
       function renderPackages() {
         var isVashi = state.branch === 'Vashi';
         var tabsWrap = document.getElementById('pkgTabs');
-        if (tabsWrap) tabsWrap.classList.toggle('pkg-tabs--vashi', isVashi);
+        var vashiNav = document.getElementById('vashiNavWrap');
+        if (tabsWrap) tabsWrap.hidden = isVashi;
+        if (vashiNav) vashiNav.hidden = !isVashi;
 
-        document.getElementById('catTabLove').textContent = isVashi ? '❤️ DINNER DATE (COUPLES)' : '❤️ LOVE PARADISE';
-        document.getElementById('catTabCeleb').textContent = isVashi ? '👑 FRIENDS & FAMILY ZONE' : '👑 CELEBRATION PACKAGES';
-        var tabHeaven = document.getElementById('catTabHeaven');
-        var tabVashi3 = document.getElementById('catTabVashi3');
-        if (tabHeaven) tabHeaven.hidden = !isVashi;
-        if (tabVashi3) tabVashi3.hidden = !isVashi;
-
-        if (!isVashi && (state.category === 'heaven_couple' || state.category === 'mega_party')) {
+        if (!isVashi && (state.category === 'heaven_couple' || state.category === 'mega_party' || state.category === 'dinner_luxury' || state.category === 'dinner_royal')) {
           state.category = 'love_paradise';
         }
 
-        document.querySelectorAll('.pkg-tab').forEach(function (t) {
-          var active = t.getAttribute('data-category') === state.category;
-          t.classList.toggle('is-active', active);
-          t.setAttribute('aria-selected', String(active));
-        });
+        if (isVashi) {
+          renderVashiTwoLevelNav();
+        } else {
+          document.querySelectorAll('.pkg-tab').forEach(function (t) {
+            var active = t.getAttribute('data-category') === state.category;
+            t.classList.toggle('is-active', active);
+            t.setAttribute('aria-selected', String(active));
+          });
+        }
+
         if (isVashi) {
           if (state.category === 'heaven_couple') {
             document.getElementById('pkgCatNote').textContent = 'Heaven for Couple \u2022 Base Guests: 2 \u2022 Extra Guest: \u20B9299/person \u2022 Extra 1 Hr: \u20B9700';
           } else if (state.category === 'mega_party') {
             document.getElementById('pkgCatNote').textContent = 'Mega Party Group Events \u2022 20 to 50 Guests \u2022 Extra Guest: \u20B9300/person \u2022 Extra 1 Hr: \u20B9700';
+          } else if (state.category === 'dinner_luxury') {
+            document.getElementById('pkgCatNote').textContent = 'Luxury Dinner Setup \u2022 Base Guests: 2 \u2022 Extra Guest: \u20B9299/person \u2022 Extra 1 Hr: \u20B91,000';
+          } else if (state.category === 'dinner_royal') {
+            document.getElementById('pkgCatNote').textContent = 'Royal Proposal Setup \u2022 Base Guests: 2 \u2022 Extra Guest: \u20B9299/person \u2022 Extra 1 Hr: \u20B91,000';
           } else if (state.category === 'love_paradise') {
             document.getElementById('pkgCatNote').textContent = 'Couples Dinner Date \u2022 Base Guests: 2 \u2022 Extra Guest: \u20B9299 per person';
           } else {
@@ -3343,7 +3743,7 @@
         grid.innerHTML = '';
         BRANCHES[state.branch].packages.forEach(function (pid) {
           var p = PACKAGES[pid];
-          if (p.category !== state.category) return;
+          if (!p || p.category !== state.category) return;
           var card = h('article', 'pkg-card' + (p.featured ? ' is-featured' : '') + (state.packageId === p.id ? ' is-selected' : ''));
           if (p.badge) card.appendChild(h('span', 'pkg-card__badge', p.badge));
           card.appendChild(h('span', 'pkg-card__dur', p.durationHours + ' Hour' + (p.durationHours > 1 ? 's' : '')));
@@ -3351,9 +3751,52 @@
           card.appendChild(h('div', 'pkg-card__price', money(p.price)));
           card.appendChild(h('div', 'pkg-card__meta', 'Base Guests: ' + p.baseGuests + ' \u2022 Extra: ' + money(p.extraGuestRate) + '/person'));
 
+          var featList = Array.isArray(p.features) ? p.features : [];
+          var shouldCollapse = featList.length > 7;
+          var featWrap = h('div', 'pkg-card__features');
           var ul = h('ul', 'pkg-card__list');
-          p.features.forEach(function (f) { ul.appendChild(h('li', '', f)); });
-          card.appendChild(ul);
+          var initialFeatures = shouldCollapse ? featList.slice(0, 6) : featList;
+          var extraFeatures = shouldCollapse ? featList.slice(6) : [];
+          initialFeatures.forEach(function (f) { ul.appendChild(h('li', '', f)); });
+          featWrap.appendChild(ul);
+
+          if (shouldCollapse && extraFeatures.length > 0) {
+            var isExp = Boolean(state.expandedPackages[p.id]);
+            var moreWrap = h('div', 'pkg-card__more-wrap' + (isExp ? ' is-expanded' : ''));
+            moreWrap.setAttribute('aria-hidden', String(!isExp));
+            var moreInner = h('div', 'pkg-card__more-inner');
+            var moreList = h('ul', 'pkg-card__more-list');
+            extraFeatures.forEach(function (f) { moreList.appendChild(h('li', '', f)); });
+            moreInner.appendChild(moreList);
+            moreWrap.appendChild(moreInner);
+            featWrap.appendChild(moreWrap);
+
+            var toggleBtn = h('button', 'pkg-card__toggle', isExp ? '− Show less' : '+ Read more (' + extraFeatures.length + ' more)');
+            toggleBtn.type = 'button';
+            toggleBtn.setAttribute('aria-expanded', String(isExp));
+            toggleBtn.setAttribute('data-pkg-toggle', p.id);
+            toggleBtn.addEventListener('click', function () {
+              var nextExp = !state.expandedPackages[p.id];
+              state.expandedPackages[p.id] = nextExp;
+              moreWrap.classList.toggle('is-expanded', nextExp);
+              moreWrap.setAttribute('aria-hidden', String(!nextExp));
+              toggleBtn.setAttribute('aria-expanded', String(nextExp));
+              toggleBtn.textContent = nextExp ? '− Show less' : '+ Read more (' + extraFeatures.length + ' more)';
+            });
+            featWrap.appendChild(toggleBtn);
+          }
+          card.appendChild(featWrap);
+
+          var resolvedReelUrl = resolvePackageReelUrl(p.id, state.branch);
+          if (isSafeHttpUrl(resolvedReelUrl)) {
+            var reelWrap = h('div', 'pkg-card__reel-wrap');
+            var reelLink = h('a', 'pkg-card__reel-link', '▶ Watch Setup Reel ↗');
+            reelLink.href = resolvedReelUrl;
+            reelLink.target = '_blank';
+            reelLink.rel = 'noopener noreferrer';
+            reelWrap.appendChild(reelLink);
+            card.appendChild(reelWrap);
+          }
 
           var btn = h('button', 'btn ' + (state.packageId === p.id ? 'btn--gold' : 'btn--ghost'), state.packageId === p.id ? 'Selected ✓' : 'Select ' + p.name);
           btn.type = 'button';
@@ -3412,6 +3855,7 @@
         }
         state.packageId = p.id;
         state.category = p.category;
+        state.vashiAudience = getVashiAudienceForCategory(p.category);
         state.roomType = nextRoomType;
         state.selectedStartHour = null;
 
@@ -3441,6 +3885,19 @@
             state.carouselIndex = 0;
           }
           state.category = nextCat;
+          renderPackages();
+        });
+      });
+      document.querySelectorAll('.vashi-audience-tab').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+          var aud = btn.getAttribute('data-audience');
+          if (!VASHI_AUDIENCE_THEMES[aud]) return;
+          state.vashiAudience = aud;
+          var validCats = VASHI_AUDIENCE_THEMES[aud].map(function (t) { return t.category; });
+          if (validCats.indexOf(state.category) === -1) {
+            state.category = validCats[0];
+            state.carouselIndex = 0;
+          }
           renderPackages();
         });
       });
@@ -3476,7 +3933,18 @@
 
       function resolveBookingRoomTypeSafe(b) {
         var rt = (typeof b.roomType === 'string') ? b.roomType.trim() : '';
+        if (rt === LEGACY_PREMIUM_ROOM || (!rt && b.category === 'premium_dinner')) {
+          return resolveLegacyDinnerRoom(b);
+        }
         return rt || getRoomType(b.category) || 'couples';
+      }
+
+      // True when booking record b occupies the given room's timetable.
+      // Legacy "premium_dinner" records that cannot be attributed to a specific package
+      // conservatively occupy BOTH dinner rooms (matching their pre-split shared behaviour).
+      function bookingOccupiesRoom(b, roomType) {
+        var r = resolveBookingRoomTypeSafe(b);
+        return r === roomType || (r === LEGACY_PREMIUM_ROOM && isDinnerRoomType(roomType));
       }
 
       // Returns an array of occupied hours (Numbers) for a booking record, tolerant of string-typed values.
@@ -3509,12 +3977,31 @@
             return { status: 'hold', expiresAt: lock.expiresAt };
           }
         }
+        if (isDinnerRoomType(currentRoomType)) {
+          // Backward compatibility: pre-split shared slot_locks/<branch>/premium_dinner/<date>
+          var legacyLock = state.legacyRoomLocks && state.legacyRoomLocks[pad(hour)];
+          if (legacyLock && (legacyLock.status === 'confirmed' || isValidActiveHold(legacyLock, now))) {
+            var linkedRoom = null;
+            for (var lk = 0; lk < state.legacyBookings.length; lk++) {
+              var lb = state.legacyBookings[lk];
+              if (lb && legacyLock.bookingId && lb.bookingId === legacyLock.bookingId) {
+                linkedRoom = resolveBookingRoomTypeSafe(lb);
+                break;
+              }
+            }
+            if (!linkedRoom || bookingOccupiesRoom({ roomType: linkedRoom }, currentRoomType)) {
+              return legacyLock.status === 'confirmed'
+                ? { status: 'booked' }
+                : { status: 'hold', expiresAt: legacyLock.expiresAt };
+            }
+          }
+        }
         for (var i = 0; i < state.legacyBookings.length; i++) {
           var b = state.legacyBookings[i];
           if (!isActiveBookingRecord(b)) continue;
           var bBranch = b.branch || 'Kurla';
           if (bBranch !== state.branch) continue;
-          if (resolveBookingRoomTypeSafe(b) !== currentRoomType) continue;
+          if (!bookingOccupiesRoom(b, currentRoomType)) continue;
           if (getBookingOccupiedHours(b).indexOf(hour) !== -1) return { status: 'booked' };
         }
         if (state.bookingDate === todayISO()) {
@@ -3605,7 +4092,9 @@
       function subscribeAvailability() {
         if (state.activeLockRef) { state.activeLockRef.off(); state.activeLockRef = null; }
         if (state.activeBookingsRef) { state.activeBookingsRef.off(); state.activeBookingsRef = null; }
+        if (state.activeLegacyRoomRef) { state.activeLegacyRoomRef.off(); state.activeLegacyRoomRef = null; }
         state.slotLocks = {};
+        state.legacyRoomLocks = {};
         state.legacyBookings = [];
         state.availabilitySubToken = (state.availabilitySubToken || 0) + 1;
 
@@ -3636,6 +4125,22 @@
           state.slotLocks = snap.val() || {};
           renderSlotGrid();
         });
+
+        if (isDinnerRoomType(expectedRoomType)) {
+          state.activeLegacyRoomRef = db.ref(getSlotLockPath(expectedBranch, LEGACY_PREMIUM_ROOM, expectedDate));
+          state.activeLegacyRoomRef.on('value', function (snap) {
+            var activePkg = PACKAGES[state.packageId];
+            var activeRoom = activePkg ? getRoomType(activePkg.category) : null;
+            if (subToken !== state.availabilitySubToken ||
+                state.branch !== expectedBranch ||
+                state.bookingDate !== expectedDate ||
+                activeRoom !== expectedRoomType) {
+              return;
+            }
+            state.legacyRoomLocks = snap.val() || {};
+            renderSlotGrid();
+          });
+        }
 
         state.activeBookingsRef = db.ref(BOOKINGS_NODE);
         state.activeBookingsRef.on('value', function (snap) {
@@ -3882,7 +4387,7 @@
           if ((b.branch || 'Kurla') !== branch) continue;
           var bDate = b.bookingDate || b.date;
           if (bDate && bDate !== date) continue;
-          if (resolveBookingRoomTypeSafe(b) !== roomType) continue;
+          if (!bookingOccupiesRoom(b, roomType)) continue;
           var occupied = getBookingOccupiedHours(b);
           for (var k = 0; k < occupied.length; k++) {
             if (occupied[k] >= startHour && occupied[k] < endHour) return true;
@@ -3908,11 +4413,15 @@
         var roomRef = db.ref(getSlotLockPath(branch, roomType, date));
         var legacyRef = db.ref(LOCKS_NODE + '/' + branch + '/' + date);
         var bookingsRef = db.ref(BOOKINGS_NODE);
+        var legacyPremiumRef = isDinnerRoomType(roomType)
+          ? db.ref(getSlotLockPath(branch, LEGACY_PREMIUM_ROOM, date))
+          : null;
 
         return Promise.all([
           bookingsRef.once('value'),
           roomRef.once('value'),
-          legacyRef.once('value')
+          legacyRef.once('value'),
+          legacyPremiumRef ? legacyPremiumRef.once('value') : Promise.resolve(null)
         ]).then(function (snaps) {
           var checkNow = Date.now();
 
@@ -3958,6 +4467,25 @@
                   }
                 }
                 if (!linkedRoom || linkedRoom === roomType) throw makeSlotTakenError();
+              }
+            }
+          }
+
+          // 3b) Pre-split shared slot_locks/<branch>/premium_dinner/<date> (legacy bookings only, read-only)
+          var legacyPremium = snaps[3] ? snaps[3].val() : null;
+          if (legacyPremium && typeof legacyPremium === 'object') {
+            for (var ph = startHour; ph < endHour; ph++) {
+              var pLock = legacyPremium[pad(ph)];
+              if (pLock && typeof pLock === 'object' && pLock.bookingId !== bookingId &&
+                  (pLock.status === 'confirmed' || isValidActiveHold(pLock, checkNow))) {
+                var pLinked = null;
+                for (var pq = 0; pq < freshBookings.length; pq++) {
+                  if (pLock.bookingId && freshBookings[pq].bookingId === pLock.bookingId) {
+                    pLinked = resolveBookingRoomTypeSafe(freshBookings[pq]);
+                    break;
+                  }
+                }
+                if (!pLinked || bookingOccupiesRoom({ roomType: pLinked }, roomType)) throw makeSlotTakenError();
               }
             }
           }

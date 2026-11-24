@@ -703,6 +703,9 @@
     .pill--room-family { background: rgba(212, 175, 55, 0.14); border-color: rgba(212, 175, 55, 0.45); color: var(--gold-light); }
     .pill--room-heaven_couple { background: rgba(96, 165, 250, 0.14); border-color: rgba(96, 165, 250, 0.45); color: #93C5FD; }
     .pill--room-mega_party { background: rgba(52, 211, 153, 0.14); border-color: rgba(52, 211, 153, 0.45); color: #6EE7B7; }
+    .pill--room-premium_dinner { background: rgba(212, 175, 55, 0.18); border-color: rgba(245, 217, 139, 0.55); color: var(--gold-light); }
+    .pill--room-dinner_luxury { background: rgba(245, 158, 11, 0.16); border-color: rgba(251, 191, 36, 0.55); color: #FCD34D; }
+    .pill--room-dinner_royal { background: rgba(225, 29, 72, 0.16); border-color: rgba(251, 113, 133, 0.55); color: #FDA4AF; }
     .pill--room-unset { background: rgba(255, 255, 255, 0.05); border-color: rgba(255, 255, 255, 0.15); color: var(--text-muted); }
     .pill--ok { background: var(--ok-bg); border-color: rgba(52, 211, 153, 0.35); color: var(--ok); }
     .pill--cancel { background: var(--danger-bg); border-color: rgba(248, 113, 113, 0.35); color: var(--danger); }
@@ -805,6 +808,17 @@
       color: var(--text);
       text-align: right;
       font-weight: 600;
+    }
+    .rate-item--url {
+      grid-template-columns: 1fr 1.35fr;
+    }
+    .rate-item--url input {
+      text-align: left;
+      font-weight: 500;
+      font-size: 0.82rem;
+    }
+    @media (max-width: 720px) {
+      .rate-item--url { grid-template-columns: 1fr; }
     }
 
     /* ---------- Photo & Gallery Manager ---------- */
@@ -1054,6 +1068,7 @@
       width: min(640px, 100%);
       max-height: 92vh;
       overflow-y: auto;
+      overflow-x: hidden;
       background: linear-gradient(175deg, #1B1B22, #111115);
       border: 1px solid var(--border-gold-strong);
       border-radius: var(--radius-xl);
@@ -1069,8 +1084,11 @@
       border-bottom: 1px solid rgba(255, 255, 255, 0.08);
       margin-bottom: 16px;
     }
-    .modal-head h3 { font-size: 1.25rem; color: var(--gold-light); }
+    .modal-head > div { min-width: 0; flex: 1 1 auto; }
+    .modal-head h3 { font-size: 1.25rem; color: var(--gold-light); min-width: 0; overflow-wrap: anywhere; word-break: break-word; }
+    .modal-head .panel-sub { overflow-wrap: anywhere; }
     .modal-close {
+      position: static;
       width: 36px; height: 36px; border-radius: 50%;
       border: 1px solid var(--border-gold);
       background: transparent;
@@ -1554,6 +1572,8 @@
                 <button type="button" class="seg-btn" data-slot-room="family">👑 Family Room</button>
                 <button type="button" class="seg-btn" data-slot-room="heaven_couple" hidden>💙 Heaven for Couple</button>
                 <button type="button" class="seg-btn" data-slot-room="mega_party" hidden>🎉 Mega Party Hall</button>
+                <button type="button" class="seg-btn" data-slot-room="dinner_luxury" hidden>💎 ₹9k Luxury Dinner</button>
+                <button type="button" class="seg-btn" data-slot-room="dinner_royal" hidden>👑 ₹20k Royal Proposal</button>
               </div>
               <input type="date" id="slotDateInput" class="date-input" aria-label="Slot Manager Date">
               <button type="button" class="btn btn--outline btn--sm" id="refreshSlotsBtn">↻ Refresh</button>
@@ -1645,11 +1665,21 @@
                     <label for="reelUrlVashiFamily">Vashi Family Reel URL</label>
                     <input type="url" id="reelUrlVashiFamily" placeholder="https://www.instagram.com/reel/..." required>
                   </div>
-                  <div class="field field--full">
+                  <div class="field">
                     <label for="reelUrlVashiHeaven">Vashi Heaven (Blue) Reel URL</label>
                     <input type="url" id="reelUrlVashiHeaven" placeholder="https://www.instagram.com/reel/..." required>
                   </div>
+                  <div class="field">
+                    <label for="reelUrlVashiPremiumDinner">Vashi Premium Dinner Reel URL</label>
+                    <input type="url" id="reelUrlVashiPremiumDinner" placeholder="https://www.instagram.com/reel/...">
+                  </div>
                 </div>
+              </div>
+
+              <div class="rate-card" style="grid-column: 1 / -1;">
+                <h3>Package-Wise Setup Reel Links</h3>
+                <p class="subline" style="margin-bottom: 14px;">Stored at <code>site_settings/packageReels/&lt;packageId&gt;</code>. Leave an input blank and save to restore that venue's default Instagram fallback URL.</p>
+                <div class="rate-list" id="packageReelsList"></div>
               </div>
 
               <div class="rate-card" style="grid-column: 1 / -1;">
@@ -1690,6 +1720,8 @@
                   <option value="vashi_family">👑 Vashi — Friends &amp; Family Zone</option>
                   <option value="vashi_heaven">💙 Vashi — Heaven for Couple</option>
                   <option value="vashi_mega">🎉 Vashi — Mega Party Hall</option>
+                  <option value="vashi_dinner_luxury">💎 Vashi ₹9,000 Luxury Dinner</option>
+                  <option value="vashi_dinner_royal">👑 Vashi ₹20,000 Royal Proposal</option>
                 </select>
               </div>
               <div class="field">
@@ -1756,6 +1788,22 @@
             </div>
             <div id="gallery-vashi_mega" class="gallery-grid"></div>
           </div>
+
+          <div class="gallery-section" data-gallery-section="vashi_dinner_luxury">
+            <div class="gallery-section-head">
+              <h3>💎 7. Vashi — ₹9,000 Indoor Dinner Setup (Luxury) (<code>site_settings/gallery/vashi_dinner_luxury</code>)</h3>
+              <span class="subline" id="count-vashi_dinner_luxury">0 photos</span>
+            </div>
+            <div id="gallery-vashi_dinner_luxury" class="gallery-grid"></div>
+          </div>
+
+          <div class="gallery-section" data-gallery-section="vashi_dinner_royal">
+            <div class="gallery-section-head">
+              <h3>👑 8. Vashi — ₹20,000 Royal Proposal Package (<code>site_settings/gallery/vashi_dinner_royal</code>)</h3>
+              <span class="subline" id="count-vashi_dinner_royal">0 photos</span>
+            </div>
+            <div id="gallery-vashi_dinner_royal" class="gallery-grid"></div>
+          </div>
         </section>
       </div>
     </main>
@@ -1790,6 +1838,8 @@
               <option value="family">Family Room</option>
               <option value="heaven_couple">Heaven for Couple (Vashi)</option>
               <option value="mega_party">Mega Party Hall (Vashi)</option>
+              <option value="dinner_luxury">Luxury Dinner Room (₹9,000)</option>
+              <option value="dinner_royal">Royal Proposal Room (₹20,000)</option>
             </select>
           </div>
           <div class="field field--full">
@@ -1919,6 +1969,8 @@
               <option value="family">Family Room</option>
               <option value="heaven_couple">Heaven for Couple (Vashi)</option>
               <option value="mega_party">Mega Party Hall (Vashi)</option>
+              <option value="dinner_luxury">Luxury Dinner Room (₹9,000)</option>
+              <option value="dinner_royal">Royal Proposal Room (₹20,000)</option>
             </select>
           </div>
           <div class="field">
@@ -1947,6 +1999,7 @@
               <button type="button" class="rate-chip is-active" data-rate="0">₹0 (Time Shift Only)</button>
               <button type="button" class="rate-chip" data-rate="500">₹500/hr (Family / Group)</button>
               <button type="button" class="rate-chip" data-rate="700">₹700/hr (Love Paradise)</button>
+              <button type="button" class="rate-chip" data-rate="1000">₹1,000/hr (Premium Dinner)</button>
             </div>
           </div>
         </div>
@@ -2028,8 +2081,11 @@
       var SLOT_LOCKS_PATH = 'slot_locks';
       var SITE_SETTINGS_PATH = 'site_settings';
       var BRANCHES = ['Kurla', 'Vashi'];
-      var ROOMS = ['couples', 'family', 'heaven_couple', 'mega_party'];
-      var GALLERY_CATEGORIES = ['kurla_couples', 'kurla_family', 'vashi_couples', 'vashi_family', 'vashi_heaven', 'vashi_mega'];
+      var ROOMS = ['couples', 'family', 'heaven_couple', 'mega_party', 'dinner_luxury', 'dinner_royal'];
+      var VASHI_ONLY_ROOMS = ['heaven_couple', 'mega_party', 'dinner_luxury', 'dinner_royal'];
+      /* Legacy shared dinner room used before the Luxury/Royal split. Historical data only — never used for new bookings. */
+      var LEGACY_PREMIUM_ROOM = 'premium_dinner';
+      var GALLERY_CATEGORIES = ['kurla_couples', 'kurla_family', 'vashi_couples', 'vashi_family', 'vashi_heaven', 'vashi_mega', 'vashi_dinner_luxury', 'vashi_dinner_royal'];
       var MAX_INPUT_PHOTO_BYTES = 15 * 1024 * 1024;
       var MAX_RTDB_DATA_URL_BYTES = 950 * 1024;
       var ALLOWED_IMAGE_TYPES = ['image/jpeg', 'image/png', 'image/webp'];
@@ -2038,19 +2094,39 @@
         couples: 'Couples Room',
         family: 'Family Room',
         heaven_couple: 'Heaven for Couple (Vashi)',
-        mega_party: 'Mega Party Hall (Vashi)'
+        mega_party: 'Mega Party Hall (Vashi)',
+        dinner_luxury: 'Luxury Dinner Room (₹9,000)',
+        dinner_royal: 'Royal Proposal Room (₹20,000)'
       };
       var ROOM_BADGES = {
         couples: '❤️ Couples Room',
         family: '👑 Family Room',
         heaven_couple: '💙 Heaven for Couple',
-        mega_party: '🎉 Mega Party Hall'
+        mega_party: '🎉 Mega Party Hall',
+        dinner_luxury: '💎 ₹9k Luxury Dinner',
+        dinner_royal: '👑 ₹20k Royal Proposal'
       };
       function normalizeRoomType(val) {
         return ROOMS.indexOf(val) !== -1 ? val : '';
       }
       function getRoomLabel(roomType) {
-        return ROOM_LABELS[roomType] || '';
+        return ROOM_LABELS[roomType] || (roomType === LEGACY_PREMIUM_ROOM ? 'Premium Dinner Setup (Legacy)' : '');
+      }
+      function isDinnerRoom(roomType) {
+        return roomType === 'dinner_luxury' || roomType === 'dinner_royal';
+      }
+      function isLegacyPremiumRaw(raw) {
+        return !!raw && typeof raw.roomType === 'string' && raw.roomType.trim() === LEGACY_PREMIUM_ROOM;
+      }
+      // Resolves the room of a stored booking record. Legacy "premium_dinner" records are attributed
+      // to the correct independent room through their packageId; otherwise they stay unresolved ('').
+      function resolveStoredRoomType(raw) {
+        if (isLegacyPremiumRaw(raw)) {
+          if (raw.packageId === 'vashi_dinner_luxury') return 'dinner_luxury';
+          if (raw.packageId === 'vashi_dinner_royal') return 'dinner_royal';
+          return '';
+        }
+        return normalizeRoomType(raw ? raw.roomType : '');
       }
 
       var BUSINESS_TIMEZONE = 'Asia/Kolkata';
@@ -2093,6 +2169,50 @@
             { id: 'vashi_mega_20', name: 'Mega Party 20 Guests', duration: 3, price: 14999, baseGuests: 20, extraGuest: 300 },
             { id: 'vashi_mega_30', name: 'Mega Party 30 Guests', duration: 3, price: 19999, baseGuests: 30, extraGuest: 300 },
             { id: 'vashi_mega_50', name: 'Mega Party 50 Guests', duration: 3, price: 24999, baseGuests: 50, extraGuest: 300 }
+          ],
+          dinner_luxury: [
+            {
+              id: 'vashi_dinner_luxury',
+              category: 'dinner_luxury',
+              room: 'dinner_luxury',
+              name: 'Indoor Dinner Setup (Luxury Celebration)',
+              duration: 2,
+              price: 9000,
+              baseGuests: 2,
+              extraGuest: 299,
+              extraHour: 1000,
+              features: [
+                'Red Balloon Decor', 'Candle Light Setup', 'Rose Decor',
+                'Hanging Photos Decor (24 Pics)', 'Smoke Entry', 'Bubble Entry',
+                'Letter Light Name', 'Letter Light Digit', 'Video Shoot (iPhone)',
+                'Music (Speakers)', 'Non-Alcoholic Fruit Wine (1)', 'Half Kg Cake',
+                'Flower Bouquet', 'Food Worth ₹1,000 Included', 'Movie Screen Setup'
+              ]
+            }
+          ],
+          dinner_royal: [
+            {
+              id: 'vashi_dinner_royal',
+              category: 'dinner_royal',
+              room: 'dinner_royal',
+              name: 'Royal Proposal Package (Indoor Dinner Setup with AC)',
+              duration: 3,
+              price: 20000,
+              baseGuests: 2,
+              extraGuest: 299,
+              extraHour: 1000,
+              badge: 'ROYAL OFFER',
+              features: [
+                'Room Proposal Decoration (Red Theme)', 'Fully Air Conditioned Setup',
+                'Movie Screen Setup', 'Letter Light Name', 'Letter Light Digit',
+                'Hanging Photos Decor (36 Photos)', 'Smoke Entry', 'Bubble Entry',
+                'Customized Flower Bouquet', 'Music Setup (Speakers)',
+                'Half Kg Customized Cake', 'Non-Alcoholic Wine',
+                'Rose Petals Decor (Customized)', 'Hanging Rose Decor (Customized)',
+                'Candle Decor (Customized)', 'Hanging Candle Decor (Customized)',
+                'Video Shoot (iPhone)', 'Food Included (Worth ₹1,000)'
+              ]
+            }
           ]
         }
       };
@@ -2114,7 +2234,9 @@
         vashi_heaven_3: { label: 'Vashi — HEAVEN 3 (3 Hrs)', price: 4000 },
         vashi_mega_20: { label: 'Vashi — Mega Party 20 Guests (3 Hrs)', price: 14999 },
         vashi_mega_30: { label: 'Vashi — Mega Party 30 Guests (3 Hrs)', price: 19999 },
-        vashi_mega_50: { label: 'Vashi — Mega Party 50 Guests (3 Hrs)', price: 24999 }
+        vashi_mega_50: { label: 'Vashi — Mega Party 50 Guests (3 Hrs)', price: 24999 },
+        vashi_dinner_luxury: { label: 'Vashi — Indoor Dinner Setup (Luxury Celebration) (2 Hrs)', price: 9000 },
+        vashi_dinner_royal: { label: 'Vashi — Royal Proposal Package (Indoor Dinner Setup with AC) (3 Hrs)', price: 20000 }
       };
 
       var ADDON_MASTER_LIST = [
@@ -2143,7 +2265,8 @@
         kurla_family: 'https://www.instagram.com/reel/DapmZjeICnf/?jplx=MTBiYmF0c2JwYTljbQ==',
         vashi_couples: 'https://www.instagram.com/reel/De1yhvDAw9N/?jplx=MWNnZno4cjhoOG1qNw==',
         vashi_family: 'https://www.instagram.com/reel/DfFK-8YgZ23/?knvt=ejZod205ZWk5dGli',
-        vashi_heaven: 'https://www.instagram.com/reel/DdLjdpQIkoV/?jplx=ZDh2NWN2bnRudWRk'
+        vashi_heaven: 'https://www.instagram.com/reel/DdLjdpQIkoV/?jplx=ZDh2NWN2bnRudWRk',
+        vashi_premium_dinner: 'https://www.instagram.com/blinkevent_vashi'
       };
 
       var firebaseConfig = {
@@ -2178,6 +2301,7 @@
           packagePrices: {},
           addonPrices: {},
           instagramReels: Object.assign({}, DEFAULT_REELS),
+          packageReels: {},
           razorpayKeyId: DEFAULT_RAZORPAY_KEY_ID,
           gallery: {
             kurla_couples: {},
@@ -2185,7 +2309,9 @@
             vashi_couples: {},
             vashi_family: {},
             vashi_heaven: {},
-            vashi_mega: {}
+            vashi_mega: {},
+            vashi_dinner_luxury: {},
+            vashi_dinner_royal: {}
           }
         },
         branchFilter: 'All',
@@ -2429,6 +2555,9 @@
             instagramReels: (val.instagramReels && typeof val.instagramReels === 'object')
               ? Object.assign({}, DEFAULT_REELS, val.instagramReels)
               : Object.assign({}, DEFAULT_REELS),
+            packageReels: (val.packageReels && typeof val.packageReels === 'object' && !Array.isArray(val.packageReels))
+              ? val.packageReels
+              : {},
             razorpayKeyId: (typeof val.razorpayKeyId === 'string' && /^rzp_(test|live)_[A-Za-z0-9]+$/.test(val.razorpayKeyId.trim()))
               ? val.razorpayKeyId.trim()
               : DEFAULT_RAZORPAY_KEY_ID,
@@ -2501,8 +2630,9 @@
           _key: key,
           bookingId: raw.bookingId || key,
           branch: branch,
-          roomType: normalizeRoomType(raw.roomType),
-          roomLabel: raw.roomLabel || getRoomLabel(normalizeRoomType(raw.roomType)),
+          roomType: resolveStoredRoomType(raw),
+          legacyRoomType: isLegacyPremiumRaw(raw) ? LEGACY_PREMIUM_ROOM : '',
+          roomLabel: raw.roomLabel || getRoomLabel(resolveStoredRoomType(raw)),
           customerName: raw.customerName || (isOfflineBlock ? 'Offline Block (Admin)' : 'Guest'),
           contactNumber: raw.contactNumber || raw.phone || '',
           whatsappNumber: raw.whatsappNumber || raw.phone || raw.contactNumber || '',
@@ -3009,12 +3139,12 @@
          ===================================================================== */
       function syncSlotRoomButtons() {
         var isVashi = state.slotBranch === 'Vashi';
-        if (!isVashi && (state.slotRoom === 'heaven_couple' || state.slotRoom === 'mega_party')) {
+        if (!isVashi && VASHI_ONLY_ROOMS.indexOf(state.slotRoom) !== -1) {
           state.slotRoom = 'couples';
         }
         document.querySelectorAll('[data-slot-room]').forEach(function (btn) {
           var rm = btn.getAttribute('data-slot-room');
-          var vashiOnly = (rm === 'heaven_couple' || rm === 'mega_party');
+          var vashiOnly = VASHI_ONLY_ROOMS.indexOf(rm) !== -1;
           btn.hidden = vashiOnly && !isVashi;
           btn.classList.toggle('is-active', rm === state.slotRoom);
         });
@@ -3044,7 +3174,10 @@
           if ((b.branch || 'Kurla') !== branch) continue;
           if ((b.bookingDate || b.date) !== date) continue;
           var bRoom = b.roomType || 'couples';
-          if (roomType && bRoom !== roomType) continue;
+          if (!b.roomType && b.legacyRoomType) {
+            // Unattributable legacy shared-dinner booking: occupies both dinner rooms (pre-split behaviour).
+            if (roomType && !isDinnerRoom(roomType)) continue;
+          } else if (roomType && bRoom !== roomType) continue;
           var bStart = Number(b.startHour);
           var bDur = Number(b.durationHours);
           if (!isFinite(bDur) || bDur < 1) bDur = 1;
@@ -3065,6 +3198,19 @@
         var rdNode = rNode && rNode[date];
         if (rdNode && rdNode[hh] && isActiveSlotLock(rdNode[hh], now)) {
           return rdNode[hh];
+        }
+
+        if (isDinnerRoom(roomType)) {
+          // Backward compatibility: pre-split shared slot_locks/<branch>/premium_dinner/<date> (read-only view)
+          var pdRoomNode = bNode[LEGACY_PREMIUM_ROOM];
+          var pdDateNode = pdRoomNode && pdRoomNode[date];
+          if (pdDateNode && pdDateNode[hh] && isActiveSlotLock(pdDateNode[hh], now)) {
+            var pdLock = pdDateNode[hh];
+            var pdLinked = pdLock.bookingId ? findBookingById(pdLock.bookingId) : null;
+            if (!pdLinked || !pdLinked.roomType || pdLinked.roomType === roomType) {
+              return Object.assign({}, pdLock, { _isLegacy: true });
+            }
+          }
         }
 
         var legacyDateNode = bNode[date];
@@ -3198,7 +3344,9 @@
             if (b.bookingStatus !== 'confirmed') return;
             if (excludeBookingId && b.bookingId === excludeBookingId) return;
             if (b.branch !== branch || b.bookingDate !== date) return;
-            if ((b.roomType || 'couples') !== roomType) return;
+            if (!b.roomType && b.legacyRoomType) {
+              if (!isDinnerRoom(roomType)) return;
+            } else if ((b.roomType || 'couples') !== roomType) return;
             var bStart = Number(b.startHour);
             var bDur = Number(b.durationHours);
             if (!isFinite(bStart) || !isFinite(bDur) || bDur < 1) return;
@@ -3210,7 +3358,28 @@
             }
           });
           if (found) return found;
-          return state.db.ref(SLOT_LOCKS_PATH + '/' + branch + '/' + date).once('value').then(function (snap) {
+          var legacyPremiumCheck = isDinnerRoom(roomType)
+            ? state.db.ref(SLOT_LOCKS_PATH + '/' + branch + '/' + LEGACY_PREMIUM_ROOM + '/' + date).once('value').then(function (pSnap) {
+                var pNode = pSnap.val();
+                if (!pNode || typeof pNode !== 'object') return null;
+                var pNow = Date.now();
+                for (var pi = 0; pi < requiredHours.length; pi++) {
+                  var pl = pNode[requiredHours[pi]];
+                  if (pl && isActiveSlotLock(pl, pNow) && pl.bookingId !== excludeBookingId) {
+                    var pLinked = pl.bookingId ? findBookingById(pl.bookingId) : null;
+                    if (!pLinked || !pLinked.roomType || pLinked.roomType === roomType) {
+                      return { hour: Number(requiredHours[pi]), bookingId: pl.bookingId || 'LEGACY' };
+                    }
+                  }
+                }
+                return null;
+              })
+            : Promise.resolve(null);
+          return legacyPremiumCheck.then(function (premiumConflict) {
+            if (premiumConflict) return premiumConflict;
+            return state.db.ref(SLOT_LOCKS_PATH + '/' + branch + '/' + date).once('value');
+          }).then(function (snap) {
+            if (!snap || typeof snap.val !== 'function') return snap;
             var legacy = snap.val();
             if (!legacy || typeof legacy !== 'object') return null;
             var now = Date.now();
@@ -3419,6 +3588,9 @@
         var bookingId = booking.bookingId;
         var legacyLockRef = state.db.ref(SLOT_LOCKS_PATH + '/' + branch + '/' + date);
         var roomLockRef = roomType ? state.db.ref(SLOT_LOCKS_PATH + '/' + branch + '/' + roomType + '/' + date) : null;
+        var legacyPremiumLockRef = (booking.legacyRoomType || isDinnerRoom(roomType))
+          ? state.db.ref(SLOT_LOCKS_PATH + '/' + branch + '/' + LEGACY_PREMIUM_ROOM + '/' + date)
+          : null;
         var bookingRef = state.db.ref(BOOKINGS_PATH + '/' + booking._key);
 
         return bookingRef.once('value').then(function (bSnap) {
@@ -3429,11 +3601,13 @@
           }
           return Promise.all([
             roomLockRef ? roomLockRef.once('value') : Promise.resolve(null),
-            legacyLockRef.once('value')
+            legacyLockRef.once('value'),
+            legacyPremiumLockRef ? legacyPremiumLockRef.once('value') : Promise.resolve(null)
           ]);
         }).then(function (snaps) {
           var roomLocks = snaps[0] ? (snaps[0].val() || {}) : {};
           var legacyLocks = snaps[1].val() || {};
+          var legacyPremiumLocks = snaps[2] ? (snaps[2].val() || {}) : {};
           var updates = {};
           updates[BOOKINGS_PATH + '/' + booking._key + '/bookingStatus'] = 'cancelled';
           updates[BOOKINGS_PATH + '/' + booking._key + '/status'] = 'cancelled';
@@ -3448,6 +3622,11 @@
           Object.keys(legacyLocks).forEach(function (hh) {
             if (legacyLocks[hh] && legacyLocks[hh].bookingId === bookingId) {
               updates[SLOT_LOCKS_PATH + '/' + branch + '/' + date + '/' + hh] = null;
+            }
+          });
+          Object.keys(legacyPremiumLocks).forEach(function (hh) {
+            if (legacyPremiumLocks[hh] && legacyPremiumLocks[hh].bookingId === bookingId) {
+              updates[SLOT_LOCKS_PATH + '/' + branch + '/' + LEGACY_PREMIUM_ROOM + '/' + date + '/' + hh] = null;
             }
           });
           return state.db.ref().update(updates);
@@ -3466,7 +3645,7 @@
         updates[BOOKINGS_PATH + '/' + bookingKey] = null;
 
         if (branch && /^\d{4}-\d{2}-\d{2}$/.test(date)) {
-          var readPaths = ROOMS.map(function (rm) {
+          var readPaths = ROOMS.concat([LEGACY_PREMIUM_ROOM]).map(function (rm) {
             return {
               path: SLOT_LOCKS_PATH + '/' + branch + '/' + rm + '/' + date,
               ref: state.db.ref(SLOT_LOCKS_PATH + '/' + branch + '/' + rm + '/' + date)
@@ -3590,7 +3769,7 @@
       }
 
       function getAvailableRoomsForBranch(branch) {
-        return branch === 'Kurla' ? ['couples', 'family'] : ['couples', 'family', 'heaven_couple', 'mega_party'];
+        return branch === 'Kurla' ? ['couples', 'family'] : ['couples', 'family', 'heaven_couple', 'mega_party', 'dinner_luxury', 'dinner_royal'];
       }
 
       function syncQuickBookRoomOptions(preferredRoom) {
@@ -3857,6 +4036,10 @@
         if (BRANCHES.indexOf(branch) === -1) return showFormErr('Please select a valid branch (Kurla or Vashi).');
         if (allowedRooms.indexOf(roomType) === -1) return showFormErr('Selected room is not available for ' + branch + '.');
         if (!calc.pkg) return showFormErr('Please select a valid package.');
+        var roomPackages = (PACKAGE_MASTER_DATA[branch] && PACKAGE_MASTER_DATA[branch][roomType]) || [];
+        var pkgBelongsToRoom = roomPackages.some(function (p) { return p.id === calc.pkg.id; }) &&
+          (!calc.pkg.room || calc.pkg.room === roomType);
+        if (!pkgBelongsToRoom) return showFormErr('Selected package does not belong to the chosen room. Please re-select the room and package.');
         if (['Walk-In', 'WhatsApp', 'Online'].indexOf(bookingSource) === -1) return showFormErr('Please select a valid Booking Source (Walk-In, WhatsApp, or Online).');
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || date < getKolkataTodayISO()) return showFormErr('Please select today or a future booking date.');
         if (isNaN(startHour) || startHour < 9 || startHour > 23) return showFormErr('Start hour must be between 09:00 AM and 11:00 PM.');
@@ -4083,7 +4266,7 @@
           roomLbl.textContent = 'Room / Timetable';
           var roomSel = document.createElement('select');
           roomSel.id = 'saBlockRoom';
-          ROOMS.forEach(function (rm) {
+          getAvailableRoomsForBranch(state.slotBranch).forEach(function (rm) {
             var o = document.createElement('option');
             o.value = rm;
             o.textContent = getRoomLabel(rm);
@@ -4490,7 +4673,7 @@
         var banner = $('editSlotAvailability');
         var saveBtn = $('etSaveBtn');
 
-        if (BRANCHES.indexOf(branch) === -1 || ROOMS.indexOf(roomType) === -1 || !/^\d{4}-\d{2}-\d{2}$/.test(date) || isNaN(startHour) || isNaN(duration) || extraRate < 0 || isNaN(extraRate)) {
+        if (BRANCHES.indexOf(branch) === -1 || getAvailableRoomsForBranch(branch).indexOf(roomType) === -1 || !/^\d{4}-\d{2}-\d{2}$/.test(date) || isNaN(startHour) || isNaN(duration) || extraRate < 0 || isNaN(extraRate)) {
           banner.className = 'avail-banner is-conflict';
           banner.textContent = 'Please complete all required fields with valid values.';
           saveBtn.disabled = true;
@@ -4548,6 +4731,7 @@
           bookingId: booking.bookingId,
           branch: booking.branch,
           roomType: normalizeRoomType(booking.roomType),
+          legacyRoomType: booking.legacyRoomType || '',
           bookingDate: booking.bookingDate,
           startHour: booking.startHour,
           durationHours: booking.durationHours,
@@ -4616,7 +4800,7 @@
       function executeSafeSlotAndBookingUpdate(snap, newBranch, newRoomType, newDate, newStartHour, newDuration, bill, extraRate) {
         var newHours = getRequiredHours(newStartHour, newDuration);
         var origHours = getRequiredHours(snap.startHour, snap.durationHours);
-        var sameLocation = (snap.roomType && newBranch === snap.branch && newRoomType === snap.roomType && newDate === snap.bookingDate);
+        var sameLocation = (snap.roomType && !snap.legacyRoomType && newBranch === snap.branch && newRoomType === snap.roomType && newDate === snap.bookingDate);
         var nowISO = new Date().toISOString();
 
         var bookingUpdates = {
@@ -4636,7 +4820,7 @@
           lastEditAudit: {
             bookingId: snap.bookingId,
             previousBranch: snap.branch,
-            previousRoomType: snap.roomType || 'legacy',
+            previousRoomType: snap.legacyRoomType || snap.roomType || 'legacy',
             previousDate: snap.bookingDate,
             previousStartTime: formatHour12(snap.startHour),
             previousDuration: snap.durationHours,
@@ -4723,9 +4907,11 @@
           }
 
           var newRef = state.db.ref(SLOT_LOCKS_PATH + '/' + newBranch + '/' + newRoomType + '/' + newDate);
-          var oldPath = snap.roomType
-            ? (SLOT_LOCKS_PATH + '/' + snap.branch + '/' + snap.roomType + '/' + snap.bookingDate)
-            : (SLOT_LOCKS_PATH + '/' + snap.branch + '/' + snap.bookingDate);
+          var oldPath = snap.legacyRoomType
+            ? (SLOT_LOCKS_PATH + '/' + snap.branch + '/' + snap.legacyRoomType + '/' + snap.bookingDate)
+            : (snap.roomType
+              ? (SLOT_LOCKS_PATH + '/' + snap.branch + '/' + snap.roomType + '/' + snap.bookingDate)
+              : (SLOT_LOCKS_PATH + '/' + snap.branch + '/' + snap.bookingDate));
           var oldRef = state.db.ref(oldPath);
           var crossConflictMsg = null;
           var newLocksSecured = false;
@@ -4778,7 +4964,7 @@
                 origHours.forEach(function (hh) {
                   if (!n[hh]) {
                     n[hh] = { status: 'confirmed', bookingId: snap.bookingId };
-                    if (snap.roomType) n[hh].roomType = snap.roomType;
+                    if (snap.legacyRoomType || snap.roomType) n[hh].roomType = snap.legacyRoomType || snap.roomType;
                   }
                 });
                 return n;
@@ -4911,7 +5097,72 @@
         $('reelUrlVashiCouples').value = reels.vashi_couples || DEFAULT_REELS.vashi_couples;
         $('reelUrlVashiFamily').value = reels.vashi_family || DEFAULT_REELS.vashi_family;
         $('reelUrlVashiHeaven').value = reels.vashi_heaven || DEFAULT_REELS.vashi_heaven;
+        $('reelUrlVashiPremiumDinner').value = reels.vashi_premium_dinner || '';
         $('razorpayKeyId').value = (state.siteSettings && state.siteSettings.razorpayKeyId) || DEFAULT_RAZORPAY_KEY_ID;
+
+        renderPackageReelsList();
+      }
+
+      var DEFAULT_VENUE_REELS = {
+        Kurla: 'https://www.instagram.com/blinkevents_kurla',
+        Vashi: 'https://www.instagram.com/blinkevent_vashi'
+      };
+
+      function getAllPackagesForReels() {
+        var list = [];
+        BRANCHES.forEach(function (branch) {
+          var byRoom = PACKAGE_MASTER_DATA[branch] || {};
+          Object.keys(byRoom).forEach(function (roomKey) {
+            (byRoom[roomKey] || []).forEach(function (pkg) {
+              list.push({
+                id: pkg.id,
+                name: pkg.name,
+                branch: branch,
+                roomLabel: getRoomLabel(roomKey)
+              });
+            });
+          });
+        });
+        return list;
+      }
+
+      function renderPackageReelsList() {
+        var container = $('packageReelsList');
+        if (!container) return;
+        container.innerHTML = '';
+        var saved = (state.siteSettings && state.siteSettings.packageReels) || {};
+        getAllPackagesForReels().forEach(function (item) {
+          var row = document.createElement('div');
+          row.className = 'rate-item rate-item--url';
+
+          var lbl = document.createElement('label');
+          lbl.setAttribute('for', 'pkgReel_' + item.id);
+          lbl.textContent = item.branch + ' — ' + item.name + ' (' + item.roomLabel + ')';
+          var code = document.createElement('small');
+          code.textContent = item.id;
+          lbl.appendChild(code);
+
+          var inp = document.createElement('input');
+          inp.type = 'url';
+          inp.id = 'pkgReel_' + item.id;
+          inp.setAttribute('data-pkg-reel-id', item.id);
+          inp.setAttribute('data-pkg-reel-label', item.branch + ' — ' + item.name);
+          inp.placeholder = DEFAULT_VENUE_REELS[item.branch] || DEFAULT_VENUE_REELS.Kurla;
+          inp.value = typeof saved[item.id] === 'string' ? saved[item.id] : '';
+
+          row.appendChild(lbl);
+          row.appendChild(inp);
+          container.appendChild(row);
+        });
+      }
+
+      function isValidHttpUrl(url) {
+        try {
+          var parsed = new URL(url);
+          return parsed.protocol === 'https:' || parsed.protocol === 'http:';
+        } catch (e) {
+          return false;
+        }
       }
 
       function getActiveRazorpayKeyId() {
@@ -4962,12 +5213,34 @@
         var vashiCouplesUrl = $('reelUrlVashiCouples').value.trim();
         var vashiFamilyUrl = $('reelUrlVashiFamily').value.trim();
         var vashiHeavenUrl = $('reelUrlVashiHeaven').value.trim();
+        var vashiPremiumDinnerUrl = $('reelUrlVashiPremiumDinner').value.trim();
 
         if (!isValidInstagramUrl(kurlaCouplesUrl)) return showRatesErr('Please enter a valid https://www.instagram.com/... URL for Kurla Couples.');
         if (!isValidInstagramUrl(kurlaFamilyUrl)) return showRatesErr('Please enter a valid https://www.instagram.com/... URL for Kurla Family.');
         if (!isValidInstagramUrl(vashiCouplesUrl)) return showRatesErr('Please enter a valid https://www.instagram.com/... URL for Vashi Couples.');
         if (!isValidInstagramUrl(vashiFamilyUrl)) return showRatesErr('Please enter a valid https://www.instagram.com/... URL for Vashi Family.');
         if (!isValidInstagramUrl(vashiHeavenUrl)) return showRatesErr('Please enter a valid https://www.instagram.com/... URL for Vashi Heaven.');
+        if (vashiPremiumDinnerUrl !== '' && !isValidInstagramUrl(vashiPremiumDinnerUrl)) {
+          $('reelUrlVashiPremiumDinner').focus();
+          return showRatesErr('Please enter a valid https://www.instagram.com/... URL for Vashi Premium Dinner, or leave blank.');
+        }
+
+        var pkgReelUpdates = {};
+        var pkgReelInputs = document.querySelectorAll('#packageReelsList [data-pkg-reel-id]');
+        for (var j = 0; j < pkgReelInputs.length; j++) {
+          var pInp = pkgReelInputs[j];
+          var pId = pInp.getAttribute('data-pkg-reel-id');
+          var pLbl = pInp.getAttribute('data-pkg-reel-label');
+          var pUrl = pInp.value.trim();
+          if (pUrl === '') {
+            pkgReelUpdates[pId] = null;
+          } else if (!isValidHttpUrl(pUrl)) {
+            pInp.focus();
+            return showRatesErr('Invalid Reel URL for "' + pLbl + '". Enter a valid https://... URL or leave blank for fallback.');
+          } else {
+            pkgReelUpdates[pId] = pUrl;
+          }
+        }
 
         var rzpKeyId = $('razorpayKeyId').value.trim();
         if (!/^rzp_(test|live)_[A-Za-z0-9]+$/.test(rzpKeyId)) {
@@ -4986,19 +5259,23 @@
         Object.keys(addonUpdates).forEach(function (k) {
           multiPathUpdate[SITE_SETTINGS_PATH + '/addonPrices/' + k] = addonUpdates[k];
         });
+        Object.keys(pkgReelUpdates).forEach(function (k) {
+          multiPathUpdate[SITE_SETTINGS_PATH + '/packageReels/' + k] = pkgReelUpdates[k];
+        });
         multiPathUpdate[SITE_SETTINGS_PATH + '/instagramReels/kurla_couples'] = kurlaCouplesUrl;
         multiPathUpdate[SITE_SETTINGS_PATH + '/instagramReels/kurla_family'] = kurlaFamilyUrl;
         multiPathUpdate[SITE_SETTINGS_PATH + '/instagramReels/vashi_couples'] = vashiCouplesUrl;
         multiPathUpdate[SITE_SETTINGS_PATH + '/instagramReels/vashi_family'] = vashiFamilyUrl;
         multiPathUpdate[SITE_SETTINGS_PATH + '/instagramReels/vashi_heaven'] = vashiHeavenUrl;
+        multiPathUpdate[SITE_SETTINGS_PATH + '/instagramReels/vashi_premium_dinner'] = vashiPremiumDinnerUrl === '' ? null : vashiPremiumDinnerUrl;
         multiPathUpdate[SITE_SETTINGS_PATH + '/razorpayKeyId'] = rzpKeyId;
         multiPathUpdate[SITE_SETTINGS_PATH + '/updatedAt'] = new Date().toISOString();
 
         state.db.ref().update(multiPathUpdate).then(function () {
           fb.className = 'modal-note is-ok';
-          fb.textContent = 'Saved! Package prices, add-on prices, Instagram Reel links, and Razorpay Key ID are now live in site_settings.';
+          fb.textContent = 'Saved! Package prices, add-on prices, package-wise Reel links, and Razorpay Key ID are now live in site_settings.';
           fb.hidden = false;
-          showToast('Rates & Reel links saved to Firebase.', 'ok');
+          showToast('Rates & Package Reel links saved to Firebase.', 'ok');
         }).catch(function (err) {
           showRatesErr('Failed to save settings: ' + (err && err.message ? err.message : 'Database permission error'));
         }).then(function () {
