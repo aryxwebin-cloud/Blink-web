@@ -713,6 +713,10 @@
     .pill--pay-pending { background: var(--warn-bg); border-color: rgba(251, 191, 36, 0.4); color: var(--warn); }
     .pill--pay-cash { background: var(--ok-bg); border-color: rgba(52, 211, 153, 0.45); color: var(--ok); }
     .pill--pay-online { background: rgba(96, 165, 250, 0.14); border-color: rgba(96, 165, 250, 0.45); color: #93C5FD; }
+    .pill--lifecycle-live { background: rgba(52, 211, 153, 0.16); border-color: rgba(52, 211, 153, 0.55); color: #4ADE80; }
+    .pill--lifecycle-upcoming { background: rgba(251, 191, 36, 0.14); border-color: rgba(251, 191, 36, 0.5); color: #FBBF24; }
+    .pill--lifecycle-finished { background: rgba(148, 163, 184, 0.12); border-color: rgba(148, 163, 184, 0.35); color: #9CA3AF; }
+    .slot-lifecycle-badge { font-size: 0.65rem; padding: 2px 7px; }
 
     /* One-Tap Venue Payment Quick Controls */
     .pay-btn-group {
@@ -1683,6 +1687,17 @@
               </div>
 
               <div class="rate-card" style="grid-column: 1 / -1;">
+                <h3>Google Sheets Automatic Synchronization</h3>
+                <div class="form-grid">
+                  <div class="field field--full">
+                    <label for="googleSheetWebhookUrl">Google Sheets Webhook URL</label>
+                    <input type="url" id="googleSheetWebhookUrl" placeholder="https://script.google.com/macros/s/.../exec" autocomplete="off">
+                    <div class="subline">Stored at <code>site_settings/googleSheetWebhookUrl</code> and synced live to the customer website. Leave blank to use the default BLINK EVENTS Apps Script webhook.</div>
+                  </div>
+                </div>
+              </div>
+
+              <div class="rate-card" style="grid-column: 1 / -1;">
                 <h3>Razorpay Standard Checkout Settings (Test Mode)</h3>
                 <div class="form-grid">
                   <div class="field field--full">
@@ -2080,6 +2095,54 @@
       var BOOKINGS_PATH = 'aryx_demo_bookings';
       var SLOT_LOCKS_PATH = 'slot_locks';
       var SITE_SETTINGS_PATH = 'site_settings';
+      var DEFAULT_GOOGLE_SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbze_83CIQwWF4syE7uBX5lwDozvD9nR8eCATVZ3-uY_0zY2l2hv5817WTCZM9QS4JXA/exec';
+      var recentSheetDispatches = {};
+
+      function isValidGoogleScriptWebhookUrl(url) {
+        if (typeof url !== 'string') return false;
+        var s = url.trim();
+        if (!s) return false;
+        try {
+          var parsed = new URL(s);
+          return parsed.protocol === 'https:' && /^script\.google(usercontent)?\.com$/i.test(parsed.hostname);
+        } catch (e) {
+          return false;
+        }
+      }
+
+      function getActiveGoogleSheetWebhookUrl() {
+        var custom = state.siteSettings && state.siteSettings.googleSheetWebhookUrl;
+        return isValidGoogleScriptWebhookUrl(custom) ? custom.trim() : DEFAULT_GOOGLE_SHEET_WEBHOOK_URL;
+      }
+
+      function syncToSheet(payload) {
+        try {
+          if (!payload || typeof payload !== 'object' || !payload.action) return;
+          var url = getActiveGoogleSheetWebhookUrl();
+          if (!isValidGoogleScriptWebhookUrl(url)) return;
+
+          var dedupeKey = payload.action + '|' + (payload.bookingId || '') + '|' + JSON.stringify(payload);
+          var now = Date.now();
+          if (payload.action === 'create' && recentSheetDispatches[dedupeKey]) return;
+          if (recentSheetDispatches[dedupeKey] && (now - recentSheetDispatches[dedupeKey] < 2000)) return;
+          recentSheetDispatches[dedupeKey] = now;
+
+          fetch(url, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(payload)
+          }).catch(function (err) {
+            if (typeof console !== 'undefined' && console.warn) {
+              console.warn('Google Sheets sync dispatch error (non-blocking):', err);
+            }
+          });
+        } catch (err) {
+          if (typeof console !== 'undefined' && console.warn) {
+            console.warn('Google Sheets sync skipped:', err);
+          }
+        }
+      }
       var BRANCHES = ['Kurla', 'Vashi'];
       var ROOMS = ['couples', 'family', 'heaven_couple', 'mega_party', 'dinner_luxury', 'dinner_royal'];
       var VASHI_ONLY_ROOMS = ['heaven_couple', 'mega_party', 'dinner_luxury', 'dinner_royal'];
@@ -2303,6 +2366,7 @@
           instagramReels: Object.assign({}, DEFAULT_REELS),
           packageReels: {},
           razorpayKeyId: DEFAULT_RAZORPAY_KEY_ID,
+          googleSheetWebhookUrl: DEFAULT_GOOGLE_SHEET_WEBHOOK_URL,
           gallery: {
             kurla_couples: {},
             kurla_family: {},
@@ -2327,7 +2391,8 @@
         deletingKeys: {},
         updatingPaymentKeys: {},
         qbManualTotalOverride: false,
-        replaceTarget: null
+        replaceTarget: null,
+        lifecycleTimer: null
       };
 
       /* =====================================================================
@@ -2347,6 +2412,105 @@
         var utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
         var d = new Date(utcMs + (330 * 60000));
         return d.getFullYear() + '-' + pad2(d.getMonth() + 1) + '-' + pad2(d.getDate());
+      }
+
+      function getKolkataCurrentMinutes() {
+        try {
+          var parts = new Intl.DateTimeFormat('en-GB', {
+            timeZone: BUSINESS_TIMEZONE,
+            hour: '2-digit',
+            minute: '2-digit',
+            hour12: false
+          }).formatToParts(new Date());
+          var hh = 0, mm = 0;
+          parts.forEach(function (p) {
+            if (p.type === 'hour') hh = parseInt(p.value, 10) || 0;
+            if (p.type === 'minute') mm = parseInt(p.value, 10) || 0;
+          });
+          if (hh === 24) hh = 0;
+          return (hh * 60) + mm;
+        } catch (e) {}
+        var now = new Date();
+        var utcMs = now.getTime() + (now.getTimezoneOffset() * 60000);
+        var d = new Date(utcMs + (330 * 60000));
+        return (d.getHours() * 60) + d.getMinutes();
+      }
+
+      function getDaysDiffISO(fromISO, toISO) {
+        var m1 = /^(\d{4})-(\d{2})-(\d{2})$/.exec(fromISO || '');
+        var m2 = /^(\d{4})-(\d{2})-(\d{2})$/.exec(toISO || '');
+        if (!m1 || !m2) return null;
+        var t1 = Date.UTC(Number(m1[1]), Number(m1[2]) - 1, Number(m1[3]));
+        var t2 = Date.UTC(Number(m2[1]), Number(m2[2]) - 1, Number(m2[3]));
+        return Math.round((t2 - t1) / 86400000);
+      }
+
+      function classifyBookingLifecycle(booking, todayIST, currentISTMinutes) {
+        if (!booking || typeof booking !== 'object') return null;
+        if (booking.bookingStatus !== 'confirmed' || booking.isOfflineBlock) return null;
+        var bDate = booking.bookingDate || booking.date || '';
+        if (!/^\d{4}-\d{2}-\d{2}$/.test(bDate)) return null;
+        var startHour = Number(booking.startHour);
+        var durationHours = Number(booking.durationHours);
+        if (!isFinite(startHour) || startHour < 0 || startHour > 23) return null;
+        if (!isFinite(durationHours) || durationHours < 1) return null;
+
+        var startMinutes = Math.round(startHour * 60);
+        var endMinutes = startMinutes + Math.round(durationHours * 60);
+        var dayDiff = getDaysDiffISO(bDate, todayIST);
+        if (dayDiff === null) return null;
+
+        if (dayDiff < 0) {
+          return { key: 'upcoming', label: '🟡 UPCOMING', cls: 'pill--lifecycle-upcoming' };
+        }
+        if (dayDiff === 0) {
+          if (currentISTMinutes < startMinutes) {
+            return { key: 'upcoming', label: '🟡 UPCOMING', cls: 'pill--lifecycle-upcoming' };
+          }
+          if (currentISTMinutes >= startMinutes && currentISTMinutes < endMinutes) {
+            return { key: 'live', label: '🟢 LIVE NOW', cls: 'pill--lifecycle-live' };
+          }
+          return { key: 'finished', label: '⚪ FINISHED', cls: 'pill--lifecycle-finished' };
+        }
+        if (dayDiff === 1 && endMinutes > 1440) {
+          var overflowEnd = endMinutes - 1440;
+          if (currentISTMinutes < overflowEnd) {
+            return { key: 'live', label: '🟢 LIVE NOW', cls: 'pill--lifecycle-live' };
+          }
+        }
+        return { key: 'finished', label: '⚪ FINISHED', cls: 'pill--lifecycle-finished' };
+      }
+
+      function refreshLifecycleBadges() {
+        var badges = document.querySelectorAll('.js-lifecycle-badge[data-lifecycle-booking-id]');
+        if (!badges.length) return;
+        var todayIST = getKolkataTodayISO();
+        var currentISTMinutes = getKolkataCurrentMinutes();
+        badges.forEach(function (el) {
+          var bid = el.getAttribute('data-lifecycle-booking-id');
+          var booking = findBookingById(bid);
+          var lc = classifyBookingLifecycle(booking, todayIST, currentISTMinutes);
+          if (!lc) {
+            el.hidden = true;
+            return;
+          }
+          var isSlotTile = el.classList.contains('slot-lifecycle-badge');
+          el.hidden = false;
+          el.className = 'pill ' + lc.cls + ' js-lifecycle-badge' + (isSlotTile ? ' slot-lifecycle-badge' : '');
+          el.textContent = lc.label;
+        });
+      }
+
+      function stopLifecycleRefreshTimer() {
+        if (state.lifecycleTimer) {
+          clearInterval(state.lifecycleTimer);
+          state.lifecycleTimer = null;
+        }
+      }
+
+      function startLifecycleRefreshTimer() {
+        stopLifecycleRefreshTimer();
+        state.lifecycleTimer = setInterval(refreshLifecycleBadges, 60000);
       }
 
       function pad2(n) { return n < 10 ? '0' + n : String(n); }
@@ -2456,7 +2620,10 @@
         $('dashboardApp').hidden = !state.authenticated;
         if (state.authenticated) {
           initFirebaseIfNeeded();
+          startLifecycleRefreshTimer();
           renderAll();
+        } else {
+          stopLifecycleRefreshTimer();
         }
       }
 
@@ -2561,6 +2728,9 @@
             razorpayKeyId: (typeof val.razorpayKeyId === 'string' && /^rzp_(test|live)_[A-Za-z0-9]+$/.test(val.razorpayKeyId.trim()))
               ? val.razorpayKeyId.trim()
               : DEFAULT_RAZORPAY_KEY_ID,
+            googleSheetWebhookUrl: (typeof val.googleSheetWebhookUrl === 'string' && isValidGoogleScriptWebhookUrl(val.googleSheetWebhookUrl))
+              ? val.googleSheetWebhookUrl.trim()
+              : DEFAULT_GOOGLE_SHEET_WEBHOOK_URL,
             gallery: (val.gallery && typeof val.gallery === 'object') ? val.gallery : {}
           };
           renderRatesManager();
@@ -2862,6 +3032,13 @@
 
         try {
           await state.db.ref(BOOKINGS_PATH + '/' + booking._key).update(payload);
+          var sheetPayMode = actionMode === 'cash' ? 'Cash' : (actionMode === 'online' ? 'Online' : 'Pending');
+          syncToSheet({
+            action: 'updateStatus',
+            bookingId: booking.bookingId,
+            bookingStatus: 'Confirmed',
+            paymentMode: sheetPayMode
+          });
           var label = actionMode === 'cash'
             ? 'Venue balance marked PAID (Cash)'
             : actionMode === 'online'
@@ -3058,6 +3235,14 @@
           srcSpan.textContent = b.bookingSource || b.source;
           stGroup.appendChild(stPill);
           stGroup.appendChild(srcSpan);
+          var lc = classifyBookingLifecycle(b, getKolkataTodayISO(), getKolkataCurrentMinutes());
+          if (lc) {
+            var lcPill = document.createElement('span');
+            lcPill.className = 'pill ' + lc.cls + ' js-lifecycle-badge';
+            lcPill.setAttribute('data-lifecycle-booking-id', b.bookingId);
+            lcPill.textContent = lc.label;
+            stGroup.appendChild(lcPill);
+          }
           if (b.bookingStatus === 'confirmed' && !b.isOfflineBlock) {
             var payPill = document.createElement('span');
             if (b.venuePaymentStatus === 'completed' && b.venuePaymentMode === 'cash') {
@@ -3312,6 +3497,16 @@
 
           btn.appendChild(timeEl);
           btn.appendChild(badgeEl);
+          if (lock && lock.status === 'confirmed' && linkedBooking) {
+            var slotLc = classifyBookingLifecycle(linkedBooking, getKolkataTodayISO(), getKolkataCurrentMinutes());
+            if (slotLc) {
+              var slotLcEl = document.createElement('span');
+              slotLcEl.className = 'pill ' + slotLc.cls + ' js-lifecycle-badge slot-lifecycle-badge';
+              slotLcEl.setAttribute('data-lifecycle-booking-id', linkedBooking.bookingId);
+              slotLcEl.textContent = slotLc.label;
+              btn.appendChild(slotLcEl);
+            }
+          }
           btn.appendChild(metaEl);
 
           btn.addEventListener('click', function () {
@@ -3727,6 +3922,7 @@
           '✅ *' + paymentLine + '*',
           '🏦 *Balance Due at Venue:* ' + formatMoney(b.balanceAtVenue),
           '🆔 *Booking ID:* ' + b.bookingId,
+          '📞 *' + b.branch + ' Support:* ' + (b.branch === 'Vashi' ? '+91 98338 65567' : '+91 91379 13083'),
           '',
           'We look forward to hosting you at Blink Events!'
         ];
@@ -4148,6 +4344,7 @@
                   noteEl.textContent = 'Payment received (' + paymentId + '). Confirming slot lock and saving booking…';
 
                   confirmAdminSlotHoldAndSaveBooking(record).then(function () {
+                    syncToSheet(Object.assign({ action: 'create' }, record));
                     noteEl.className = 'modal-note is-ok';
                     noteEl.textContent = 'Confirmed! Booking ID: ' + bookingId + ' | Razorpay Payment ID: ' + paymentId + '. All ' + duration + ' hour(s) are now locked.';
                     var waBtn = $('qbWhatsappBtn');
@@ -4219,6 +4416,7 @@
         noteEl.hidden = false;
 
         commitAtomicBooking(record).then(function () {
+          syncToSheet(Object.assign({ action: 'create' }, record));
           noteEl.className = 'modal-note is-ok';
           noteEl.textContent = 'Confirmed! Booking ID: ' + bookingId + ' (' + bookingSource + '). All ' + duration + ' hour(s) are now locked on the customer website.';
           var waBtn = $('qbWhatsappBtn');
@@ -4457,6 +4655,13 @@
           $('cmConfirmBtn').disabled = true;
           $('cmConfirmBtn').textContent = 'Updating…';
           cancelBookingAndReleaseLocks(booking).then(function () {
+            if (!booking.isOfflineBlock) {
+              syncToSheet({
+                action: 'updateStatus',
+                bookingId: booking.bookingId,
+                bookingStatus: 'Cancelled'
+              });
+            }
             $('confirmModal').hidden = true;
             showToast((booking.isOfflineBlock ? 'Block released' : 'Booking cancelled') + ' and slot locks cleared.', 'ok');
           }).catch(function (err) {
@@ -5003,6 +5208,13 @@
 
         executeSafeSlotAndBookingUpdate(currentEditSnapshot, newBranch, newRoomType, newDate, newStartHour, newDuration, bill, extraRate)
           .then(function (updatedBooking) {
+            syncToSheet({
+              action: 'updateStatus',
+              bookingId: updatedBooking.bookingId,
+              bookingDate: updatedBooking.bookingDate,
+              slot: updatedBooking.slot,
+              balanceAtVenue: updatedBooking.balanceAtVenue
+            });
             isSavingEdit = false;
             activeEditingBookingId = null;
             noteEl.className = 'modal-note is-ok';
@@ -5099,6 +5311,7 @@
         $('reelUrlVashiHeaven').value = reels.vashi_heaven || DEFAULT_REELS.vashi_heaven;
         $('reelUrlVashiPremiumDinner').value = reels.vashi_premium_dinner || '';
         $('razorpayKeyId').value = (state.siteSettings && state.siteSettings.razorpayKeyId) || DEFAULT_RAZORPAY_KEY_ID;
+        $('googleSheetWebhookUrl').value = getActiveGoogleSheetWebhookUrl();
 
         renderPackageReelsList();
       }
@@ -5248,6 +5461,12 @@
           return showRatesErr('Please enter a valid Razorpay public Key ID (starting with rzp_test_ or rzp_live_).');
         }
 
+        var gsWebhookUrl = $('googleSheetWebhookUrl').value.trim();
+        if (gsWebhookUrl !== '' && !isValidGoogleScriptWebhookUrl(gsWebhookUrl)) {
+          $('googleSheetWebhookUrl').focus();
+          return showRatesErr('Please enter a valid HTTPS Google Apps Script URL (https://script.google.com/...), or leave blank for the default webhook.');
+        }
+
         var btn = $('saveRatesBtn');
         btn.disabled = true;
         btn.textContent = 'Saving…';
@@ -5269,9 +5488,11 @@
         multiPathUpdate[SITE_SETTINGS_PATH + '/instagramReels/vashi_heaven'] = vashiHeavenUrl;
         multiPathUpdate[SITE_SETTINGS_PATH + '/instagramReels/vashi_premium_dinner'] = vashiPremiumDinnerUrl === '' ? null : vashiPremiumDinnerUrl;
         multiPathUpdate[SITE_SETTINGS_PATH + '/razorpayKeyId'] = rzpKeyId;
+        multiPathUpdate[SITE_SETTINGS_PATH + '/googleSheetWebhookUrl'] = gsWebhookUrl === '' ? null : gsWebhookUrl;
         multiPathUpdate[SITE_SETTINGS_PATH + '/updatedAt'] = new Date().toISOString();
 
         state.db.ref().update(multiPathUpdate).then(function () {
+          state.siteSettings.googleSheetWebhookUrl = gsWebhookUrl === '' ? DEFAULT_GOOGLE_SHEET_WEBHOOK_URL : gsWebhookUrl;
           fb.className = 'modal-note is-ok';
           fb.textContent = 'Saved! Package prices, add-on prices, package-wise Reel links, and Razorpay Key ID are now live in site_settings.';
           fb.hidden = false;

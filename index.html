@@ -1084,19 +1084,28 @@
     .footer { background: #040406; border-top: 1px solid var(--line); padding: 40px 16px 96px; text-align: center; }
     .footer-links {
       display: flex; flex-wrap: wrap; justify-content: center; align-items: center;
-      gap: 6px 10px; text-align: center; font-size: 0.82rem; color: var(--gold-soft); font-weight: 500;
+      gap: 10px 18px; text-align: center; font-size: 0.82rem; color: var(--gold-soft); font-weight: 500;
     }
-    .footer-links a, .footer-links span[aria-hidden="true"] { white-space: nowrap; }
+    .footer-links a, .footer-links .footer-link-btn { white-space: nowrap; padding: 4px 2px; }
     .footer-links a:hover { color: var(--rose); text-decoration: underline; }
     .footer-divider { width: 60px; height: 1px; background: var(--line-strong); margin: 4px auto; }
     .footer-link-btn {
-      background: none; border: none; padding: 3px 4px; color: var(--gold-soft);
+      background: none; border: none; color: var(--gold-soft);
       font-size: 0.82rem; font-weight: 500; white-space: nowrap; cursor: pointer; transition: color .2s;
     }
     .footer-link-btn:hover { color: var(--rose); text-decoration: underline; }
+    @media (min-width: 640px) {
+      .footer-links { gap: 8px 0; }
+      .footer-links a:not(:last-child),
+      .footer-links .footer-link-btn:not(:last-child) {
+        border-right: 1px solid rgba(212, 175, 55, 0.28);
+        padding-right: 14px;
+        margin-right: 14px;
+      }
+    }
     .footer__bottom {
       margin-top: 12px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.07);
-      text-align: center; color: var(--text-muted); font-size: 0.82rem; width: 100%;
+      text-align: center; color: var(--text-muted); font-size: 0.78rem; width: 100%; line-height: 1.5;
     }
     .policy-content { display: grid; gap: 12px; font-size: 0.88rem; color: #e2e2ea; line-height: 1.6; text-align: left; }
     .policy-content h3 { font-size: 0.98rem; color: var(--gold-soft); margin-top: 4px; }
@@ -1206,6 +1215,54 @@
     .cf-summary div { display: flex; justify-content: space-between; gap: 10px; font-size: 0.85rem; }
     .cf-summary dt { color: var(--text-muted); }
     .cf-summary dd { margin: 0; font-family: var(--font-head); font-weight: 600; text-align: right; }
+    .cf-wa-alert {
+      width: 100%;
+      padding: 10px 14px;
+      border-radius: 12px;
+      background: rgba(37, 211, 102, 0.14);
+      border: 1.5px solid rgba(37, 211, 102, 0.55);
+      color: #bbf7d0;
+      font-size: 0.82rem;
+      font-weight: 600;
+      line-height: 1.45;
+      text-align: center;
+    }
+    .btn--wa-mandatory {
+      background: linear-gradient(135deg, #25D366 0%, #15803d 100%);
+      color: #ffffff;
+      border: 1.5px solid #86efac;
+      font-weight: 700;
+      font-size: 0.94rem;
+      min-height: 52px;
+      padding: 12px 20px;
+      border-radius: 999px;
+      text-shadow: 0 1px 2px rgba(0, 0, 0, 0.35);
+      box-shadow: 0 8px 26px rgba(37, 211, 102, 0.36);
+      animation: waMandatoryPulse 2s infinite ease-in-out;
+    }
+    .btn--wa-mandatory:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 32px rgba(37, 211, 102, 0.52);
+    }
+    @keyframes waMandatoryPulse {
+      0%, 100% { box-shadow: 0 8px 24px rgba(37, 211, 102, 0.34), 0 0 0 0 rgba(37, 211, 102, 0.45); }
+      50% { box-shadow: 0 10px 30px rgba(37, 211, 102, 0.52), 0 0 0 8px rgba(37, 211, 102, 0); }
+    }
+    .cf-wa-reminder {
+      width: 100%;
+      padding: 8px 12px;
+      border-radius: 10px;
+      background: rgba(212, 175, 55, 0.1);
+      border: 1px solid rgba(212, 175, 55, 0.42);
+      color: var(--gold-soft);
+      font-size: 0.8rem;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.4;
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .btn--wa-mandatory { animation: none; }
+    }
 
     .mb-toast {
       position: fixed; left: 50%; bottom: 20px; z-index: 400; max-width: min(440px, calc(100% - 28px));
@@ -2070,11 +2127,11 @@
             <span class="pkg-card__dur">Branch B</span>
             <h3 class="pkg-card__name">Vashi Branch (Navi Mumbai)</h3>
             <p style="color: var(--text-muted); font-size: 0.88rem; margin: 10px 0 12px;">Elite CHS, Plot No. 85, Juhu Nagar, Sector 10A, Vashi, Navi Mumbai - 400703</p>
-            <p style="font-size: 0.85rem; margin-bottom: 6px; color: #e2e2e8;">Phone / WhatsApp: <a href="tel:+919137913083" style="color: var(--gold-soft); font-weight: 600;">+91 91379 13083</a></p>
+            <p style="font-size: 0.85rem; margin-bottom: 6px; color: #e2e2e8;">Phone / WhatsApp: <a href="tel:+919833865567" style="color: var(--gold-soft); font-weight: 600;">+91 98338 65567</a></p>
             <p style="font-size: 0.85rem; margin-bottom: 18px;">Instagram: <a id="contactVashiIg" href="https://www.instagram.com/blinkevent_vashi" target="_blank" rel="noopener noreferrer" style="color: var(--rose); font-weight: 600;">@blinkevent_vashi ↗</a></p>
             <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: auto;">
               <a class="btn btn--ghost" href="https://www.google.com/maps/search/?api=1&query=Elite+CHS+Plot+85+Sector+10A+Vashi+Navi+Mumbai+400703" target="_blank" rel="noopener noreferrer" style="padding: 10px 12px; font-size: 0.84rem;">📍 Open in Maps</a>
-              <a class="btn btn--gold" href="https://wa.me/919137913083" target="_blank" rel="noopener noreferrer" style="padding: 10px 12px; font-size: 0.84rem;">💬 WhatsApp</a>
+              <a class="btn btn--gold" href="https://wa.me/919833865567" target="_blank" rel="noopener noreferrer" style="padding: 10px 12px; font-size: 0.84rem;">💬 WhatsApp</a>
             </div>
           </div>
         </div>
@@ -2091,24 +2148,18 @@
       <p style="color: var(--text-muted); font-size: 0.88rem; max-width: 540px;">Private celebration halls and romantic Love Paradise experiences in Kurla East &amp; Vashi, Navi Mumbai.</p>
       <nav aria-label="Footer navigation" class="footer-links">
         <a href="#branches">Branches</a>
-        <span aria-hidden="true">&bull;</span>
         <a href="#packages">Packages</a>
-        <span aria-hidden="true">&bull;</span>
         <a href="#book">Book Slot</a>
-        <span aria-hidden="true">&bull;</span>
         <a href="#contact">Venues</a>
       </nav>
       <div class="footer-divider" aria-hidden="true"></div>
       <nav aria-label="Policies and information" class="footer-links">
         <button type="button" class="footer-link-btn js-open-policy" data-policy="about">About Us</button>
-        <span aria-hidden="true">&bull;</span>
         <button type="button" class="footer-link-btn js-open-policy" data-policy="contact">Contact Us</button>
-        <span aria-hidden="true">&bull;</span>
         <button type="button" class="footer-link-btn js-open-policy" data-policy="privacy">Privacy Policy</button>
       </nav>
       <nav aria-label="Legal and refund policies" class="footer-links">
         <button type="button" class="footer-link-btn js-open-policy" data-policy="terms">Terms &amp; Conditions</button>
-        <span aria-hidden="true">&bull;</span>
         <button type="button" class="footer-link-btn js-open-policy" data-policy="refund">Refund &amp; Cancellation Policy</button>
       </nav>
       <p class="footer__bottom">© 2026 Blink Events. All Rights Reserved.</p>
@@ -2117,12 +2168,12 @@
 
   <!-- ================= FLOATING CALL & WHATSAPP BUTTONS ================= -->
   <div class="fab-contact-stack" aria-label="Quick contact actions">
-    <a href="tel:+919137913083" class="fab-btn fab-btn--call" aria-label="Call BLINK EVENTS" title="Call +91 91379 13083">
+    <a href="tel:+919137913083" id="fabCallBtn" class="fab-btn fab-btn--call" aria-label="Call BLINK EVENTS" title="Call Kurla Branch (+91 91379 13083)">
       <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
         <path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/>
       </svg>
     </a>
-    <a href="https://wa.me/919137913083?text=Hi%20BLINK%20EVENTS%2C%20I%20want%20to%20enquire%20about%20a%20celebration%20slot." class="fab-btn fab-btn--wa" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" title="Chat on WhatsApp">
+    <a href="https://wa.me/919137913083?text=Hi%20BLINK%20EVENTS%20Kurla%2C%20I%20want%20to%20enquire%20about%20a%20celebration%20slot." id="fabWaBtn" class="fab-btn fab-btn--wa" target="_blank" rel="noopener noreferrer" aria-label="Chat on WhatsApp" title="Chat with Kurla Branch on WhatsApp">
       <svg width="26" height="26" viewBox="0 0 32 32" fill="currentColor" aria-hidden="true">
         <path d="M16 3C8.82 3 3 8.82 3 16c0 2.29.6 4.53 1.74 6.51L3 29l6.65-1.74A12.94 12.94 0 0 0 16 29c7.18 0 13-5.82 13-13S23.18 3 16 3zm0 23.62c-2.06 0-4.08-.56-5.84-1.61l-.42-.25-3.95 1.03 1.05-3.85-.27-.44A10.56 10.56 0 0 1 5.38 16C5.38 10.14 10.14 5.38 16 5.38S26.62 10.14 26.62 16 21.86 26.62 16 26.62zm5.82-7.92c-.32-.16-1.89-.93-2.18-1.04-.29-.11-.5-.16-.72.16-.21.32-.82 1.04-1.01 1.25-.18.21-.37.24-.69.08-.32-.16-1.35-.5-2.57-1.59-.95-.85-1.59-1.9-1.78-2.22-.18-.32-.02-.49.14-.65.14-.14.32-.37.48-.56.16-.18.21-.32.32-.53.11-.21.05-.4-.03-.56-.08-.16-.72-1.73-.98-2.37-.26-.62-.52-.54-.72-.55-.18-.01-.4-.01-.61-.01-.21 0-.56.08-.85.4-.29.32-1.12 1.09-1.12 2.66 0 1.57 1.15 3.09 1.31 3.3.16.21 2.26 3.45 5.47 4.84.76.33 1.36.53 1.82.68.76.24 1.46.21 2.01.13.61-.09 1.89-.77 2.15-1.52.27-.75.27-1.39.19-1.52-.08-.13-.29-.21-.61-.37z"/>
       </svg>
@@ -2154,8 +2205,10 @@
         <div class="cf-id"><span>Booking ID</span><b id="cfBookingId">BLINK-0000</b></div>
         <dl class="cf-summary" id="cfSummary"></dl>
         <div class="bk-actions" style="width: 100%;">
+          <div class="cf-wa-alert" role="status">⚠️ MANDATORY: Send your booking pass to BLINK EVENTS WhatsApp below to activate your venue entry gate pass.</div>
+          <button type="button" class="btn btn--wa-mandatory" id="cfWhatsApp">📲 Send Pass on WhatsApp (Mandatory for Entry)</button>
+          <div class="cf-wa-reminder">⚠️ Gate entry ke liye apna confirmed pass WhatsApp par zaroor bhejein.</div>
           <button type="button" class="btn btn--gold" id="cfDownload">📥 Download Digital Booking Pass (PNG)</button>
-          <button type="button" class="btn btn--ghost" id="cfWhatsApp">📲 Send Copy on WhatsApp</button>
           <button type="button" class="btn btn--ghost" id="cfShare" hidden>📤 Share Pass Image</button>
           <button type="button" class="btn btn--ghost" id="cfView">🎟️ View My Bookings</button>
         </div>
@@ -2261,6 +2314,48 @@
       var BOOKINGS_NODE = 'aryx_demo_bookings';
       var LOCKS_NODE = 'slot_locks';
       var SETTINGS_NODE = 'site_settings';
+      var OFFICIAL_RECEPTION_WA = '919137913083';
+      var DEFAULT_GOOGLE_SHEET_WEBHOOK_URL = 'https://script.google.com/macros/s/AKfycbze_83CIQwWF4syE7uBX5lwDozvD9nR8eCATVZ3-uY_0zY2l2hv5817WTCZM9QS4JXA/exec';
+      var GOOGLE_SHEET_WEBHOOK_URL = DEFAULT_GOOGLE_SHEET_WEBHOOK_URL;
+      var syncedSheetCreateIds = {};
+
+      function isValidGoogleScriptWebhookUrl(url) {
+        if (typeof url !== 'string') return false;
+        var s = url.trim();
+        if (!s) return false;
+        try {
+          var parsed = new URL(s);
+          return parsed.protocol === 'https:' && /^script\.google(usercontent)?\.com$/i.test(parsed.hostname);
+        } catch (e) {
+          return false;
+        }
+      }
+
+      function syncBookingToGoogleSheet(record) {
+        try {
+          if (!record || typeof record !== 'object' || !record.bookingId) return;
+          if (syncedSheetCreateIds[record.bookingId]) return;
+          var url = isValidGoogleScriptWebhookUrl(GOOGLE_SHEET_WEBHOOK_URL)
+            ? GOOGLE_SHEET_WEBHOOK_URL.trim()
+            : DEFAULT_GOOGLE_SHEET_WEBHOOK_URL;
+          if (!url) return;
+          syncedSheetCreateIds[record.bookingId] = true;
+          fetch(url, {
+            method: 'POST',
+            mode: 'no-cors',
+            headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+            body: JSON.stringify(Object.assign({ action: 'create' }, record))
+          }).catch(function (err) {
+            if (typeof console !== 'undefined' && console.warn) {
+              console.warn('Google Sheets sync dispatch error (non-blocking):', err);
+            }
+          });
+        } catch (err) {
+          if (typeof console !== 'undefined' && console.warn) {
+            console.warn('Google Sheets sync skipped:', err);
+          }
+        }
+      }
       var HISTORY_KEY = 'aryx_booking_history_v1';
 
       /*
@@ -2841,6 +2936,7 @@
           shortName: 'Kurla',
           address: 'Shop 45, 49, Mass Metropolis, Eastern Express Hwy, Near Kurla Signal, Kurla East, Mumbai - 400071',
           phone: '+91 91379 13083',
+          whatsappNumber: '919137913083',
           whatsapp: 'https://wa.me/919137913083',
           maps: 'https://www.google.com/maps/search/?api=1&query=Mass+Metropolis+Kurla+East+Mumbai+400071',
           instagramHandle: '@blinkevents_kurla',
@@ -2852,8 +2948,9 @@
           name: 'BLINK EVENTS — Vashi Branch',
           shortName: 'Vashi',
           address: 'Elite CHS, Plot No. 85, Juhu Nagar, Sector 10A, Vashi, Navi Mumbai - 400703',
-          phone: '+91 91379 13083',
-          whatsapp: 'https://wa.me/919137913083',
+          phone: '+91 98338 65567',
+          whatsappNumber: '919833865567',
+          whatsapp: 'https://wa.me/919833865567',
           maps: 'https://www.google.com/maps/search/?api=1&query=Elite+CHS+Plot+85+Sector+10A+Vashi+Navi+Mumbai+400703',
           instagramHandle: '@blinkevent_vashi',
           instagramUrl: DEFAULT_INSTAGRAM_REELS.Vashi,
@@ -3211,6 +3308,30 @@
         var vIg = document.getElementById('contactVashiIg');
         if (vIg) vIg.href = BRANCHES.Vashi.instagramUrl;
 
+        var fabCallBtn = document.getElementById('fabCallBtn');
+        var fabWaBtn = document.getElementById('fabWaBtn');
+        if (state.branch === 'Vashi') {
+          if (fabCallBtn) {
+            fabCallBtn.href = 'tel:+919833865567';
+            fabCallBtn.title = 'Call Vashi Branch (+91 98338 65567)';
+            fabCallBtn.setAttribute('aria-label', 'Call Vashi Branch (+91 98338 65567)');
+          }
+          if (fabWaBtn) {
+            fabWaBtn.href = 'https://wa.me/919833865567?text=' + encodeURIComponent('Hi BLINK EVENTS Vashi, I want to enquire about a celebration slot.');
+            fabWaBtn.title = 'Chat with Vashi Branch on WhatsApp';
+          }
+        } else {
+          if (fabCallBtn) {
+            fabCallBtn.href = 'tel:+919137913083';
+            fabCallBtn.title = 'Call Kurla Branch (+91 91379 13083)';
+            fabCallBtn.setAttribute('aria-label', 'Call Kurla Branch (+91 91379 13083)');
+          }
+          if (fabWaBtn) {
+            fabWaBtn.href = 'https://wa.me/919137913083?text=' + encodeURIComponent('Hi BLINK EVENTS Kurla, I want to enquire about a celebration slot.');
+            fabWaBtn.title = 'Chat with Kurla Branch on WhatsApp';
+          }
+        }
+
         updateCarouselInstagramPills();
         document.getElementById('branchSelect').value = state.branch;
       }
@@ -3317,6 +3438,16 @@
             PAYMENT_CONFIG.razorpayKey = k.trim();
           } else {
             PAYMENT_CONFIG.razorpayKey = defaultRazorpayKey;
+          }
+        });
+
+        // Dynamic Google Sheets Webhook URL (synced from admin.html -> site_settings/googleSheetWebhookUrl)
+        db.ref(SETTINGS_NODE + '/googleSheetWebhookUrl').on('value', function (snap) {
+          var rawUrl = snap.val();
+          if (typeof rawUrl === 'string' && isValidGoogleScriptWebhookUrl(rawUrl)) {
+            GOOGLE_SHEET_WEBHOOK_URL = rawUrl.trim();
+          } else {
+            GOOGLE_SHEET_WEBHOOK_URL = DEFAULT_GOOGLE_SHEET_WEBHOOK_URL;
           }
         });
 
@@ -4759,6 +4890,7 @@
                 finalizePromise
                   .then(function () {
                     saveBookingLocally(record);
+                    syncBookingToGoogleSheet(record);
                     state.processing = false;
                     document.getElementById('submitBtn').disabled = false;
                     statusEl.textContent = '';
@@ -4896,11 +5028,14 @@
         contact: {
           title: 'Contact Us',
           subtitle: 'Venues, Phone & WhatsApp Support',
-          html: '<div class="policy-highlight">Phone / WhatsApp Support: <a href="tel:+919137913083" style="text-decoration:underline;">+91 91379 13083</a></div>' +
+          html: '<div class="policy-highlight">' +
+                  '<div>Kurla Branch: <a href="tel:+919137913083" style="text-decoration:underline;">+91 91379 13083</a></div>' +
+                  '<div style="margin-top:4px;">Vashi Branch: <a href="tel:+919833865567" style="text-decoration:underline;">+91 98338 65567</a></div>' +
+                '</div>' +
                 '<h3>Kurla East Branch (Mumbai)</h3>' +
-                '<p>Shop 45, 49, Mass Metropolis, Eastern Express Hwy, Near Kurla Signal, Kurla East, Mumbai - 400071</p>' +
+                '<p>Shop 45, 49, Mass Metropolis, Eastern Express Hwy, Near Kurla Signal, Kurla East, Mumbai - 400071<br>Phone / WhatsApp: <a href="tel:+919137913083" style="color:var(--gold-soft);font-weight:600;">+91 91379 13083</a></p>' +
                 '<h3>Vashi Branch (Navi Mumbai)</h3>' +
-                '<p>Elite CHS, Plot No. 85, Juhu Nagar, Sector 10A, Vashi, Navi Mumbai - 400703</p>' +
+                '<p>Elite CHS, Plot No. 85, Juhu Nagar, Sector 10A, Vashi, Navi Mumbai - 400703<br>Phone / WhatsApp: <a href="tel:+919833865567" style="color:var(--gold-soft);font-weight:600;">+91 98338 65567</a></p>' +
                 '<h3>Operating Hours</h3>' +
                 '<p>Hourly slots available daily from 09:00 AM to 12:00 AM Midnight.</p>'
         },
@@ -5061,206 +5196,824 @@
         openModal(document.getElementById('mbOverlay'));
       });
 
+      function safeStr(val, fallback) {
+        if (val === undefined || val === null) return fallback || '';
+        var s = String(val).trim();
+        if (!s || s === 'undefined' || s === 'null' || s === 'NaN') return fallback || '';
+        return s;
+      }
+
       function openWhatsAppCopy(r) {
+        if (!r || typeof r !== 'object') {
+          toast('Booking details unavailable for WhatsApp sharing.', true);
+          return;
+        }
         var br = BRANCHES[r.branch] || BRANCHES.Kurla;
+        var bookingId = safeStr(r.bookingId, 'N/A');
+        var branchLabel = safeStr(r.branch, br.shortName || 'Kurla');
+        var roomLabel = safeStr(resolveBookingRoomLabel(r), 'Private Suite');
+        var customerName = safeStr(r.customerName, 'Guest');
+        var contactVal = safeStr(r.contactNumber || r.whatsappNumber, 'Not provided');
+        var pkgPart = safeStr(r.packageName, 'Celebration Package');
+        var celebPart = safeStr(r.celebrationType, '');
+        var packageDisplay = celebPart ? (pkgPart + ' (' + celebPart + ')') : pkgPart;
+        var dateDisplay = formatDate(r.bookingDate || r.date);
+        if (dateDisplay === 'Not selected') dateDisplay = safeStr(r.bookingDate || r.date, 'N/A');
+        var timeSlot = safeStr(r.slot, ((safeStr(r.startTime, '') && safeStr(r.endTime, '')) ? (r.startTime + ' – ' + r.endTime) : 'N/A'));
+        var guestsCount = (isFinite(Number(r.totalPersons)) && Number(r.totalPersons) > 0) ? String(Math.round(Number(r.totalPersons))) : '2';
+        var onlinePaidNum = isFinite(Number(r.onlinePaymentAmount)) ? Number(r.onlinePaymentAmount) : 795;
+        var balanceNum = isFinite(Number(r.balanceAtVenue)) ? Number(r.balanceAtVenue) : 0;
+
         var msg = [
-          '✨ *BLINK EVENTS — BOOKING CONFIRMED*',
-          'Booking ID: ' + r.bookingId,
-          'Branch: ' + br.shortName + ' (' + br.address + ')',
-          'Room: ' + resolveBookingRoomLabel(r),
-          'Customer: ' + r.customerName,
-          'Celebration: ' + (r.celebrationType || 'Celebration'),
-          'Package: ' + r.packageName,
-          'Date: ' + formatDate(r.bookingDate || r.date),
-          'Time: ' + (r.slot || ''),
-          'Guests: ' + (r.totalPersons || 2),
-          'Venue Advance Credit: ' + money(r.venueAdvance || 750),
-          'Online Paid (incl. charges): ' + money(r.onlinePaymentAmount || 795),
-          'Balance Payable at Venue: ' + money(r.balanceAtVenue || 0),
-          'Instagram: ' + (br.instagramHandle || BRAND.instagramHandle),
-          'Contact: ' + BRAND.phoneDisplay
+          'BLINK EVENTS — CONFIRMED BOOKING PASS',
+          '',
+          'Booking ID: ' + bookingId,
+          'Branch: ' + branchLabel + ' (' + br.address + ')',
+          'Room: ' + roomLabel,
+          'Customer: ' + customerName,
+          'Contact: ' + contactVal,
+          'Package: ' + packageDisplay,
+          'Date: ' + dateDisplay,
+          'Time Slot: ' + timeSlot,
+          'Guests: ' + guestsCount,
+          'Online Paid: ' + money(onlinePaidNum),
+          'Balance at Venue: ' + money(balanceNum),
+          '',
+          'Please verify your booking details and share this confirmed pass with BLINK EVENTS reception for venue entry activation.'
         ].join('\n');
-        window.open('https://wa.me/91' + (normalizePhone(r.whatsappNumber || r.contactNumber) || '9137913083') + '?text=' + encodeURIComponent(msg), '_blank', 'noopener,noreferrer');
+
+        var targetWaNumber = (br && br.whatsappNumber) ? br.whatsappNumber : (r.branch === 'Vashi' ? '919833865567' : OFFICIAL_RECEPTION_WA);
+        var waUrl = 'https://wa.me/' + targetWaNumber + '?text=' + encodeURIComponent(msg);
+        window.open(waUrl, '_blank', 'noopener,noreferrer');
       }
 
       /* =========================================================
-         13. INSTANT PNG DIGITAL BOOKING PASS GENERATOR
+         13. LIGHTWEIGHT INLINE QR MATRIX GENERATOR (ISO 18004)
+         ========================================================= */
+      var QRCodeEngine = (function () {
+        var EXP = new Array(256);
+        var LOG = new Array(256);
+        (function () {
+          var v = 1;
+          for (var i = 0; i < 256; i++) {
+            EXP[i] = v;
+            if (i < 255) LOG[v] = i;
+            v <<= 1;
+            if (v & 256) v ^= 0x11d;
+          }
+          LOG[0] = 0;
+        })();
+
+        function gfMul(a, b) {
+          if (a === 0 || b === 0) return 0;
+          return EXP[(LOG[a] + LOG[b]) % 255];
+        }
+
+        function rsGeneratorPoly(ecLen) {
+          var poly = [1];
+          for (var i = 0; i < ecLen; i++) {
+            var next = new Array(poly.length + 1).fill(0);
+            var root = EXP[i];
+            for (var j = 0; j < poly.length; j++) {
+              next[j] ^= poly[j];
+              next[j + 1] ^= gfMul(poly[j], root);
+            }
+            poly = next;
+          }
+          return poly;
+        }
+
+        function rsEncode(data, ecLen) {
+          var gen = rsGeneratorPoly(ecLen);
+          var rem = data.slice();
+          for (var z = 0; z < ecLen; z++) rem.push(0);
+          for (var i = 0; i < data.length; i++) {
+            var factor = rem[i];
+            if (factor !== 0) {
+              for (var j = 0; j < gen.length; j++) {
+                rem[i + j] ^= gfMul(gen[j], factor);
+              }
+            }
+          }
+          return rem.slice(data.length);
+        }
+
+        // Version 1..10 tables for ECC Level M: [totalDataCodewords, ecPerBlock, blocksG1, dataPerBlockG1, blocksG2, dataPerBlockG2]
+        var VER_M = [
+          null,
+          [16, 10, 1, 16, 0, 0],   // V1 (21x21)
+          [28, 16, 1, 28, 0, 0],   // V2 (25x25)
+          [44, 26, 1, 44, 0, 0],   // V3 (29x29)
+          [64, 18, 2, 32, 0, 0],   // V4 (33x33)
+          [86, 24, 2, 43, 0, 0],   // V5 (37x37)
+          [108, 16, 4, 27, 0, 0],  // V6 (41x41)
+          [124, 18, 4, 31, 0, 0],  // V7 (45x45)
+          [154, 22, 2, 38, 2, 39], // V8 (49x49)
+          [182, 22, 3, 36, 2, 37], // V9 (53x53)
+          [216, 26, 4, 43, 1, 44]  // V10 (57x57)
+        ];
+
+        var ALIGN_POS = [
+          null, [], [6, 18], [6, 22], [6, 26], [6, 30], [6, 34],
+          [6, 22, 38], [6, 24, 42], [6, 26, 46], [6, 28, 50]
+        ];
+
+        function utf8Bytes(str) {
+          var bytes = [];
+          if (typeof TextEncoder !== 'undefined') {
+            var arr = new TextEncoder().encode(str);
+            for (var i = 0; i < arr.length; i++) bytes.push(arr[i]);
+            return bytes;
+          }
+          var enc = unescape(encodeURIComponent(str));
+          for (var j = 0; j < enc.length; j++) bytes.push(enc.charCodeAt(j) & 0xff);
+          return bytes;
+        }
+
+        function pushBits(buf, val, len) {
+          for (var i = len - 1; i >= 0; i--) {
+            buf.push((val >>> i) & 1);
+          }
+        }
+
+        function buildMatrix(text) {
+          var rawBytes = utf8Bytes(String(text || ''));
+          var version = 0;
+          for (var v = 1; v <= 10; v++) {
+            var ccBits = v >= 10 ? 16 : 8;
+            var capBits = VER_M[v][0] * 8;
+            if (4 + ccBits + rawBytes.length * 8 <= capBits) {
+              version = v;
+              break;
+            }
+          }
+          if (!version) throw new Error('QR payload exceeds supported version capacity');
+
+          var spec = VER_M[version];
+          var totalDataCw = spec[0];
+          var ecPerBlock = spec[1];
+          var bG1 = spec[2], dG1 = spec[3], bG2 = spec[4], dG2 = spec[5];
+
+          var bits = [];
+          pushBits(bits, 0x4, 4); // Byte mode
+          pushBits(bits, rawBytes.length, version >= 10 ? 16 : 8);
+          for (var i = 0; i < rawBytes.length; i++) pushBits(bits, rawBytes[i], 8);
+
+          var maxBits = totalDataCw * 8;
+          var term = Math.min(4, maxBits - bits.length);
+          for (var t = 0; t < term; t++) bits.push(0);
+          while (bits.length % 8 !== 0) bits.push(0);
+
+          var padBytes = [0xEC, 0x11];
+          var pIdx = 0;
+          while (bits.length < maxBits) {
+            pushBits(bits, padBytes[pIdx % 2], 8);
+            pIdx++;
+          }
+
+          var dataCw = [];
+          for (var b = 0; b < bits.length; b += 8) {
+            var byteVal = 0;
+            for (var k = 0; k < 8; k++) byteVal = (byteVal << 1) | bits[b + k];
+            dataCw.push(byteVal);
+          }
+
+          var blocks = [];
+          var ecBlocks = [];
+          var offset = 0;
+          for (var g1 = 0; g1 < bG1; g1++) {
+            var blk1 = dataCw.slice(offset, offset + dG1);
+            offset += dG1;
+            blocks.push(blk1);
+            ecBlocks.push(rsEncode(blk1, ecPerBlock));
+          }
+          for (var g2 = 0; g2 < bG2; g2++) {
+            var blk2 = dataCw.slice(offset, offset + dG2);
+            offset += dG2;
+            blocks.push(blk2);
+            ecBlocks.push(rsEncode(blk2, ecPerBlock));
+          }
+
+          var finalStream = [];
+          var maxD = Math.max(dG1, dG2);
+          for (var di = 0; di < maxD; di++) {
+            for (var bi = 0; bi < blocks.length; bi++) {
+              if (di < blocks[bi].length) finalStream.push(blocks[bi][di]);
+            }
+          }
+          for (var ei = 0; ei < ecPerBlock; ei++) {
+            for (var ebi = 0; ebi < ecBlocks.length; ebi++) {
+              finalStream.push(ecBlocks[ebi][ei]);
+            }
+          }
+
+          var size = version * 4 + 17;
+          var modules = [];
+          var isFunc = [];
+          for (var r = 0; r < size; r++) {
+            modules.push(new Array(size).fill(0));
+            isFunc.push(new Array(size).fill(false));
+          }
+
+          function setFunc(r, c, val) {
+            if (r < 0 || r >= size || c < 0 || c >= size) return;
+            modules[r][c] = val ? 1 : 0;
+            isFunc[r][c] = true;
+          }
+
+          function drawFinder(r0, c0) {
+            for (var dr = -1; dr <= 7; dr++) {
+              for (var dc = -1; dc <= 7; dc++) {
+                var rr = r0 + dr, cc = c0 + dc;
+                if (rr < 0 || rr >= size || cc < 0 || cc >= size) continue;
+                var inSquare = dr >= 0 && dr <= 6 && dc >= 0 && dc <= 6;
+                var dark = inSquare && (dr === 0 || dr === 6 || dc === 0 || dc === 6 || (dr >= 2 && dr <= 4 && dc >= 2 && dc <= 4));
+                setFunc(rr, cc, dark);
+              }
+            }
+          }
+
+          drawFinder(0, 0);
+          drawFinder(0, size - 7);
+          drawFinder(size - 7, 0);
+
+          for (var i = 8; i < size - 8; i++) {
+            setFunc(6, i, i % 2 === 0);
+            setFunc(i, 6, i % 2 === 0);
+          }
+
+          var align = ALIGN_POS[version];
+          for (var ai = 0; ai < align.length; ai++) {
+            for (var aj = 0; aj < align.length; aj++) {
+              var ar = align[ai], ac = align[aj];
+              if (isFunc[ar][ac]) continue;
+              for (var dr = -2; dr <= 2; dr++) {
+                for (var dc = -2; dc <= 2; dc++) {
+                  setFunc(ar + dr, ac + dc, Math.max(Math.abs(dr), Math.abs(dc)) !== 1);
+                }
+              }
+            }
+          }
+
+          setFunc(size - 8, 8, 1);
+
+          // Reserve format info areas
+          for (var fi = 0; fi < 9; fi++) {
+            if (fi !== 6) {
+              isFunc[8][fi] = true;
+              isFunc[fi][8] = true;
+            }
+          }
+          for (var fj = 0; fj < 8; fj++) {
+            isFunc[8][size - 1 - fj] = true;
+            if (fj < 7) isFunc[size - 1 - fj][8] = true;
+          }
+
+          // Reserve and draw version info for V7+
+          if (version >= 7) {
+            var vInfo = version << 12;
+            var remV = vInfo;
+            for (var vi = 0; vi < 6; vi++) {
+              if ((remV >>> (17 - vi)) & 1) remV ^= (0x1F25 << (5 - vi));
+            }
+            vInfo |= remV;
+            for (var vk = 0; vk < 18; vk++) {
+              var vbit = (vInfo >>> vk) & 1;
+              var vr = Math.floor(vk / 3);
+              var vc = size - 11 + (vk % 3);
+              setFunc(vr, vc, vbit);
+              setFunc(vc, vr, vbit);
+            }
+          }
+
+          // Place data bits in zigzag
+          var streamBits = [];
+          for (var sb = 0; sb < finalStream.length; sb++) pushBits(streamBits, finalStream[sb], 8);
+          var bitIdx = 0;
+          var upward = true;
+          for (var col = size - 1; col >= 1; col -= 2) {
+            if (col === 6) col--;
+            for (var step = 0; step < size; step++) {
+              var row = upward ? (size - 1 - step) : step;
+              for (var dc = 0; dc < 2; dc++) {
+                var cc = col - dc;
+                if (!isFunc[row][cc]) {
+                  modules[row][cc] = bitIdx < streamBits.length ? streamBits[bitIdx] : 0;
+                  bitIdx++;
+                }
+              }
+            }
+            upward = !upward;
+          }
+
+          function applyMask(maskId, grid) {
+            var out = grid.map(function (row) { return row.slice(); });
+            for (var r = 0; r < size; r++) {
+              for (var c = 0; c < size; c++) {
+                if (isFunc[r][c]) continue;
+                var inv = false;
+                if (maskId === 0) inv = (r + c) % 2 === 0;
+                else if (maskId === 1) inv = r % 2 === 0;
+                else if (maskId === 2) inv = c % 3 === 0;
+                else if (maskId === 3) inv = (r + c) % 3 === 0;
+                else if (maskId === 4) inv = (Math.floor(r / 2) + Math.floor(c / 3)) % 2 === 0;
+                else if (maskId === 5) inv = ((r * c) % 2 + (r * c) % 3) === 0;
+                else if (maskId === 6) inv = (((r * c) % 2 + (r * c) % 3) % 2) === 0;
+                else if (maskId === 7) inv = (((r + c) % 2 + (r * c) % 3) % 2) === 0;
+                if (inv) out[r][c] ^= 1;
+              }
+            }
+            // Write format info (ECC M = 00)
+            var fmtData = (0 << 3) | maskId;
+            var remF = fmtData << 10;
+            for (var fbi = 0; fbi < 5; fbi++) {
+              if ((remF >>> (14 - fbi)) & 1) remF ^= (0x537 << (4 - fbi));
+            }
+            var fmt = ((fmtData << 10) | remF) ^ 0x5412;
+            for (var k = 0; k < 15; k++) {
+              var bit = (fmt >>> k) & 1;
+              if (k < 6) out[8][k] = bit;
+              else if (k === 6) out[8][7] = bit;
+              else if (k === 7) out[8][8] = bit;
+              else if (k === 8) out[7][8] = bit;
+              else out[14 - k][8] = bit;
+
+              if (k < 8) out[size - 1 - k][8] = bit;
+              else out[8][size - 15 + k] = bit;
+            }
+            return out;
+          }
+
+          function penaltyScore(g) {
+            var score = 0;
+            for (var r = 0; r < size; r++) {
+              var runColor = g[r][0], runLen = 1;
+              for (var c = 1; c < size; c++) {
+                if (g[r][c] === runColor) {
+                  runLen++;
+                } else {
+                  if (runLen >= 5) score += 3 + (runLen - 5);
+                  runColor = g[r][c];
+                  runLen = 1;
+                }
+              }
+              if (runLen >= 5) score += 3 + (runLen - 5);
+            }
+            for (var c2 = 0; c2 < size; c2++) {
+              var runColor2 = g[0][c2], runLen2 = 1;
+              for (var r2 = 1; r2 < size; r2++) {
+                if (g[r2][c2] === runColor2) {
+                  runLen2++;
+                } else {
+                  if (runLen2 >= 5) score += 3 + (runLen2 - 5);
+                  runColor2 = g[r2][c2];
+                  runLen2 = 1;
+                }
+              }
+              if (runLen2 >= 5) score += 3 + (runLen2 - 5);
+            }
+            for (var r3 = 0; r3 < size - 1; r3++) {
+              for (var c3 = 0; c3 < size - 1; c3++) {
+                var s = g[r3][c3] + g[r3 + 1][c3] + g[r3][c3 + 1] + g[r3 + 1][c3 + 1];
+                if (s === 0 || s === 4) score += 3;
+              }
+            }
+            return score;
+          }
+
+          var bestGrid = null;
+          var bestScore = Infinity;
+          for (var m = 0; m < 8; m++) {
+            var cand = applyMask(m, modules);
+            var sc = penaltyScore(cand);
+            if (sc < bestScore) {
+              bestScore = sc;
+              bestGrid = cand;
+            }
+          }
+          return bestGrid;
+        }
+
+        return { generate: buildMatrix };
+      })();
+
+      /* =========================================================
+         14. COMPACT PREMIUM VIP ENTRY PASS PNG (1000x560 @ 2x)
          ========================================================= */
       function drawCrestOnCanvas(c, cx, cy, r) {
         c.save();
         c.beginPath(); c.arc(cx, cy, r, 0, Math.PI * 2); c.fillStyle = '#060608'; c.fill();
-        c.strokeStyle = '#D4AF37'; c.lineWidth = 3; c.stroke();
-        c.beginPath(); c.arc(cx, cy, r - 6, 0, Math.PI * 2);
-        c.strokeStyle = '#F5D98B'; c.lineWidth = 1.2; c.stroke();
+        c.strokeStyle = '#D4AF37'; c.lineWidth = 2.5; c.stroke();
+        c.beginPath(); c.arc(cx, cy, r - 4, 0, Math.PI * 2);
+        c.strokeStyle = '#F5D98B'; c.lineWidth = 1; c.stroke();
         c.fillStyle = '#E89BAE';
-        c.beginPath(); c.ellipse(cx - r * 0.56, cy - r * 0.52, 8, 4, -0.7, 0, Math.PI * 2); c.fill();
-        c.beginPath(); c.ellipse(cx + r * 0.56, cy + r * 0.52, 8, 4, -0.7, 0, Math.PI * 2); c.fill();
+        c.beginPath(); c.ellipse(cx - r * 0.56, cy - r * 0.52, Math.max(4, r * 0.14), Math.max(2, r * 0.07), -0.7, 0, Math.PI * 2); c.fill();
+        c.beginPath(); c.ellipse(cx + r * 0.56, cy + r * 0.52, Math.max(4, r * 0.14), Math.max(2, r * 0.07), -0.7, 0, Math.PI * 2); c.fill();
         c.textAlign = 'center';
         c.fillStyle = '#D4AF37';
-        c.font = '700 28px "Cormorant Garamond", Georgia, serif';
-        c.fillText('Be', cx, cy + 4);
+        c.font = '700 ' + Math.round(r * 0.54) + 'px "Cormorant Garamond", Georgia, serif';
+        c.fillText('Be', cx, cy + Math.round(r * 0.1));
         c.fillStyle = '#F5D98B';
-        c.font = 'italic 600 13px "Cormorant Garamond", Georgia, serif';
-        c.fillText('Blink Events', cx, cy + 23);
+        c.font = 'italic 600 ' + Math.round(r * 0.23) + 'px "Cormorant Garamond", Georgia, serif';
+        c.fillText('Blink Events', cx, cy + Math.round(r * 0.42));
         c.restore();
       }
 
-      function wrapText(ctx, text, x, y, maxWidth, lineHeight) {
+      function fitTextSingleLine(ctx, text, fontWeight, fontFamily, startSize, minSize, maxWidth) {
         var str = String(text || '');
-        var words = str.split(/\s+/);
-        var line = '';
-        var lines = [];
-
-        for (var i = 0; i < words.length; i++) {
-          var word = words[i];
-          var testLine = line ? line + ' ' + word : word;
-          if (ctx.measureText(testLine).width <= maxWidth) {
-            line = testLine;
-          } else {
-            if (line) {
-              lines.push(line);
-              line = '';
-            }
-            if (ctx.measureText(word).width > maxWidth) {
-              var chunk = '';
-              for (var k = 0; k < word.length; k++) {
-                var nextChunk = chunk + word[k];
-                if (ctx.measureText(nextChunk).width > maxWidth && chunk) {
-                  lines.push(chunk);
-                  chunk = word[k];
-                } else {
-                  chunk = nextChunk;
-                }
-              }
-              line = chunk;
-            } else {
-              line = word;
-            }
+        var sz = startSize;
+        while (sz > minSize) {
+          ctx.font = fontWeight + ' ' + sz + 'px ' + fontFamily;
+          if (ctx.measureText(str).width <= maxWidth) break;
+          sz -= 1;
+        }
+        ctx.font = fontWeight + ' ' + sz + 'px ' + fontFamily;
+        if (ctx.measureText(str).width > maxWidth) {
+          while (str.length > 3 && ctx.measureText(str + '…').width > maxWidth) {
+            str = str.slice(0, -1);
           }
+          str += '…';
         }
-        if (line) lines.push(line);
-        if (!lines.length) lines.push('');
+        return { text: str, font: ctx.font };
+      }
 
-        for (var j = 0; j < lines.length; j++) {
-          ctx.fillText(lines[j], x, y + j * lineHeight);
+      function drawRoundedRect(ctx, x, y, w, h, r) {
+        ctx.beginPath();
+        ctx.moveTo(x + r, y);
+        ctx.lineTo(x + w - r, y);
+        ctx.quadraticCurveTo(x + w, y, x + w, y + r);
+        ctx.lineTo(x + w, y + h - r);
+        ctx.quadraticCurveTo(x + w, y + h, x + w - r, y + h);
+        ctx.lineTo(x + r, y + h);
+        ctx.quadraticCurveTo(x, y + h, x, y + h - r);
+        ctx.lineTo(x, y + r);
+        ctx.quadraticCurveTo(x, y, x + r, y);
+        ctx.closePath();
+      }
+
+      function loadPassCrestImage() {
+        return new Promise(function (resolve) {
+          if (window.location.protocol === 'about:') { resolve(null); return; }
+          var existingImg = document.querySelector('.js-crest-img');
+          if (existingImg && existingImg.complete && existingImg.naturalWidth > 0 && existingImg.style.display !== 'none') {
+            resolve(existingImg);
+            return;
+          }
+          var img = new Image();
+          var settled = false;
+          var timer = setTimeout(function () { if (!settled) { settled = true; resolve(null); } }, 1500);
+          img.onload = function () {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timer);
+            resolve(img.naturalWidth > 0 ? img : null);
+          };
+          img.onerror = function () {
+            if (settled) return;
+            settled = true;
+            clearTimeout(timer);
+            resolve(null);
+          };
+          img.src = 'logo.png';
+        });
+      }
+
+      function waitForFontsReady() {
+        if (document.fonts && document.fonts.ready) {
+          return Promise.race([
+            document.fonts.ready,
+            new Promise(function (res) { setTimeout(res, 1200); })
+          ]);
         }
-        return lines.length;
+        return Promise.resolve();
       }
 
       function downloadPassPNG(r) {
-        var W = 680, H = 1280, scale = 2;
-        var maxWidth = W - 112;
-        var lineHeight = 22;
+        if (!r || typeof r !== 'object') {
+          toast('Booking details missing. Cannot generate pass.', true);
+          return;
+        }
 
-        var probeCv = document.createElement('canvas');
-        var probeCtx = probeCv.getContext('2d');
-        var br = BRANCHES[r.branch] || BRANCHES.Kurla;
-        var rows = [
-          ['Customer Name', r.customerName || 'Guest'],
-          ['Celebration Type', r.celebrationType || 'Celebration'],
-          ['Branch', (r.branch || 'Kurla') + ' Branch'],
-          ['Room', resolveBookingRoomLabel(r)],
-          ['Venue Address', br.address],
-          ['Booking Date', formatDate(r.bookingDate || r.date)],
-          ['Time Slot', r.slot || ((r.startTime || '') + ' - ' + (r.endTime || ''))],
-          ['Selected Package', r.packageName || 'Package'],
-          ['Total Persons', String(r.totalPersons || 2) + ' Guests'],
-          ['Venue Advance Credit', money(r.venueAdvance || 750)],
-          ['Online Paid (incl. ₹' + (r.gatewayFee !== undefined ? r.gatewayFee : 45) + ' charges)', money(r.onlinePaymentAmount || 795)],
-          ['Balance Payable at Venue', money(r.balanceAtVenue || 0)]
-        ];
+        var bookingId = safeStr(r.bookingId, 'BLINK-0000');
+        var branch = safeStr(r.branch, 'Kurla');
+        var br = BRANCHES[branch] || BRANCHES.Kurla;
+        var roomLabel = safeStr(resolveBookingRoomLabel(r), 'Private Suite');
+        var rawDate = safeStr(r.bookingDate || r.date, '');
+        var dateDisplay = formatDate(rawDate);
+        if (dateDisplay === 'Not selected') dateDisplay = rawDate || 'N/A';
+        var slotStr = safeStr(r.slot, ((safeStr(r.startTime, '') && safeStr(r.endTime, '')) ? (r.startTime + ' - ' + r.endTime) : 'N/A'));
+        var customerName = safeStr(r.customerName, 'Guest');
+        var pkgName = safeStr(r.packageName, 'Celebration Package');
+        var celebType = safeStr(r.celebrationType, 'Celebration');
+        var balanceNum = isFinite(Number(r.balanceAtVenue)) ? Number(r.balanceAtVenue) : 0;
 
-        probeCtx.font = '600 15px Poppins, sans-serif';
-        var totalExtraY = 0;
-        rows.forEach(function (row) {
-          var words = String(row[1] || '').split(/\s+/);
-          var line = '', count = 0;
-          words.forEach(function (w) {
-            var t = line ? line + ' ' + w : w;
-            if (probeCtx.measureText(t).width <= maxWidth) line = t;
-            else { count++; line = w; }
-          });
-          if (line) count++;
-          if (count > 1) totalExtraY += (count - 1) * lineHeight;
-        });
-        if (totalExtraY > 20) H += totalExtraY;
+        var qrPayload = ['BLINK', bookingId, branch, roomLabel, rawDate || dateDisplay, slotStr].join('|');
+        var qrMatrix;
+        try {
+          qrMatrix = QRCodeEngine.generate(qrPayload);
+        } catch (qrErr) {
+          console.error('QR generation failed:', qrErr);
+          toast('Could not encode QR code for this booking pass.', true);
+          return;
+        }
 
-        var cv = document.createElement('canvas');
-        cv.width = W * scale; cv.height = H * scale;
-        var c = cv.getContext('2d');
-        c.scale(scale, scale);
+        Promise.all([loadPassCrestImage(), waitForFontsReady()]).then(function (assets) {
+          var crestImg = assets[0];
+          var W = 1000, H = 560, scale = 2;
+          var cv = document.createElement('canvas');
+          cv.width = W * scale;
+          cv.height = H * scale;
+          var c = cv.getContext('2d');
+          if (!c) {
+            toast('Canvas rendering is unavailable on this browser.', true);
+            return;
+          }
+          c.scale(scale, scale);
 
-        c.fillStyle = '#060608';
-        c.fillRect(0, 0, W, H);
+          // 1. Luxury dark background
+          c.fillStyle = '#060608';
+          c.fillRect(0, 0, W, H);
 
-        c.strokeStyle = '#D4AF37';
-        c.lineWidth = 3;
-        c.strokeRect(20, 20, W - 40, H - 40);
-        c.strokeStyle = 'rgba(245, 217, 139, 0.35)';
-        c.lineWidth = 1;
-        c.strokeRect(30, 30, W - 60, H - 60);
+          // Subtle ambient gold & rose glow
+          var glowGold = c.createRadialGradient(260, 120, 20, 260, 120, 420);
+          glowGold.addColorStop(0, 'rgba(212, 175, 55, 0.08)');
+          glowGold.addColorStop(1, 'rgba(6, 6, 8, 0)');
+          c.fillStyle = glowGold;
+          c.fillRect(0, 0, W, H);
 
-        drawCrestOnCanvas(c, W / 2, 102, 52);
+          var glowRose = c.createRadialGradient(840, 450, 10, 840, 450, 280);
+          glowRose.addColorStop(0, 'rgba(232, 155, 174, 0.08)');
+          glowRose.addColorStop(1, 'rgba(6, 6, 8, 0)');
+          c.fillStyle = glowRose;
+          c.fillRect(0, 0, W, H);
 
-        c.textAlign = 'center';
-        c.fillStyle = '#F5D98B';
-        c.font = '700 28px Poppins, sans-serif';
-        c.fillText('BLINK EVENTS', W / 2, 192);
+          // 2. Metallic gold outer & inner borders
+          c.strokeStyle = '#D4AF37';
+          c.lineWidth = 2.5;
+          drawRoundedRect(c, 14, 14, W - 28, H - 28, 18);
+          c.stroke();
 
-        c.fillStyle = '#4ADE80';
-        c.font = '700 14px Poppins, sans-serif';
-        c.fillText('✓ CONFIRMED DIGITAL BOOKING PASS', W / 2, 224);
+          c.strokeStyle = 'rgba(245, 217, 139, 0.35)';
+          c.lineWidth = 1;
+          drawRoundedRect(c, 22, 22, W - 44, H - 44, 14);
+          c.stroke();
 
-        c.fillStyle = '#131317';
-        c.fillRect(54, 248, W - 108, 78);
-        c.strokeStyle = '#D4AF37';
-        c.lineWidth = 1.5;
-        c.strokeRect(54, 248, W - 108, 78);
-        c.fillStyle = '#B4B4BE';
-        c.font = '600 11px Montserrat, sans-serif';
-        c.fillText('BOOKING ID', W / 2, 274);
-        c.fillStyle = '#F5D98B';
-        c.font = '800 30px Poppins, sans-serif';
-        c.fillText(r.bookingId || 'BLINK-0000', W / 2, 312);
+          // 3. Left Vertical Spine ("— ENTRY PASS —")
+          c.fillStyle = '#0c0c10';
+          c.fillRect(23, 23, 46, H - 46);
+          c.strokeStyle = 'rgba(212, 175, 55, 0.38)';
+          c.lineWidth = 1;
+          c.beginPath();
+          c.moveTo(69, 23);
+          c.lineTo(69, H - 23);
+          c.stroke();
 
-        var y = 372;
-        rows.forEach(function (row) {
+          c.save();
+          c.translate(46, H / 2);
+          c.rotate(-Math.PI / 2);
+          c.textAlign = 'center';
+          c.textBaseline = 'middle';
+          c.fillStyle = '#D4AF37';
+          c.font = '700 14px Poppins, sans-serif';
+          c.fillText('—  E N T R Y   P A S S  —', 0, 0);
+          c.restore();
+
+          // 4. Top Header (Crest Logo + BLINK EVENTS + CONFIRMED VENUE PASS badge)
+          var contentX = 96;
+          var infoW = 566;
+          var dividerX = 692;
+
+          if (crestImg) {
+            c.save();
+            c.beginPath();
+            c.arc(contentX + 28, 66, 26, 0, Math.PI * 2);
+            c.closePath();
+            c.clip();
+            c.drawImage(crestImg, contentX + 2, 40, 52, 52);
+            c.restore();
+            c.beginPath();
+            c.arc(contentX + 28, 66, 26, 0, Math.PI * 2);
+            c.strokeStyle = '#D4AF37';
+            c.lineWidth = 2;
+            c.stroke();
+          } else {
+            drawCrestOnCanvas(c, contentX + 28, 66, 26);
+          }
+
+          c.textAlign = 'left';
+          c.textBaseline = 'alphabetic';
+          c.fillStyle = '#F5D98B';
+          c.font = '700 26px Poppins, sans-serif';
+          c.fillText('BLINK EVENTS', contentX + 70, 64);
+
+          c.fillStyle = '#E89BAE';
+          c.font = '500 12px Montserrat, sans-serif';
+          c.fillText('PRIVATE CELEBRATION & PARTY VENUE  •  ' + branch.toUpperCase(), contentX + 70, 84);
+
+          // Confirmed Venue Pass Badge
+          drawRoundedRect(c, dividerX - 186, 46, 162, 34, 17);
+          c.fillStyle = 'rgba(74, 222, 128, 0.14)';
+          c.fill();
+          c.strokeStyle = 'rgba(74, 222, 128, 0.65)';
+          c.lineWidth = 1.2;
+          c.stroke();
+          c.textAlign = 'center';
+          c.fillStyle = '#4ADE80';
+          c.font = '700 11px Poppins, sans-serif';
+          c.fillText('✓ CONFIRMED VENUE PASS', dividerX - 105, 67);
+
+          // Header divider
+          c.strokeStyle = 'rgba(212, 175, 55, 0.3)';
+          c.lineWidth = 1;
+          c.beginPath();
+          c.moveTo(contentX, 108);
+          c.lineTo(dividerX - 24, 108);
+          c.stroke();
+
+          // 5. Left Information Column
           c.textAlign = 'left';
           c.fillStyle = '#B4B4BE';
-          c.font = '600 12px Montserrat, sans-serif';
-          c.fillText(row[0].toUpperCase(), 56, y);
+          c.font = '600 11px Montserrat, sans-serif';
+          c.fillText('GUEST / PASS HOLDER', contentX, 134);
 
-          c.fillStyle = row[0] === 'Balance Payable at Venue' ? '#F472B6' : '#FFFFFF';
-          c.font = '600 15px Poppins, sans-serif';
-          var lineCount = wrapText(c, String(row[1]), 56, y + 24, maxWidth, lineHeight);
-          var dividerY = y + 24 + (lineCount - 1) * lineHeight + 14;
+          var nameFit = fitTextSingleLine(c, customerName, '700', 'Poppins, sans-serif', 28, 17, infoW);
+          c.fillStyle = '#FFFFFF';
+          c.font = nameFit.font;
+          c.fillText(nameFit.text, contentX, 168);
 
-          c.strokeStyle = 'rgba(255,255,255,0.08)';
+          // Package / Celebration Pill
+          var pillLabel = pkgName + '  •  ' + celebType;
+          var pillFit = fitTextSingleLine(c, pillLabel, '600', 'Poppins, sans-serif', 13, 10, infoW - 28);
+          c.font = pillFit.font;
+          var pillW = Math.min(infoW, Math.ceil(c.measureText(pillFit.text).width) + 28);
+          drawRoundedRect(c, contentX, 184, pillW, 30, 15);
+          c.fillStyle = 'rgba(232, 155, 174, 0.14)';
+          c.fill();
+          c.strokeStyle = 'rgba(232, 155, 174, 0.45)';
           c.lineWidth = 1;
-          c.beginPath(); c.moveTo(56, dividerY); c.lineTo(W - 56, dividerY); c.stroke();
-          y = dividerY + 24;
+          c.stroke();
+          c.fillStyle = '#E89BAE';
+          c.fillText(pillFit.text, contentX + 14, 204);
+
+          // Structured Details Grid (2 columns)
+          var col1X = contentX;
+          var col2X = contentX + 292;
+          var colW = 272;
+
+          function drawField(x, y, label, value, valColor) {
+            c.textAlign = 'left';
+            c.fillStyle = '#B4B4BE';
+            c.font = '600 10.5px Montserrat, sans-serif';
+            c.fillText(label, x, y);
+            var fit = fitTextSingleLine(c, value, '600', 'Poppins, sans-serif', 16, 12, colW);
+            c.fillStyle = valColor || '#FFFFFF';
+            c.font = fit.font;
+            c.fillText(fit.text, x, y + 22);
+          }
+
+          drawField(col1X, 246, 'VENUE BRANCH', branch + ' Branch', '#F5D98B');
+          drawField(col2X, 246, 'ROOM / SUITE', roomLabel, '#FFFFFF');
+          drawField(col1X, 304, 'BOOKING DATE', dateDisplay, '#FFFFFF');
+          drawField(col2X, 304, 'TIME SLOT', slotStr, '#FFFFFF');
+
+          // Booking ID & Balance Highlight Boxes
+          drawRoundedRect(c, col1X, 358, 266, 76, 12);
+          c.fillStyle = '#131317';
+          c.fill();
+          c.strokeStyle = 'rgba(212, 175, 55, 0.55)';
+          c.lineWidth = 1.2;
+          c.stroke();
+          c.fillStyle = '#B4B4BE';
+          c.font = '600 10.5px Montserrat, sans-serif';
+          c.fillText('BOOKING ID', col1X + 16, 382);
+          var idFit = fitTextSingleLine(c, bookingId, '800', 'Poppins, sans-serif', 22, 14, 234);
+          c.fillStyle = '#F5D98B';
+          c.font = idFit.font;
+          c.fillText(idFit.text, col1X + 16, 414);
+
+          drawRoundedRect(c, col2X, 358, 274, 76, 12);
+          c.fillStyle = 'rgba(232, 155, 174, 0.12)';
+          c.fill();
+          c.strokeStyle = '#E89BAE';
+          c.lineWidth = 1.4;
+          c.stroke();
+          c.fillStyle = '#E89BAE';
+          c.font = '700 10.5px Montserrat, sans-serif';
+          c.fillText('BALANCE PAYABLE AT VENUE', col2X + 16, 382);
+          c.fillStyle = '#F5D98B';
+          c.font = '800 24px Poppins, sans-serif';
+          c.fillText(money(balanceNum), col2X + 16, 415);
+
+          // Left column footer
+          c.strokeStyle = 'rgba(255, 255, 255, 0.1)';
+          c.lineWidth = 1;
+          c.beginPath();
+          c.moveTo(contentX, 460);
+          c.lineTo(dividerX - 24, 460);
+          c.stroke();
+
+          var addrFit = fitTextSingleLine(c, br.address, '500', 'Montserrat, sans-serif', 11.5, 9.5, infoW);
+          c.fillStyle = '#B4B4BE';
+          c.font = addrFit.font;
+          c.fillText(addrFit.text, contentX, 484);
+
+          c.fillStyle = '#D4AF37';
+          c.font = '600 12px Poppins, sans-serif';
+          var branchPhone = (br && br.phone) ? br.phone : BRAND.phoneDisplay;
+          c.fillText('Support: ' + branchPhone + '  •  ' + (br.instagramHandle || BRAND.instagramHandle) + '  •  Valid Govt ID Mandatory', contentX, 510);
+
+          // 6. Vertical Perforated Ticket Divider
+          c.save();
+          c.strokeStyle = 'rgba(212, 175, 55, 0.45)';
+          c.lineWidth = 1.5;
+          c.setLineDash([7, 6]);
+          c.beginPath();
+          c.moveTo(dividerX, 34);
+          c.lineTo(dividerX, H - 34);
+          c.stroke();
+          c.restore();
+
+          // Ticket notches
+          c.fillStyle = '#060608';
+          c.beginPath(); c.arc(dividerX, 14, 12, 0, Math.PI * 2); c.fill();
+          c.beginPath(); c.arc(dividerX, H - 14, 12, 0, Math.PI * 2); c.fill();
+
+          // 7. Right QR Code Section
+          var qrPanelCenterX = dividerX + (W - 24 - dividerX) / 2;
+          var qrBoxSize = 236;
+          var qrBoxX = Math.round(qrPanelCenterX - qrBoxSize / 2);
+          var qrBoxY = 122;
+
+          c.textAlign = 'center';
+          c.fillStyle = '#F5D98B';
+          c.font = '700 13px Poppins, sans-serif';
+          c.fillText('VIP GATE ACCESS', qrPanelCenterX, 82);
+
+          c.fillStyle = '#E89BAE';
+          c.font = '500 11px Montserrat, sans-serif';
+          c.fillText('VERIFIED TICKET QR', qrPanelCenterX, 102);
+
+          drawRoundedRect(c, qrBoxX, qrBoxY, qrBoxSize, qrBoxSize, 14);
+          c.fillStyle = '#FFFFFF';
+          c.fill();
+          c.strokeStyle = '#D4AF37';
+          c.lineWidth = 2;
+          c.stroke();
+
+          // Render crisp QR modules with 4-module quiet zone
+          var qCount = qrMatrix.length;
+          var quietModules = 4;
+          var totalGrid = qCount + quietModules * 2;
+          var modSize = Math.floor((qrBoxSize - 16) / totalGrid);
+          var qrDrawW = totalGrid * modSize;
+          var qrStartX = Math.round(qrBoxX + (qrBoxSize - qrDrawW) / 2);
+          var qrStartY = Math.round(qrBoxY + (qrBoxSize - qrDrawW) / 2);
+
+          c.fillStyle = '#060608';
+          for (var rIdx = 0; rIdx < qCount; rIdx++) {
+            for (var cIdx = 0; cIdx < qCount; cIdx++) {
+              if (qrMatrix[rIdx][cIdx]) {
+                c.fillRect(
+                  qrStartX + (cIdx + quietModules) * modSize,
+                  qrStartY + (rIdx + quietModules) * modSize,
+                  modSize,
+                  modSize
+                );
+              }
+            }
+          }
+
+          c.fillStyle = '#F5D98B';
+          c.font = '700 14px Poppins, sans-serif';
+          c.fillText('SCAN AT ENTRY', qrPanelCenterX, qrBoxY + qrBoxSize + 36);
+
+          c.fillStyle = '#B4B4BE';
+          c.font = '500 11px Montserrat, sans-serif';
+          c.fillText('Show pass at reception desk', qrPanelCenterX, qrBoxY + qrBoxSize + 58);
+
+          // 8. Export PNG reliably via toDataURL('image/png')
+          try {
+            var dataUrl = cv.toDataURL('image/png');
+            if (!dataUrl || dataUrl.indexOf('data:image/png') !== 0) {
+              throw new Error('Invalid PNG output');
+            }
+            var a = document.createElement('a');
+            a.href = dataUrl;
+            a.download = 'BLINK-EVENTS-VIP-Pass-' + bookingId.replace(/[^A-Za-z0-9_-]/g, '') + '.png';
+            document.body.appendChild(a);
+            a.click();
+            setTimeout(function () {
+              if (a.parentNode) document.body.removeChild(a);
+            }, 1000);
+            toast('VIP Entry Pass PNG downloaded.');
+          } catch (expErr) {
+            console.error('PNG export error:', expErr);
+            toast('Could not export VIP Entry Pass PNG.', true);
+          }
+        }).catch(function (err) {
+          console.error('Pass generation error:', err);
+          toast('Failed to generate VIP Entry Pass.', true);
         });
-
-        var footerY = Math.max(H - 110, y + 20);
-        c.textAlign = 'center';
-        c.fillStyle = '#E89BAE';
-        c.font = '600 14px Poppins, sans-serif';
-        c.fillText('Instagram: ' + (br.instagramHandle || BRAND.instagramHandle) + '  •  Contact: ' + BRAND.phoneDisplay, W / 2, footerY);
-        c.fillStyle = '#B4B4BE';
-        c.font = '500 12px Montserrat, sans-serif';
-        c.fillText('Present this confirmed pass at the venue reception. Valid Govt ID mandatory.', W / 2, footerY + 32);
-
-        cv.toBlob(function (blob) {
-          if (!blob) return;
-          var url = URL.createObjectURL(blob);
-          var a = document.createElement('a');
-          a.href = url;
-          a.download = 'BLINK-EVENTS-Pass-' + (r.bookingId || 'CONFIRMED') + '.png';
-          document.body.appendChild(a);
-          a.click();
-          setTimeout(function () { document.body.removeChild(a); URL.revokeObjectURL(url); }, 1000);
-          toast('Digital Booking Pass downloaded.');
-        }, 'image/png');
       }
 
       /* =========================================================
@@ -5280,6 +6033,21 @@
         };
         probe.src = 'logo.png';
       })();
+
+      document.addEventListener('click', function (e) {
+        var telLink = e.target && e.target.closest ? e.target.closest('a[href^="tel:"]') : null;
+        if (!telLink) return;
+        var href = telLink.getAttribute('href') || 'tel:+919137913083';
+        try {
+          if (window.self !== window.top) {
+            e.preventDefault();
+            try { window.top.location.href = href; } catch (topErr) { window.location.href = href; }
+          }
+        } catch (frameErr) {
+          e.preventDefault();
+          window.location.href = href;
+        }
+      });
 
       renderBranchUI();
       populatePackageDropdown();
