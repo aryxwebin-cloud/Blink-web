@@ -1248,6 +1248,149 @@
       0%, 100% { box-shadow: 0 8px 24px rgba(37, 211, 102, 0.34), 0 0 0 0 rgba(37, 211, 102, 0.45); }
       50% { box-shadow: 0 10px 30px rgba(37, 211, 102, 0.52), 0 0 0 8px rgba(37, 211, 102, 0); }
     }
+    .cf-vip-header {
+      width: 100%;
+      display: grid;
+      gap: 6px;
+      justify-items: center;
+      padding-bottom: 12px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.28);
+    }
+    .cf-brand-tag {
+      font-family: var(--font-head);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.2em;
+      text-transform: uppercase;
+      color: var(--gold-soft);
+    }
+    .cf-branch-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px;
+      border-radius: 999px;
+      background: rgba(212, 175, 55, 0.14);
+      border: 1px solid var(--gold);
+      color: var(--gold-soft);
+      font-family: var(--font-head);
+      font-size: 0.74rem;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+    }
+    .cf-balance-hero {
+      width: 100%;
+      padding: 14px 16px;
+      border-radius: 14px;
+      background: linear-gradient(135deg, rgba(232, 155, 174, 0.14), rgba(212, 175, 55, 0.12));
+      border: 1.5px solid var(--rose);
+      text-align: center;
+      display: grid;
+      gap: 4px;
+    }
+    .cf-balance-hero__label {
+      font-family: var(--font-head);
+      font-size: 0.72rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--rose);
+    }
+    .cf-balance-hero__amount {
+      font-family: var(--font-head);
+      font-size: 1.75rem;
+      font-weight: 800;
+      color: var(--gold-soft);
+      line-height: 1.15;
+    }
+    .cf-balance-hero__sub {
+      font-size: 0.78rem;
+      color: #d6d6e0;
+      font-weight: 500;
+    }
+    .vip-fullscreen {
+      min-height: 100vh;
+      min-height: 100dvh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px 14px;
+      background:
+        radial-gradient(760px 420px at 80% 10%, rgba(232, 155, 174, 0.16), transparent 60%),
+        radial-gradient(760px 420px at 15% 88%, rgba(212, 175, 55, 0.16), transparent 60%),
+        #060608;
+    }
+    .vip-card {
+      width: min(560px, 100%);
+      background: linear-gradient(175deg, #17171e 0%, #0d0d12 100%);
+      border: 1.5px solid var(--gold);
+      border-radius: 24px;
+      padding: 26px 22px;
+      box-shadow: var(--shadow), 0 0 48px rgba(212, 175, 55, 0.16);
+      display: grid;
+      gap: 16px;
+    }
+    .vip-card__head {
+      text-align: center;
+      display: grid;
+      gap: 8px;
+      justify-items: center;
+      padding-bottom: 14px;
+      border-bottom: 1px solid rgba(212, 175, 55, 0.25);
+    }
+    .vip-card__title {
+      font-family: var(--font-display);
+      font-size: clamp(1.6rem, 4.5vw, 2.15rem);
+      font-weight: 700;
+      color: var(--gold-soft);
+      line-height: 1.1;
+    }
+    .vip-status-banner {
+      padding: 12px 14px;
+      border-radius: 14px;
+      font-family: var(--font-head);
+      font-size: 0.88rem;
+      font-weight: 700;
+      text-align: center;
+      border: 1.5px solid transparent;
+    }
+    .vip-status-banner--valid {
+      background: rgba(74, 222, 128, 0.12);
+      border-color: rgba(74, 222, 128, 0.55);
+      color: #86efac;
+    }
+    .vip-status-banner--pending {
+      background: rgba(251, 191, 36, 0.12);
+      border-color: rgba(251, 191, 36, 0.55);
+      color: #fde68a;
+    }
+    .vip-status-banner--invalid {
+      background: rgba(251, 113, 133, 0.12);
+      border-color: rgba(251, 113, 133, 0.55);
+      color: #fecdd3;
+    }
+    .vip-timer-box {
+      padding: 16px 14px;
+      border-radius: 16px;
+      background: #09090d;
+      border: 1.5px solid var(--line-strong);
+      text-align: center;
+      display: grid;
+      gap: 6px;
+    }
+    .vip-timer-box__label {
+      font-size: 0.72rem;
+      letter-spacing: 0.14em;
+      text-transform: uppercase;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+    .vip-timer-box__value {
+      font-family: var(--font-head);
+      font-size: 1.18rem;
+      font-weight: 800;
+      color: var(--gold-soft);
+    }
     .cf-wa-reminder {
       width: 100%;
       padding: 8px 12px;
@@ -2195,22 +2338,57 @@
     </div>
   </div>
 
+  <!-- ================= LIVE QR GATE PASS & COUNTDOWN (?verify=<bookingId>) ================= -->
+  <section class="vip-fullscreen" id="verifyPassModal" hidden aria-label="Live Gate Pass Verification">
+    <div class="vip-card">
+      <div class="vip-card__head">
+        <span class="cf-brand-tag">BLINK EVENTS • LIVE GATE VERIFICATION</span>
+        <h1 class="vip-card__title">Digital Entry Pass Status</h1>
+        <span class="cf-branch-pill" id="vpBranchPill" hidden>KURLA BRANCH</span>
+      </div>
+      <div id="vpStatusBanner" class="vip-status-banner vip-status-banner--pending">Verifying booking in real time…</div>
+      <div class="vip-timer-box" id="vpTimerBox" hidden>
+        <span class="vip-timer-box__label">Live Session Countdown (IST • Asia/Kolkata)</span>
+        <div class="vip-timer-box__value" id="vpCountdownText">Calculating…</div>
+      </div>
+      <dl class="cf-summary" id="vpSummary" hidden></dl>
+      <div class="cf-balance-hero" id="vpBalanceHero" hidden>
+        <span class="cf-balance-hero__label">Balance Payable at Venue</span>
+        <strong class="cf-balance-hero__amount" id="vpBalanceAmount">₹0</strong>
+        <span class="cf-balance-hero__sub" id="vpPaymentSub">Status: Verified</span>
+      </div>
+      <div class="bk-actions">
+        <button type="button" class="btn btn--ghost" id="vpExploreBtn">🌐 Explore Our Website</button>
+      </div>
+    </div>
+  </section>
+
   <!-- ================= BOOKING CONFIRMED MODAL ================= -->
   <div class="mb-overlay" id="cfOverlay" hidden>
     <div class="mb-panel" id="cfPanel" role="dialog" aria-modal="true" aria-labelledby="cfTitle" tabindex="-1">
       <button type="button" class="mb-close mb-close--float" id="cfClose" aria-label="Close confirmation">✕</button>
       <div class="mb-panel__body cf-body">
-        <div class="cf-badge" aria-hidden="true">✓</div>
-        <h2 id="cfTitle">Booking Confirmed!</h2>
+        <div class="cf-vip-header">
+          <div class="cf-badge" aria-hidden="true">✓</div>
+          <span class="cf-brand-tag">BLINK EVENTS • VIP CELEBRATION PASS</span>
+          <h2 id="cfTitle">BOOKING CONFIRMED!</h2>
+          <span class="cf-branch-pill" id="cfBranchPill">KURLA BRANCH</span>
+        </div>
         <div class="cf-id"><span>Booking ID</span><b id="cfBookingId">BLINK-0000</b></div>
+        <div class="cf-balance-hero">
+          <span class="cf-balance-hero__label">Balance Payable at Venue</span>
+          <strong class="cf-balance-hero__amount" id="cfBalanceHeroAmount">₹0</strong>
+          <span class="cf-balance-hero__sub" id="cfAdvanceCreditedSub">Online Advance Credited: ₹750</span>
+        </div>
         <dl class="cf-summary" id="cfSummary"></dl>
         <div class="bk-actions" style="width: 100%;">
-          <div class="cf-wa-alert" role="status">⚠️ MANDATORY: Send your booking pass to BLINK EVENTS WhatsApp below to activate your venue entry gate pass.</div>
-          <button type="button" class="btn btn--wa-mandatory" id="cfWhatsApp">📲 Send Pass on WhatsApp (Mandatory for Entry)</button>
-          <div class="cf-wa-reminder">⚠️ Gate entry ke liye apna confirmed pass WhatsApp par zaroor bhejein.</div>
+          <div class="cf-wa-alert" role="status">⚠️ MANDATORY FOR ENTRY: Send your confirmed booking pass to the official BLINK EVENTS branch WhatsApp below to activate gate entry.</div>
+          <button type="button" class="btn btn--wa-mandatory" id="cfWhatsApp">📲 Send Pass to WhatsApp (Mandatory for Entry)</button>
+          <div class="cf-wa-reminder">⚠️ Gate entry ke liye apna confirmed pass official branch WhatsApp par zaroor bhejein.</div>
           <button type="button" class="btn btn--gold" id="cfDownload">📥 Download Digital Booking Pass (PNG)</button>
           <button type="button" class="btn btn--ghost" id="cfShare" hidden>📤 Share Pass Image</button>
           <button type="button" class="btn btn--ghost" id="cfView">🎟️ View My Bookings</button>
+          <button type="button" class="btn btn--ghost" id="cfExplore">🌐 Explore Our Website</button>
         </div>
       </div>
     </div>
@@ -2331,20 +2509,22 @@
         }
       }
 
-      function syncBookingToGoogleSheet(record) {
+      function syncBookingToGoogleSheet(record, actionOverride) {
         try {
           if (!record || typeof record !== 'object' || !record.bookingId) return;
-          if (syncedSheetCreateIds[record.bookingId]) return;
+          var act = actionOverride || 'create';
+          var dedupeKey = act + '|' + record.bookingId;
+          if (syncedSheetCreateIds[dedupeKey]) return;
           var url = isValidGoogleScriptWebhookUrl(GOOGLE_SHEET_WEBHOOK_URL)
             ? GOOGLE_SHEET_WEBHOOK_URL.trim()
             : DEFAULT_GOOGLE_SHEET_WEBHOOK_URL;
           if (!url) return;
-          syncedSheetCreateIds[record.bookingId] = true;
+          syncedSheetCreateIds[dedupeKey] = true;
           fetch(url, {
             method: 'POST',
             mode: 'no-cors',
             headers: { 'Content-Type': 'text/plain;charset=utf-8' },
-            body: JSON.stringify(Object.assign({ action: 'create' }, record))
+            body: JSON.stringify(Object.assign({ action: act }, record))
           }).catch(function (err) {
             if (typeof console !== 'undefined' && console.warn) {
               console.warn('Google Sheets sync dispatch error (non-blocking):', err);
@@ -5156,23 +5336,51 @@
         });
       });
 
+      function formatAddonsSummaryText(r) {
+        if (!r || !Array.isArray(r.selectedAddons) || !r.selectedAddons.length) return 'None';
+        var names = r.selectedAddons.map(function (a) {
+          return (typeof a === 'string') ? a : (a && a.name ? a.name : '');
+        }).filter(Boolean);
+        return names.length ? names.join(', ') : 'None';
+      }
+
+      function formatGuestsSummaryText(r) {
+        var total = Number(r && r.totalPersons) || 2;
+        var extra = Number(r && r.extraGuests) || 0;
+        return extra > 0 ? (total + ' (+' + extra + ' Extra)') : String(total);
+      }
+
       function openConfirmation(r) {
+        var branchName = (r && r.branch === 'Vashi') ? 'Vashi' : 'Kurla';
+        var venueAdv = isFinite(Number(r && r.venueAdvance)) ? Number(r.venueAdvance) : 750;
+        var gatewayFee = isFinite(Number(r && r.gatewayFee)) ? Number(r.gatewayFee) : 0;
+        var onlinePaid = isFinite(Number(r && r.onlinePaymentAmount)) ? Number(r.onlinePaymentAmount) : venueAdv;
+        var totalBill = isFinite(Number(r && r.totalBookingValue)) ? Number(r.totalBookingValue) : (venueAdv + (Number(r && r.balanceAtVenue) || 0));
+        var balanceDue = isFinite(Number(r && r.balanceAtVenue)) ? Number(r.balanceAtVenue) : Math.max(0, totalBill - venueAdv);
+
         document.getElementById('cfBookingId').textContent = r.bookingId;
+        document.getElementById('cfBranchPill').textContent = branchName.toUpperCase() + ' BRANCH';
+        document.getElementById('cfBalanceHeroAmount').textContent = money(balanceDue);
+        document.getElementById('cfAdvanceCreditedSub').textContent =
+          'Online Advance Credited: ' + money(venueAdv) +
+          (onlinePaid !== venueAdv ? (' (Paid Online: ' + money(onlinePaid) + (gatewayFee ? ' incl. ' + money(gatewayFee) + ' fee' : '') + ')') : '');
         document.getElementById('cfPanel').setAttribute('data-id', r.bookingId);
+
         var sum = document.getElementById('cfSummary');
         sum.innerHTML = '';
         [
-          ['Branch', r.branch],
-          ['Room', resolveBookingRoomLabel(r)],
-          ['Celebration', r.celebrationType || 'Celebration'],
-          ['Package', r.packageName],
-          ['Date', formatDate(r.bookingDate)],
-          ['Time', r.slot],
-          ['Guests', String(r.totalPersons)],
-          ['Venue Advance Credit', money(r.venueAdvance || 750)],
-          ['Platform & Gateway Charges', money(r.gatewayFee !== undefined ? r.gatewayFee : 45)],
-          ['Online Advance Paid', money(r.onlinePaymentAmount || 795)],
-          ['Balance Payable at Venue', money(r.balanceAtVenue)]
+          ['Guest Name', r.customerName || 'Guest'],
+          ['Booking ID', r.bookingId],
+          ['Branch', branchName],
+          ['Room / Suite', resolveBookingRoomLabel(r)],
+          ['Package', r.packageName || 'Celebration Package'],
+          ['Booking Date', formatDate(r.bookingDate || r.date)],
+          ['Time Slot', r.slot || ((r.startTime || '') + ' – ' + (r.endTime || ''))],
+          ['Guests', formatGuestsSummaryText(r)],
+          ['Selected Add-Ons', formatAddonsSummaryText(r)],
+          ['Total Bill', money(totalBill)],
+          ['Online Advance Paid', money(onlinePaid)],
+          ['Balance Payable at Venue', money(balanceDue)]
         ].forEach(function (row) {
           var div = document.createElement('div');
           div.appendChild(h('dt', '', row[0]));
@@ -5194,6 +5402,9 @@
         closeModal(document.getElementById('cfOverlay'));
         renderBookingsList();
         openModal(document.getElementById('mbOverlay'));
+      });
+      document.getElementById('cfExplore').addEventListener('click', function () {
+        window.location.href = window.location.origin + window.location.pathname;
       });
 
       function safeStr(val, fallback) {
@@ -5707,7 +5918,12 @@
         var celebType = safeStr(r.celebrationType, 'Celebration');
         var balanceNum = isFinite(Number(r.balanceAtVenue)) ? Number(r.balanceAtVenue) : 0;
 
-        var qrPayload = ['BLINK', bookingId, branch, roomLabel, rawDate || dateDisplay, slotStr].join('|');
+        var guestsText = formatGuestsSummaryText(r);
+        var addonsText = formatAddonsSummaryText(r);
+        var verifyBase = (window.location.origin && window.location.origin !== 'null')
+          ? (window.location.origin + window.location.pathname)
+          : 'https://theblinkevent.in/';
+        var qrPayload = verifyBase + '?verify=' + encodeURIComponent(bookingId);
         var qrMatrix;
         try {
           qrMatrix = QRCodeEngine.generate(qrPayload);
@@ -5719,7 +5935,7 @@
 
         Promise.all([loadPassCrestImage(), waitForFontsReady()]).then(function (assets) {
           var crestImg = assets[0];
-          var W = 1000, H = 560, scale = 2;
+          var W = 1000, H = 600, scale = 2;
           var cv = document.createElement('canvas');
           cv.width = W * scale;
           cv.height = H * scale;
@@ -5871,13 +6087,23 @@
             c.fillText(fit.text, x, y + 22);
           }
 
-          drawField(col1X, 246, 'VENUE BRANCH', branch + ' Branch', '#F5D98B');
-          drawField(col2X, 246, 'ROOM / SUITE', roomLabel, '#FFFFFF');
-          drawField(col1X, 304, 'BOOKING DATE', dateDisplay, '#FFFFFF');
-          drawField(col2X, 304, 'TIME SLOT', slotStr, '#FFFFFF');
+          drawField(col1X, 236, 'VENUE BRANCH', branch + ' Branch', '#F5D98B');
+          drawField(col2X, 236, 'ROOM / SUITE', roomLabel, '#FFFFFF');
+          drawField(col1X, 286, 'DATE & TIME SLOT', dateDisplay + ' • ' + slotStr, '#FFFFFF');
+          drawField(col2X, 286, 'GUESTS', guestsText, '#FFFFFF');
+
+          // Full-width Add-Ons row with wrapping
+          c.textAlign = 'left';
+          c.fillStyle = '#B4B4BE';
+          c.font = '600 10.5px Montserrat, sans-serif';
+          c.fillText('ADD-ONS', col1X, 336);
+          var addonsFit = fitTextSingleLine(c, addonsText, '600', 'Poppins, sans-serif', 13.5, 10, infoW);
+          c.fillStyle = addonsText === 'None' ? '#B4B4BE' : '#F5D98B';
+          c.font = addonsFit.font;
+          c.fillText(addonsFit.text, col1X, 356);
 
           // Booking ID & Balance Highlight Boxes
-          drawRoundedRect(c, col1X, 358, 266, 76, 12);
+          drawRoundedRect(c, col1X, 378, 266, 78, 12);
           c.fillStyle = '#131317';
           c.fill();
           c.strokeStyle = 'rgba(212, 175, 55, 0.55)';
@@ -5885,42 +6111,42 @@
           c.stroke();
           c.fillStyle = '#B4B4BE';
           c.font = '600 10.5px Montserrat, sans-serif';
-          c.fillText('BOOKING ID', col1X + 16, 382);
+          c.fillText('BOOKING ID', col1X + 16, 402);
           var idFit = fitTextSingleLine(c, bookingId, '800', 'Poppins, sans-serif', 22, 14, 234);
           c.fillStyle = '#F5D98B';
           c.font = idFit.font;
-          c.fillText(idFit.text, col1X + 16, 414);
+          c.fillText(idFit.text, col1X + 16, 434);
 
-          drawRoundedRect(c, col2X, 358, 274, 76, 12);
-          c.fillStyle = 'rgba(232, 155, 174, 0.12)';
+          drawRoundedRect(c, col2X, 378, 274, 78, 12);
+          c.fillStyle = 'rgba(232, 155, 174, 0.14)';
           c.fill();
           c.strokeStyle = '#E89BAE';
-          c.lineWidth = 1.4;
+          c.lineWidth = 1.5;
           c.stroke();
           c.fillStyle = '#E89BAE';
           c.font = '700 10.5px Montserrat, sans-serif';
-          c.fillText('BALANCE PAYABLE AT VENUE', col2X + 16, 382);
+          c.fillText('BALANCE PAYABLE AT VENUE', col2X + 16, 402);
           c.fillStyle = '#F5D98B';
-          c.font = '800 24px Poppins, sans-serif';
-          c.fillText(money(balanceNum), col2X + 16, 415);
+          c.font = '800 25px Poppins, sans-serif';
+          c.fillText(money(balanceNum), col2X + 16, 435);
 
           // Left column footer
           c.strokeStyle = 'rgba(255, 255, 255, 0.1)';
           c.lineWidth = 1;
           c.beginPath();
-          c.moveTo(contentX, 460);
-          c.lineTo(dividerX - 24, 460);
+          c.moveTo(contentX, 482);
+          c.lineTo(dividerX - 24, 482);
           c.stroke();
 
           var addrFit = fitTextSingleLine(c, br.address, '500', 'Montserrat, sans-serif', 11.5, 9.5, infoW);
           c.fillStyle = '#B4B4BE';
           c.font = addrFit.font;
-          c.fillText(addrFit.text, contentX, 484);
+          c.fillText(addrFit.text, contentX, 506);
 
           c.fillStyle = '#D4AF37';
           c.font = '600 12px Poppins, sans-serif';
           var branchPhone = (br && br.phone) ? br.phone : BRAND.phoneDisplay;
-          c.fillText('Support: ' + branchPhone + '  •  ' + (br.instagramHandle || BRAND.instagramHandle) + '  •  Valid Govt ID Mandatory', contentX, 510);
+          c.fillText('Support: ' + branchPhone + '  •  ' + (br.instagramHandle || BRAND.instagramHandle) + '  •  Valid Govt ID Mandatory', contentX, 532);
 
           // 6. Vertical Perforated Ticket Divider
           c.save();
@@ -5985,7 +6211,7 @@
 
           c.fillStyle = '#F5D98B';
           c.font = '700 14px Poppins, sans-serif';
-          c.fillText('SCAN AT ENTRY', qrPanelCenterX, qrBoxY + qrBoxSize + 36);
+          c.fillText('SCAN FOR LIVE TIMER', qrPanelCenterX, qrBoxY + qrBoxSize + 36);
 
           c.fillStyle = '#B4B4BE';
           c.font = '500 11px Montserrat, sans-serif';
@@ -6617,6 +6843,196 @@
       renderReviewSummaries();
       renderReviewsGrid();
       subscribeCustomerReviews();
+
+      /* =========================================================
+         16. LIVE QR GATE PASS & SESSION COUNTDOWN (?verify=<bookingId>)
+         ========================================================= */
+      function hideMainSiteChrome() {
+        var navEl = document.querySelector('header.nav');
+        var mainEl = document.querySelector('main');
+        var footerEl = document.querySelector('footer.footer');
+        var fabEl = document.querySelector('.fab-contact-stack');
+        if (navEl) navEl.hidden = true;
+        if (mainEl) mainEl.hidden = true;
+        if (footerEl) footerEl.hidden = true;
+        if (fabEl) fabEl.hidden = true;
+      }
+
+      function computeISTCountdownState(booking) {
+        var bDate = String((booking && (booking.bookingDate || booking.date)) || '');
+        var m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(bDate);
+        var startHr = Number(booking && booking.startHour);
+        var durHrs = Number(booking && booking.durationHours);
+        if (!m || !isFinite(startHr) || !isFinite(durHrs) || durHrs < 1) {
+          return { state: 'invalid', text: 'Session time unavailable' };
+        }
+        // Build exact UTC epoch ms for IST (UTC+05:30)
+        var IST_OFFSET_MS = 330 * 60 * 1000;
+        var startUtcMs = Date.UTC(Number(m[1]), Number(m[2]) - 1, Number(m[3]), startHr, 0, 0) - IST_OFFSET_MS;
+        var endUtcMs;
+        if (booking.endDate && /^(\d{4})-(\d{2})-(\d{2})$/.test(booking.endDate)) {
+          var em = /^(\d{4})-(\d{2})-(\d{2})$/.exec(booking.endDate);
+          var endHr = isFinite(Number(booking.endHour)) ? Number(booking.endHour) : ((startHr + durHrs) % 24);
+          endUtcMs = Date.UTC(Number(em[1]), Number(em[2]) - 1, Number(em[3]), endHr, 0, 0) - IST_OFFSET_MS;
+        } else {
+          // Handles midnight-crossing sessions cleanly (e.g., 22:00 + 3h => next day 01:00 IST)
+          endUtcMs = startUtcMs + (durHrs * 3600 * 1000);
+        }
+
+        var nowMs = Date.now();
+        function fmtHMS(ms) {
+          var totalSec = Math.max(0, Math.floor(ms / 1000));
+          var hrs = Math.floor(totalSec / 3600);
+          var mins = Math.floor((totalSec % 3600) / 60);
+          var secs = totalSec % 60;
+          return pad(hrs) + ':' + pad(mins) + ':' + pad(secs);
+        }
+
+        if (nowMs < startUtcMs) {
+          return { state: 'upcoming', text: '🟡 UPCOMING • Starts in ' + fmtHMS(startUtcMs - nowMs) };
+        }
+        if (nowMs >= startUtcMs && nowMs < endUtcMs) {
+          return { state: 'live', text: '🟢 LIVE IN PROGRESS • Remaining Time: ' + fmtHMS(endUtcMs - nowMs) };
+        }
+        return { state: 'finished', text: '⚪ SESSION FINISHED' };
+      }
+
+      function initVerifyPassMode(bookingId) {
+        hideMainSiteChrome();
+        var modal = document.getElementById('verifyPassModal');
+        var banner = document.getElementById('vpStatusBanner');
+        var timerBox = document.getElementById('vpTimerBox');
+        var countdownEl = document.getElementById('vpCountdownText');
+        var summaryEl = document.getElementById('vpSummary');
+        var balanceHero = document.getElementById('vpBalanceHero');
+        var branchPill = document.getElementById('vpBranchPill');
+        var exploreBtn = document.getElementById('vpExploreBtn');
+        modal.hidden = false;
+
+        var verifyRef = null;
+        var countdownInterval = null;
+        var latestBooking = null;
+
+        function cleanupVerify() {
+          if (verifyRef) { verifyRef.off(); verifyRef = null; }
+          if (countdownInterval) { clearInterval(countdownInterval); countdownInterval = null; }
+        }
+
+        exploreBtn.addEventListener('click', function () {
+          cleanupVerify();
+          window.location.href = window.location.origin + window.location.pathname;
+        });
+
+        if (!bookingId) {
+          banner.className = 'vip-status-banner vip-status-banner--invalid';
+          banner.textContent = '❌ INVALID BOOKING ID';
+          return;
+        }
+        if (!db) {
+          banner.className = 'vip-status-banner vip-status-banner--invalid';
+          banner.textContent = 'Database unavailable for live gate verification.';
+          return;
+        }
+
+        function updateCountdownUI() {
+          if (!latestBooking) return;
+          var res = computeISTCountdownState(latestBooking);
+          countdownEl.textContent = res.text;
+        }
+
+        verifyRef = db.ref(BOOKINGS_NODE + '/' + bookingId);
+        verifyRef.on('value', function (snap) {
+          if (!snap.exists()) {
+            latestBooking = null;
+            timerBox.hidden = true;
+            summaryEl.hidden = true;
+            balanceHero.hidden = true;
+            branchPill.hidden = true;
+            banner.className = 'vip-status-banner vip-status-banner--invalid';
+            banner.textContent = '❌ INVALID BOOKING ID — Record not found.';
+            return;
+          }
+
+          var b = snap.val();
+          if (!b.bookingId) b.bookingId = bookingId;
+          latestBooking = b;
+
+          var branchName = b.branch === 'Vashi' ? 'Vashi' : 'Kurla';
+          branchPill.textContent = branchName.toUpperCase() + ' BRANCH';
+          branchPill.hidden = false;
+
+          var bSt = String(b.bookingStatus || b.status || '').toLowerCase();
+          var pSt = String(b.paymentStatus || '').toLowerCase();
+          var isCancelled = bSt === 'cancelled' || bSt === 'canceled';
+          var isPending = !isCancelled && bSt === 'pending';
+          var isConfirmed = !isCancelled && !isPending && bSt === 'confirmed';
+
+          if (isCancelled) {
+            banner.className = 'vip-status-banner vip-status-banner--invalid';
+            banner.textContent = '❌ CANCELLED BOOKING — Not valid for entry.';
+          } else if (isPending) {
+            banner.className = 'vip-status-banner vip-status-banner--pending';
+            banner.textContent = '⏳ PENDING PAYMENT — Not valid for entry until paid.';
+          } else if (isConfirmed) {
+            banner.className = 'vip-status-banner vip-status-banner--valid';
+            banner.textContent = pSt === 'paid_verified'
+              ? '✅ VALID CONFIRMED & VERIFIED PASS'
+              : '✅ CONFIRMED BOOKING PASS';
+          } else {
+            banner.className = 'vip-status-banner vip-status-banner--invalid';
+            banner.textContent = '⚠️ UNVERIFIED BOOKING STATUS';
+          }
+
+          summaryEl.innerHTML = '';
+          [
+            ['Booking ID', b.bookingId],
+            ['Booking Status', bSt.toUpperCase() || 'UNKNOWN'],
+            ['Payment Status', pSt || (isConfirmed ? 'confirmed' : 'pending')],
+            ['Guest Name', b.customerName || 'Guest'],
+            ['Branch', branchName],
+            ['Room / Suite', resolveBookingRoomLabel(b)],
+            ['Package', b.packageName || 'Celebration Package'],
+            ['Booking Date', formatDate(b.bookingDate || b.date)],
+            ['Session Time Slot', b.slot || ((b.startTime || '') + ' – ' + (b.endTime || ''))],
+            ['Guests', formatGuestsSummaryText(b)],
+            ['Selected Add-Ons', formatAddonsSummaryText(b)]
+          ].forEach(function (row) {
+            var div = document.createElement('div');
+            div.appendChild(h('dt', '', row[0]));
+            div.appendChild(h('dd', '', row[1]));
+            summaryEl.appendChild(div);
+          });
+          summaryEl.hidden = false;
+
+          var balDue = Number(b.balanceAtVenue !== undefined ? b.balanceAtVenue : 0);
+          document.getElementById('vpBalanceAmount').textContent = money(balDue);
+          document.getElementById('vpPaymentSub').textContent = isConfirmed
+            ? 'Gate Check: Verify Govt ID & collect venue balance above'
+            : 'Entry Blocked: Booking is not confirmed & paid';
+          balanceHero.hidden = false;
+
+          timerBox.hidden = false;
+          updateCountdownUI();
+          if (!countdownInterval) {
+            countdownInterval = setInterval(updateCountdownUI, 1000);
+          }
+        }, function (err) {
+          banner.className = 'vip-status-banner vip-status-banner--invalid';
+          banner.textContent = 'Verification error: ' + (err && err.message ? err.message : 'Unable to read booking.');
+        });
+      }
+
+      (function routeUrlMode() {
+        try {
+          var params = new URLSearchParams(window.location.search || '');
+          var verifyId = params.get('verify');
+          if (verifyId !== null) {
+            initVerifyPassMode(verifyId.trim());
+          }
+        } catch (e) {
+          console.error('URL mode routing error:', e);
+        }
+      })();
     })();
   </script>
 </body>

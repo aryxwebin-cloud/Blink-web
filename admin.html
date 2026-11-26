@@ -11,7 +11,6 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,600;0,700;1,600&family=Inter:wght@400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet">
-  <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 
   <style>
     :root {
@@ -1867,7 +1866,6 @@
             <select id="qbBookingSource" required>
               <option value="Walk-In" selected>Walk-In</option>
               <option value="WhatsApp">WhatsApp</option>
-              <option value="Online">Online (Razorpay)</option>
             </select>
           </div>
           <div class="field">
@@ -1893,10 +1891,6 @@
           <div class="field">
             <label for="qbWhatsapp">WhatsApp Number</label>
             <input type="tel" id="qbWhatsapp" placeholder="10-digit mobile number" inputmode="tel" required>
-          </div>
-          <div class="field">
-            <label for="qbEmail">Customer Email (Optional / Razorpay Prefill)</label>
-            <input type="email" id="qbEmail" placeholder="customer@example.com" maxlength="120">
           </div>
           <div class="field">
             <label for="qbPersons">Total Persons</label>
@@ -2194,10 +2188,25 @@
 
       var BUSINESS_TIMEZONE = 'Asia/Kolkata';
       var ONLINE_PAYMENT_AMOUNT = 795;
-      var HOLD_TTL_MS = 5 * 60 * 1000;
+      var BRANCH_CONTACT_CONFIG = {
+        Kurla: {
+          branch: 'Kurla',
+          phone: '+91 91379 13083',
+          whatsapp: '919137913083',
+          tel: 'tel:+919137913083'
+        },
+        Vashi: {
+          branch: 'Vashi',
+          phone: '+91 98338 65567',
+          whatsapp: '919833865567',
+          tel: 'tel:+919833865567'
+        }
+      };
+      function getBranchContact(branchName) {
+        return BRANCH_CONTACT_CONFIG[branchName] || BRANCH_CONTACT_CONFIG.Kurla;
+      }
       var VENUE_ADVANCE_CREDIT = 750;
       var DEFAULT_RAZORPAY_KEY_ID = 'rzp_test_U3FOXcag8QFMIo';
-      var RAZORPAY_THEME_COLOR = '#20B152';
       var OPERATING_HOURS = [9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23];
 
       var PACKAGE_MASTER_DATA = {
@@ -3652,130 +3661,6 @@
         });
       }
 
-      function acquireAdminSlotHold(branch, roomType, date, startHour, duration, bookingId) {
-        var resolvedRoom = normalizeRoomType(roomType);
-        if (!resolvedRoom) return Promise.reject(new Error('Invalid room type.'));
-        var requiredHours = getRequiredHours(startHour, duration);
-        var dateLockRef = state.db.ref(SLOT_LOCKS_PATH + '/' + branch + '/' + resolvedRoom + '/' + date);
-
-        var recordConflict = hasBookingRecordConflict(branch, resolvedRoom, date, startHour, duration, bookingId);
-        if (recordConflict) {
-          var recErr = new Error('Booking Conflict! One or more selected hours are already booked or temporarily held. Please choose another available time.');
-          recErr.code = 'SLOT_CONFLICT';
-          return Promise.reject(recErr);
-        }
-
-        return hasLegacyHourConflict(branch, resolvedRoom, date, requiredHours, bookingId).then(function (legacyConflict) {
-          if (legacyConflict) {
-            var legErr = new Error('Legacy slot conflict at ' + formatHour12(legacyConflict.hour) + ' (Booking ID: ' + legacyConflict.bookingId + ').');
-            legErr.code = 'SLOT_CONFLICT';
-            throw legErr;
-          }
-
-          return dateLockRef.transaction(function (current) {
-            var now = Date.now();
-            var node = (current && typeof current === 'object') ? Object.assign({}, current) : {};
-            for (var i = 0; i < requiredHours.length; i++) {
-              var hh = requiredHours[i];
-              var existing = node[hh];
-              if (existing && isActiveSlotLock(existing, now) && existing.bookingId !== bookingId) {
-                return undefined;
-              }
-            }
-            for (var j = 0; j < requiredHours.length; j++) {
-              node[requiredHours[j]] = {
-                status: 'hold',
-                bookingId: bookingId,
-                roomType: resolvedRoom,
-                expiresAt: now + HOLD_TTL_MS
-              };
-            }
-            return node;
-          });
-        }).then(function (txResult) {
-          if (!txResult || !txResult.committed) {
-            var conflictErr = new Error('One or more selected hours are already locked or held.');
-            conflictErr.code = 'SLOT_CONFLICT';
-            throw conflictErr;
-          }
-          return txResult;
-        });
-      }
-
-      function releaseAdminSlotHold(branch, roomType, date, startHour, duration, bookingId) {
-        var resolvedRoom = normalizeRoomType(roomType);
-        if (!state.db || !resolvedRoom) return Promise.resolve();
-        var requiredHours = getRequiredHours(startHour, duration);
-        var dateLockRef = state.db.ref(SLOT_LOCKS_PATH + '/' + branch + '/' + resolvedRoom + '/' + date);
-        return dateLockRef.transaction(function (current) {
-          if (!current || typeof current !== 'object') return current;
-          var node = Object.assign({}, current);
-          for (var i = 0; i < requiredHours.length; i++) {
-            var hh = requiredHours[i];
-            if (node[hh] && node[hh].status === 'hold' && node[hh].bookingId === bookingId) {
-              delete node[hh];
-            }
-          }
-          return node;
-        });
-      }
-
-      function confirmAdminSlotHoldAndSaveBooking(bookingRecord) {
-        var branch = bookingRecord.branch;
-        var roomType = normalizeRoomType(bookingRecord.roomType) || 'couples';
-        var date = bookingRecord.bookingDate;
-        var requiredHours = getRequiredHours(bookingRecord.startHour, bookingRecord.durationHours);
-        var dateLockRef = state.db.ref(SLOT_LOCKS_PATH + '/' + branch + '/' + roomType + '/' + date);
-
-        return dateLockRef.transaction(function (current) {
-          if (!current || typeof current !== 'object') return undefined;
-          var now = Date.now();
-          var node = Object.assign({}, current);
-          for (var i = 0; i < requiredHours.length; i++) {
-            var hh = requiredHours[i];
-            var existing = node[hh];
-            if (!existing) return undefined;
-            if (existing.status === 'confirmed') {
-              if (existing.bookingId !== bookingRecord.bookingId) return undefined;
-            } else if (existing.status === 'hold') {
-              var exp = Number(existing.expiresAt);
-              if (existing.bookingId !== bookingRecord.bookingId ||
-                  existing.expiresAt === null ||
-                  existing.expiresAt === undefined ||
-                  existing.expiresAt === '' ||
-                  !isFinite(exp) ||
-                  !(exp > now)) {
-                return undefined;
-              }
-            } else {
-              return undefined;
-            }
-            node[hh] = {
-              status: 'confirmed',
-              bookingId: bookingRecord.bookingId,
-              roomType: roomType
-            };
-          }
-          return node;
-        }).then(function (txResult) {
-          if (!txResult || !txResult.committed) {
-            var conflictErr = new Error('Slot hold expired or was claimed by another booking.');
-            conflictErr.code = 'SLOT_CONFLICT';
-            throw conflictErr;
-          }
-          return state.db.ref(BOOKINGS_PATH + '/' + bookingRecord.bookingId).set(bookingRecord).catch(function (writeErr) {
-            return dateLockRef.transaction(function (curr) {
-              if (!curr || typeof curr !== 'object') return curr;
-              var n = Object.assign({}, curr);
-              requiredHours.forEach(function (hh) {
-                if (n[hh] && n[hh].bookingId === bookingRecord.bookingId) delete n[hh];
-              });
-              return n;
-            }).then(function () { throw writeErr; }, function () { throw writeErr; });
-          });
-        });
-      }
-
       function cancelBookingAndReleaseLocks(booking) {
         var branch = booking.branch;
         var roomType = normalizeRoomType(booking.roomType);
@@ -3904,6 +3789,8 @@
          ===================================================================== */
       function buildWhatsAppUrl(b) {
         var phone = normalizePhone10(b.whatsappNumber || b.contactNumber);
+        var branchCfg = getBranchContact(b.branch);
+
         var srcDisplay = b.bookingSource || b.source;
         var paymentLine = b.source === 'Online'
           ? 'Online Paid: ' + formatMoney(b.onlinePaymentAmount) + ' (Venue Advance Credited: ' + formatMoney(b.venueAdvance) + ')'
@@ -3914,7 +3801,7 @@
           '',
           'Hello *' + b.customerName + '*, your private celebration is confirmed!',
           '',
-          '📍 *Branch:* ' + b.branch + (b.roomLabel ? ' (' + b.roomLabel + ')' : ''),
+          '📍 *Branch:* ' + branchCfg.branch + (b.roomLabel ? ' (' + b.roomLabel + ')' : ''),
           '📅 *Date:* ' + formatPrettyDate(b.bookingDate),
           '⏰ *Time:* ' + b.startTime + ' – ' + b.endTime + ' (' + b.durationHours + ' Hour' + (b.durationHours > 1 ? 's' : '') + ')',
           '🎁 *Package:* ' + b.packageName,
@@ -3922,12 +3809,12 @@
           '✅ *' + paymentLine + '*',
           '🏦 *Balance Due at Venue:* ' + formatMoney(b.balanceAtVenue),
           '🆔 *Booking ID:* ' + b.bookingId,
-          '📞 *' + b.branch + ' Support:* ' + (b.branch === 'Vashi' ? '+91 98338 65567' : '+91 91379 13083'),
+          '📞 *' + branchCfg.branch + ' Support:* ' + branchCfg.phone,
           '',
           'We look forward to hosting you at Blink Events!'
         ];
         var text = encodeURIComponent(lines.join('\n'));
-        return phone ? ('https://wa.me/91' + phone + '?text=' + text) : ('https://wa.me/?text=' + text);
+        return phone ? ('https://wa.me/91' + phone + '?text=' + text) : ('https://wa.me/' + branchCfg.whatsapp + '?text=' + text);
       }
 
       /* =====================================================================
@@ -4151,27 +4038,13 @@
         $('qbNote').hidden = true;
         $('qbWhatsappBtn').hidden = true;
         $('qbSubmitBtn').disabled = false;
-        syncQuickBookSourceUI(false);
 
         renderQuickBookAddons();
         populateQuickBookPackages(null);
         $('quickBookModal').hidden = false;
       }
 
-      function syncQuickBookSourceUI(adjustAdvance) {
-        var source = $('qbBookingSource').value;
-        var isOnline = source === 'Online';
-        $('qbSubmitBtn').textContent = isOnline ? 'Confirm & Pay (Razorpay)' : 'Confirm & Lock Slots';
-        if (adjustAdvance) {
-          var curAdv = Number($('qbAdvance').value);
-          if (isOnline && (isNaN(curAdv) || curAdv === 750 || curAdv === 0)) {
-            $('qbAdvance').value = String(ONLINE_PAYMENT_AMOUNT);
-          } else if (!isOnline && curAdv === ONLINE_PAYMENT_AMOUNT) {
-            $('qbAdvance').value = '750';
-          }
-          recalculateQuickBookPricing();
-        }
-      }
+
 
       $('qbBranch').addEventListener('change', function () {
         syncQuickBookRoomOptions(null);
@@ -4179,9 +4052,6 @@
       });
       $('qbRoom').addEventListener('change', function () {
         populateQuickBookPackages(null);
-      });
-      $('qbBookingSource').addEventListener('change', function () {
-        syncQuickBookSourceUI(true);
       });
       $('qbPackageSelect').addEventListener('change', function () {
         applySelectedPackageBehavior(true);
@@ -4221,7 +4091,6 @@
         var duration = Number($('qbDuration').value);
         var name = $('qbName').value.trim().replace(/\s+/g, ' ');
         var whatsapp = normalizePhone10($('qbWhatsapp').value);
-        var email = $('qbEmail').value.trim();
         var persons = Number($('qbPersons').value);
         var totalRaw = $('qbTotal').value.trim();
         var advanceRaw = $('qbAdvance').value.trim();
@@ -4236,23 +4105,18 @@
         var pkgBelongsToRoom = roomPackages.some(function (p) { return p.id === calc.pkg.id; }) &&
           (!calc.pkg.room || calc.pkg.room === roomType);
         if (!pkgBelongsToRoom) return showFormErr('Selected package does not belong to the chosen room. Please re-select the room and package.');
-        if (['Walk-In', 'WhatsApp', 'Online'].indexOf(bookingSource) === -1) return showFormErr('Please select a valid Booking Source (Walk-In, WhatsApp, or Online).');
+        if (['Walk-In', 'WhatsApp'].indexOf(bookingSource) === -1) return showFormErr('Please select a valid Booking Source (Walk-In or WhatsApp).');
         if (!/^\d{4}-\d{2}-\d{2}$/.test(date) || date < getKolkataTodayISO()) return showFormErr('Please select today or a future booking date.');
         if (isNaN(startHour) || startHour < 9 || startHour > 23) return showFormErr('Start hour must be between 09:00 AM and 11:00 PM.');
         if ([1, 2, 3].indexOf(duration) === -1) return showFormErr('Duration must be 1, 2, or 3 hours.');
         if (startHour + duration > 24) return showFormErr('Selected duration exceeds 12:00 AM closing time. Choose an earlier start hour or shorter duration.');
         if (name.length < 2) return showFormErr('Please enter the customer name.');
         if (!whatsapp) return showFormErr('Please enter a valid 10-digit Indian WhatsApp number.');
-        if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) return showFormErr('Please enter a valid email address or leave it blank.');
         if (isNaN(persons) || persons < calc.pkg.baseGuests) return showFormErr('Total persons must be at least ' + calc.pkg.baseGuests + ' for ' + calc.pkg.name + '.');
         if (totalRaw === '' || isNaN(total) || total < 0 || !isFinite(total)) return showFormErr('Please enter a valid total amount.');
         if (advanceRaw === '' || isNaN(advance) || advance < 0 || !isFinite(advance)) return showFormErr('Please enter a valid advance amount.');
-        if (bookingSource === 'Online' && Math.round(advance) < 1) return showFormErr('Online Razorpay checkout requires an advance amount of at least ₹1.');
 
-        var amountInRupees = Math.round(advance);
-        var venueAdvanceCredit = (bookingSource === 'Online' && amountInRupees === ONLINE_PAYMENT_AMOUNT)
-          ? VENUE_ADVANCE_CREDIT
-          : amountInRupees;
+        var venueAdvanceCredit = Math.round(advance);
         var balanceAtVenue = Math.max(0, Math.round(total) - venueAdvanceCredit);
         var bookingId = generateBookingId(branch);
         var record = {
@@ -4263,7 +4127,6 @@
           customerName: name,
           contactNumber: whatsapp,
           whatsappNumber: whatsapp,
-          customerEmail: email,
           celebrationType: bookingSource,
           bookingDate: date,
           date: date,
@@ -4283,7 +4146,7 @@
           totalBookingValue: Math.round(total),
           manualTotalOverride: state.qbManualTotalOverride,
           venueAdvance: venueAdvanceCredit,
-          onlinePaymentAmount: bookingSource === 'Online' ? amountInRupees : 0,
+          onlinePaymentAmount: 0,
           balanceAtVenue: balanceAtVenue,
           venuePaymentMode: 'pending',
           venuePaymentStatus: 'pending',
@@ -4293,120 +4156,6 @@
           source: bookingSource,
           createdAt: new Date().toISOString()
         };
-
-        if (bookingSource === 'Online') {
-          if (typeof window.Razorpay !== 'function') {
-            return showFormErr('Razorpay Checkout failed to load. Please check your internet connection and refresh the page.');
-          }
-
-          state.submittingBooking = true;
-          $('qbSubmitBtn').disabled = true;
-          $('qbSubmitBtn').textContent = 'Reserving Hold…';
-          noteEl.className = 'modal-note';
-          noteEl.textContent = 'Reserving temporary 5-minute slot hold before opening Razorpay…';
-          noteEl.hidden = false;
-
-          acquireAdminSlotHold(branch, roomType, date, startHour, duration, bookingId)
-            .then(function () {
-              $('qbSubmitBtn').textContent = 'Opening Razorpay…';
-              noteEl.textContent = 'Slot hold reserved. Complete Razorpay payment to confirm & lock slots.';
-
-              var paymentHandled = false;
-              var rzpOptions = {
-                key: getActiveRazorpayKeyId(),
-                amount: amountInRupees * 100,
-                currency: 'INR',
-                name: 'Blink Events',
-                description: branch + ' • ' + getRoomLabel(roomType) + ' • ' + date + ' (' + formatRange12(startHour, duration) + ')',
-                prefill: {
-                  name: name,
-                  email: email || '',
-                  contact: whatsapp
-                },
-                notes: {
-                  booking_id: bookingId,
-                  branch: branch,
-                  room_type: roomType,
-                  booking_date: date,
-                  slot: formatRange12(startHour, duration)
-                },
-                theme: {
-                  color: RAZORPAY_THEME_COLOR
-                },
-                handler: function (response) {
-                  paymentHandled = true;
-                  var paymentId = response && response.razorpay_payment_id ? String(response.razorpay_payment_id) : '';
-                  record.paymentId = paymentId;
-                  record.razorpayPaymentId = paymentId;
-
-                  $('qbSubmitBtn').textContent = 'Confirming Slot & Saving…';
-                  noteEl.className = 'modal-note';
-                  noteEl.textContent = 'Payment received (' + paymentId + '). Confirming slot lock and saving booking…';
-
-                  confirmAdminSlotHoldAndSaveBooking(record).then(function () {
-                    syncToSheet(Object.assign({ action: 'create' }, record));
-                    noteEl.className = 'modal-note is-ok';
-                    noteEl.textContent = 'Confirmed! Booking ID: ' + bookingId + ' | Razorpay Payment ID: ' + paymentId + '. All ' + duration + ' hour(s) are now locked.';
-                    var waBtn = $('qbWhatsappBtn');
-                    waBtn.href = buildWhatsAppUrl(record);
-                    waBtn.hidden = false;
-                    showToast('Online booking ' + bookingId + ' confirmed (' + paymentId + ').', 'ok');
-                  }).catch(function (err) {
-                    var msg = err && err.code === 'SLOT_CONFLICT'
-                      ? 'Payment captured (' + paymentId + '), but the slot hold expired or was taken. Please resolve manually or issue refund.'
-                      : 'Payment captured (' + paymentId + '), but failed to save booking: ' + (err && err.message ? err.message : 'Database error');
-                    showFormErr(msg);
-                    $('qbSubmitBtn').disabled = false;
-                  }).then(function () {
-                    state.submittingBooking = false;
-                    syncQuickBookSourceUI(false);
-                  });
-                },
-                modal: {
-                  ondismiss: function () {
-                    if (paymentHandled) return;
-                    releaseAdminSlotHold(branch, roomType, date, startHour, duration, bookingId);
-                    state.submittingBooking = false;
-                    $('qbSubmitBtn').disabled = false;
-                    syncQuickBookSourceUI(false);
-                    showFormErr('Payment window closed before completion. Slot hold released and no unpaid booking was saved.');
-                    showToast('Razorpay checkout dismissed — slot hold released.', 'warn');
-                  }
-                }
-              };
-
-              try {
-                var rzp = new window.Razorpay(rzpOptions);
-                rzp.on('payment.failed', function (resp) {
-                  paymentHandled = true;
-                  releaseAdminSlotHold(branch, roomType, date, startHour, duration, bookingId);
-                  state.submittingBooking = false;
-                  $('qbSubmitBtn').disabled = false;
-                  syncQuickBookSourceUI(false);
-                  var errDesc = (resp && resp.error && resp.error.description) ? resp.error.description : 'Payment could not be completed.';
-                  showFormErr('Payment failed: ' + errDesc + ' Slot hold released.');
-                  showToast('Razorpay payment failed.', 'err');
-                });
-                rzp.open();
-              } catch (rzpErr) {
-                releaseAdminSlotHold(branch, roomType, date, startHour, duration, bookingId);
-                state.submittingBooking = false;
-                $('qbSubmitBtn').disabled = false;
-                syncQuickBookSourceUI(false);
-                showFormErr('Unable to launch Razorpay Checkout: ' + (rzpErr && rzpErr.message ? rzpErr.message : 'Unknown error'));
-              }
-            })
-            .catch(function (holdErr) {
-              state.submittingBooking = false;
-              $('qbSubmitBtn').disabled = false;
-              syncQuickBookSourceUI(false);
-              var msg = holdErr && holdErr.code === 'SLOT_CONFLICT'
-                ? 'Booking Conflict! One or more selected hours are already booked or temporarily held. Please choose another available time.'
-                : 'Could not reserve slot hold: ' + (holdErr && holdErr.message ? holdErr.message : 'Database error');
-              showFormErr(msg);
-            });
-          return;
-        }
 
         state.submittingBooking = true;
         $('qbSubmitBtn').disabled = true;
@@ -4431,7 +4180,7 @@
           $('qbSubmitBtn').disabled = false;
         }).then(function () {
           state.submittingBooking = false;
-          syncQuickBookSourceUI(false);
+          $('qbSubmitBtn').textContent = 'Confirm & Lock Slots';
         });
       });
 
